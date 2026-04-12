@@ -1,0 +1,139 @@
+# Build outputs
+**/bin/
+**/obj/
+**/out/
+**/dist/
+**/build/
+
+# Frontend (React + Vite)
+**/node_modules/
+**/.vite/
+**/dist-ssr/
+**/*.local
+**/.env.local
+**/.env.*.local
+
+# Backend (ASP.NET Core)
+**/Generated_Code/
+**/packages/
+**/TestResults/
+**/wwwroot/lib/
+**/appsettings.Development.json
+
+# User secrets
+**/secrets.json
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.csproj.user
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.tmp
+*.log
+
+# Package management
+**/package-lock.json
+**/yarn.lock
+**/pnpm-lock.yaml
+**/bun.lockb
+
+# Environment variables (sensitive data)
+.env
+.env.*
+!.env.example
+
+# Local PostgreSQL data (if you store it in the repo – you shouldn't)
+data/
+pgdata/
+
+# Publish profiles
+**/PublishProfiles/
+**/Properties/PublishProfiles/
+
+# Test coverage
+**/coverage/
+**/.nyc_output/
+
+# Misc
+*.swp
+*~
+*.orig
+*.bak
+# Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.csproj.user
+**/Properties/launchSettings.json
+
+# Build outputs
+**/bin/
+**/obj/
+**/out/
+**/dist/
+**/build/
+
+# Frontend (React + Vite)
+**/node_modules/
+**/.vite/
+**/dist-ssr/
+**/*.local
+**/.env.local
+**/.env.*.local
+
+# Backend (ASP.NET Core)
+**/Generated_Code/
+**/packages/
+**/TestResults/
+**/wwwroot/lib/
+
+# User secrets
+**/secrets.json
+
+# OS generated files
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Cache files (from your list)
+CodeChunks.db*
+SemanticSymbols.db*
+.dtbcache.v2
+.futdcache.v2
+DocumentLayout*.json
+ProjectEvaluation/
+*.metadata.v9.bin
+*.projects.v9.bin
+*.strings.v9.bin
+*.vsixd
+
+# CopilotIndices
+CopilotIndices/
+
+# DesignTimeBuild
+DesignTimeBuild/
+FileContentIndex/
+
+# Git internal files (should already be ignored)
+.git/
