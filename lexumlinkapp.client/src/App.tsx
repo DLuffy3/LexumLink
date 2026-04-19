@@ -16,6 +16,7 @@ import CreateUser from './pages/CreateUser';
 import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import NewCase from './pages/NewCase';
 import NewClaim from './pages/NewClaim';
+import SuperAdminTickets from './pages/SuperAdminTickets';
 import './App.css';
 
 function App() {
@@ -107,6 +108,13 @@ function App() {
                             <OrganizationGuard>
                                 <NewClaim />
                             </OrganizationGuard>
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/admin/tickets" element={
+                        <ProtectedRoute>
+                            <SuperAdminGuard>
+                                <SuperAdminTickets />
+                            </SuperAdminGuard>
                         </ProtectedRoute>
                     } />
                     <Route path="*" element={<Navigate to="/" replace />} />

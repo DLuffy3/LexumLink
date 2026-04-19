@@ -22,6 +22,7 @@ export default function Cases() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         if (activeOrganization) {
@@ -54,6 +55,12 @@ export default function Cases() {
         };
         return colors[status] || 'bg-gray-100 text-gray-800';
     };
+
+    // Filter cases based on client name or case number
+    const filteredCases = cases.filter(caseItem =>
+        caseItem.caseNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (caseItem.clientName && caseItem.clientName.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
 
     if (loading) {
         return (
@@ -115,11 +122,20 @@ export default function Cases() {
                         transition={{ duration: 0.5 }}
                         className="w-full"
                     >
-                        <div className="flex justify-between items-center mb-6">
+                        <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
                             <h1 className="text-2xl font-bold text-gray-800">Cases</h1>
-                            <Link to="/cases/new" className="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-800">
-                                Add Case
-                            </Link>
+                            <div className="flex gap-4">
+                                <input
+                                    type="text"
+                                    placeholder="Search by client or case number..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="border rounded px-3 py-2 w-64"
+                                />
+                                <Link to="/cases/new" className="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-800">
+                                    Add Case
+                                </Link>
+                            </div>
                         </div>
                         <div className="bg-white rounded-lg shadow overflow-hidden">
                             <table className="min-w-full divide-y divide-gray-200">
@@ -133,14 +149,14 @@ export default function Cases() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {cases.length === 0 ? (
+                                    {filteredCases.length === 0 ? (
                                         <tr>
                                             <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                                                No cases found. Click "Add Case" to create one.
+                                                {searchQuery ? 'No cases match your search.' : 'No cases found. Click "Add Case" to create one.'}
                                             </td>
                                         </tr>
                                     ) : (
-                                        cases.map((caseItem) => (
+                                        filteredCases.map((caseItem) => (
                                             <tr key={caseItem.id}>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <Link to={`/cases/${caseItem.id}`} className="text-red-700 hover:underline">

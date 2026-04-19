@@ -23,6 +23,7 @@ export default function Claims() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         if (activeOrganization) fetchClaims();
@@ -51,6 +52,12 @@ export default function Claims() {
         return colors[status] || 'bg-gray-100 text-gray-800';
     };
 
+    // Filter claims by client name or claim number
+    const filteredClaims = claims.filter(claim =>
+        (claim.clientName && claim.clientName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        claim.claimNumber.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     if (loading) return <div className="p-6">Loading claims...</div>;
     if (error) return <div className="p-6 text-red-600">{error}</div>;
 
@@ -74,11 +81,20 @@ export default function Claims() {
                         transition={{ duration: 0.5 }}
                         className="w-full"
                     >
-                        <div className="flex justify-between items-center mb-6">
+                        <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
                             <h1 className="text-2xl font-bold text-gray-800">RAF Claims</h1>
-                            <Link to="/claims/new" className="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-800">
-                                Add Claim
-                            </Link>
+                            <div className="flex gap-4">
+                                <input
+                                    type="text"
+                                    placeholder="Search by client or claim #..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="border rounded px-3 py-2 w-64"
+                                />
+                                <Link to="/claims/new" className="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-800">
+                                    Add Claim
+                                </Link>
+                            </div>
                         </div>
                         <div className="bg-white rounded-lg shadow overflow-hidden">
                             <table className="min-w-full divide-y divide-gray-200">
@@ -93,35 +109,40 @@ export default function Claims() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {claims.map((claim) => (
-                                        <tr key={claim.id}>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <Link to={`/claims/${claim.id}`} className="text-red-700 hover:underline">
-                                                    {claim.claimNumber}
-                                                </Link>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{claim.clientName || claim.clientId}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{claim.rafReference}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                R {claim.amountRequested?.toLocaleString()}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadge(claim.status)}`}>
-                                                    {claim.status.replace('_', ' ')}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <Link to={`/claims/${claim.id}/edit`} className="text-indigo-600 hover:text-indigo-900 mr-3">
-                                                    Edit
-                                                </Link>
+                                    {filteredClaims.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                                                {searchQuery ? 'No claims match your search.' : 'No claims found. Click "Add Claim" to create one.'}
                                             </td>
                                         </tr>
-                                    ))}
+                                    ) : (
+                                        filteredClaims.map((claim) => (
+                                            <tr key={claim.id}>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <Link to={`/claims/${claim.id}`} className="text-red-700 hover:underline">
+                                                        {claim.claimNumber}
+                                                    </Link>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">{claim.clientName || claim.clientId}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap">{claim.rafReference}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    R {claim.amountRequested?.toLocaleString()}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadge(claim.status)}`}>
+                                                        {claim.status.replace('_', ' ')}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <Link to={`/claims/${claim.id}/edit`} className="text-indigo-600 hover:text-indigo-900 mr-3">
+                                                        Edit
+                                                    </Link>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
                                 </tbody>
                             </table>
-                            {claims.length === 0 && (
-                                <div className="p-6 text-center text-gray-500">No claims found. Click "Add Claim" to create one.</div>
-                            )}
                         </div>
                     </motion.div>
                 </main>

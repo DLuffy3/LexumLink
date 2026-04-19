@@ -27,6 +27,7 @@ export default function Clients() {
     const [loading, setLoading] = useState(true);
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -92,6 +93,11 @@ export default function Clients() {
         }
     };
 
+    const filteredClients = clients.filter(client =>
+        client.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        client.lastName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     if (loading) return <div className="p-6">Loading clients...</div>;
 
     return (
@@ -121,13 +127,22 @@ export default function Clients() {
                     >
                         <div className="flex justify-between items-center mb-6">
                             <h1 className="text-2xl font-bold text-gray-800">Clients</h1>
-                            <button
-                                onClick={() => setIsModalOpen(true)}
-                                disabled={!activeOrganization}
-                                className={`bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-800 ${!activeOrganization ? 'opacity-50 cursor-not-allowed' : ''}`}
-                            >
-                                Add Client
-                            </button>
+                            <div className="flex gap-4">
+                                <input
+                                    type="text"
+                                    placeholder="Search by name..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="border rounded px-3 py-2 w-64"
+                                />
+                                <button
+                                    onClick={() => setIsModalOpen(true)}
+                                    disabled={!activeOrganization}
+                                    className={`bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-800 ${!activeOrganization ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                >
+                                    Add Client
+                                </button>
+                            </div>
                         </div>
 
                         {error && !isModalOpen && (
@@ -147,7 +162,7 @@ export default function Clients() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {clients.map(client => (
+                                    {filteredClients.map(client => (  
                                         <tr key={client.id}>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <Link to={`/clients/${client.id}`} className="text-red-700 hover:underline">
@@ -165,8 +180,10 @@ export default function Clients() {
                                     ))}
                                 </tbody>
                             </table>
-                            {clients.length === 0 && (
-                                <div className="p-6 text-center text-gray-500">No clients found. Click "Add Client" to create one.</div>
+                            {filteredClients.length === 0 && (
+                                <div className="p-6 text-center text-gray-500">
+                                    {searchQuery ? 'No clients match your search.' : 'No clients found. Click "Add Client" to create one.'}
+                                </div>
                             )}
                         </div>
                     </motion.div>

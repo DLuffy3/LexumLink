@@ -22,18 +22,23 @@ namespace LexumLinkApp.Server.Services
                 new Claim("firstName", user.FirstName ?? ""),
                 new Claim("lastName", user.LastName ?? "")
             };
+
+            claims.Add(new Claim("isSuperAdmin", user.IsSuperAdmin.ToString().ToLower()));
+
             if (organizationId.HasValue)
             {
                 claims.Add(new Claim("orgId", organizationId.Value.ToString()));
                 if (!string.IsNullOrEmpty(role))
                     claims.Add(new Claim("role", role));
             }
+
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddDays(7),
                 signingCredentials: creds);
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
