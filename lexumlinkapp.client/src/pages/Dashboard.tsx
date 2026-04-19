@@ -1,120 +1,236 @@
-import { useState } from 'react';
-import { useAuth } from '../context/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import Sidebar from '../components/Sidebar';
 import { motion } from 'framer-motion';
+import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import api from '../services/api';
+import { useAuth } from '../context/useAuth';
 
-const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6', current: true },
-    { name: 'Clients', href: '/clients', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z', current: false },
-    { name: 'Cases', href: '/cases', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', current: false },
-    { name: 'Claims', href: '/claims', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', current: false },
-    { name: 'Documents', href: '/documents', icon: 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4', current: false },
-    { name: 'Settings', href: '/settings', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z', current: false },
-];
+const COLORS = ['#10b981', '#f59e0b', '#ef4444'];
+
+interface Case {
+    id: string;
+    status: string;
+}
+
+interface Claim {
+    id: string;
+    status: string;
+}
+
+interface Stats {
+    activeCases: number;
+    pendingDocs: number;
+    rafClaims: number;
+    claimsByStatus: {
+        completed: number;
+        inProgress: number;
+        critical: number;
+    };
+}
 
 export default function Dashboard() {
-    const { user, activeOrganization, signOut } = useAuth();
-    const navigate = useNavigate();
+    const { activeOrganization } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [stats, setStats] = useState<Stats>({
+        activeCases: 0,
+        pendingDocs: 0,
+        rafClaims: 0,
+        claimsByStatus: { completed: 0, inProgress: 0, critical: 0 },
+    });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
-    const handleSignOut = () => {
-        signOut();
-        navigate('/signin');
+    useEffect(() => {
+        if (activeOrganization) fetchDashboardData();
+    }, [activeOrganization]);
+
+    const fetchDashboardData = async () => {
+        setLoading(true);
+        setError('');
+        try {
+            // Fetch cases
+            let cases: Case[] = [];
+            try {
+                const casesRes = await api.get('/cases');
+                cases = casesRes.data;
+            } catch (err) {
+                console.warn('Failed to fetch cases', err);
+            }
+            const activeCasesCount = cases.filter(c => c.status !== 'closed').length;
+
+            // Fetch claims
+            let claims: Claim[] = [];
+            try {
+                const claimsRes = await api.get('/claims');
+                claims = claimsRes.data;
+            } catch (err) {
+                console.warn('Failed to fetch claims', err);
+            }
+            const rafClaimsCount = claims.length;
+            const claimsByStatus = {
+                completed: claims.filter(c => c.status === 'completed').length,
+                inProgress: claims.filter(c => c.status === 'in_progress').length,
+                critical: claims.filter(c => c.status === 'critical').length,
+            };
+
+            // For pending documents, we might not have an endpoint. Set to 0 or fetch if available.
+            let pendingDocsCount = 0;
+            try {
+                const docsRes = await api.get('/documents');
+                // If documents have a status field, filter. Otherwise, count all.
+                pendingDocsCount = docsRes.data.length;
+            } catch (err) {
+                console.warn('Failed to fetch documents', err);
+            }
+
+            setStats({
+                activeCases: activeCasesCount,
+                pendingDocs: pendingDocsCount,
+                rafClaims: rafClaimsCount,
+                claimsByStatus,
+            });
+        } catch (error) {
+            console.error('Failed to fetch dashboard stats', error);
+            setError('Unable to load dashboard data. Please refresh.');
+        } finally {
+            setLoading(false);
+        }
     };
+
+    const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
+    const pieData = [
+        { name: 'Completed', value: stats.claimsByStatus.completed },
+        { name: 'In Progress', value: stats.claimsByStatus.inProgress },
+        { name: 'Critical', value: stats.claimsByStatus.critical },
+    ].filter(item => item.value > 0);
 
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Sidebar */}
-            <motion.aside
-                initial={{ x: -280 }}
-                animate={{ x: sidebarOpen ? 0 : -280 }}
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
-                className="fixed top-0 left-0 z-40 w-64 h-screen bg-white border-r border-gray-200 shadow-lg"
-            >
-                <div className="flex flex-col h-full">
-                    <div className="flex items-center justify-between p-4 border-b">
-                        <h2 className="text-xl font-bold text-red-700">LexumLink</h2>
-                        <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-gray-500 hover:text-gray-700">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
-                    <div className="flex-1 overflow-y-auto py-4">
-                        <nav className="px-2 space-y-1">
-                            {navigation.map((item) => (
-                                <a
-                                    key={item.name}
-                                    href={item.href}
-                                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${item.current
-                                            ? 'bg-red-100 text-red-700'
-                                            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                                        }`}
-                                >
-                                    <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
-                                    </svg>
-                                    {item.name}
-                                </a>
-                            ))}
-                        </nav>
-                    </div>
-                    <div className="p-4 border-t">
-                        <div className="flex items-center">
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900 truncate">{user?.firstName} {user?.lastName}</p>
-                                <p className="text-xs text-gray-500 truncate">{activeOrganization?.name}</p>
-                            </div>
-                            <button onClick={handleSignOut} className="ml-2 text-red-600 hover:text-red-800">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
+            <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+
+            <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
+                <div className="fixed top-4 left-4 z-30">
+                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-white shadow-md text-gray-500 hover:text-gray-700 focus:outline-none">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
                 </div>
-            </motion.aside>
 
-            {/* Mobile header / toggle */}
-            <div className="lg:hidden fixed top-0 left-0 z-30 w-full bg-white border-b shadow-sm px-4 py-2 flex items-center">
-                <button onClick={() => setSidebarOpen(true)} className="text-gray-500">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-                <span className="ml-2 text-lg font-semibold text-red-700">LexumLink</span>
-            </div>
-
-            {/* Main content */}
-            <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'} pt-16 lg:pt-0`}>
-                <main className="p-6">
+                <main className="p-6 pt-16">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="max-w-7xl mx-auto"
+                        className="w-full"
                     >
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                            <div className="bg-white rounded-lg shadow p-6 border-l-4 border-red-500 hover:shadow-md transition-all">
-                                <div className="flex items-center">
-                                    <div className="p-2 bg-red-100 rounded-full">
-                                        <svg className="w-6 h-6 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
+                        {loading ? (
+                            <div className="flex justify-center items-center h-64">
+                                <div className="text-gray-500">Loading dashboard data...</div>
+                            </div>
+                        ) : error ? (
+                            <div className="bg-red-100 text-red-700 p-4 rounded">{error}</div>
+                        ) : (
+                            <>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                                    <div className="bg-white rounded-lg shadow p-6 border-l-4 border-red-500 hover:shadow-md transition-all">
+                                        <div className="flex items-center">
+                                            <div className="p-2 bg-red-100 rounded-full">
+                                                <svg className="w-6 h-6 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                            </div>
+                                            <div className="ml-3">
+                                                <p className="text-sm text-gray-500">Active Cases</p>
+                                                <p className="text-2xl font-bold text-gray-800">{stats.activeCases}</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="ml-3">
-                                        <p className="text-sm text-gray-500">Active Cases</p>
-                                        <p className="text-2xl font-bold text-gray-800">12</p>
+                                    <div className="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500 hover:shadow-md transition-all">
+                                        <div className="flex items-center">
+                                            <div className="p-2 bg-yellow-100 rounded-full">
+                                                <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                            </div>
+                                            <div className="ml-3">
+                                                <p className="text-sm text-gray-500">Total Documents</p>
+                                                <p className="text-2xl font-bold text-gray-800">{stats.pendingDocs}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500 hover:shadow-md transition-all">
+                                        <div className="flex items-center">
+                                            <div className="p-2 bg-blue-100 rounded-full">
+                                                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                                </svg>
+                                            </div>
+                                            <div className="ml-3">
+                                                <p className="text-sm text-gray-500">RAF Claims</p>
+                                                <p className="text-2xl font-bold text-gray-800">{stats.rafClaims}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            {/* More stat cards... */}
-                        </div>
 
-                        <div className="bg-white rounded-lg shadow p-6">
-                            <h3 className="text-lg font-medium text-gray-800 mb-4">Recent Activity</h3>
-                            <p className="text-gray-500">No recent activity yet.</p>
-                        </div>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                                    <div className="bg-white rounded-lg shadow p-6">
+                                        <h3 className="text-lg font-medium text-gray-800 mb-4">Claims Status</h3>
+                                        {pieData.length > 0 ? (
+                                            <div className="flex justify-center">
+                                                {/* @ts-expect-error - recharts types incompatible with React 19 */}
+                                                <PieChart width={300} height={300}>
+                                                    {/* @ts-expect-error - recharts types incompatible with React 19 */}
+                                                    <Pie
+                                                        data={pieData}
+                                                        cx="50%"
+                                                        cy="50%"
+                                                        labelLine={false}
+                                                        label={({ name, percent }) => `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`}
+                                                        outerRadius={80}
+                                                        fill="#8884d8"
+                                                        dataKey="value"
+                                                    >
+                                                        {pieData.map((_entry, index) => (
+                                                            /* @ts-expect-error - recharts types incompatible with React 19 */
+                                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                        ))}
+                                                    </Pie>
+                                                    <Tooltip />
+                                                    {/* @ts-expect-error - recharts types incompatible with React 19 */}
+                                                    <Legend />
+                                                </PieChart>
+                                            </div>
+                                        ) : (
+                                            <div className="text-center text-gray-500">No claim data available</div>
+                                        )}
+                                    </div>
+
+                                    <div className="bg-white rounded-lg shadow p-6">
+                                        <h3 className="text-lg font-medium text-gray-800 mb-4">Calendar</h3>
+                                        <Calendar
+                                            onChange={(value) => setSelectedDate(value as Date)}
+                                            value={selectedDate}
+                                            className="rounded-md border-0"
+                                        />
+                                        <div className="mt-4">
+                                            <h4 className="font-medium text-gray-700">Upcoming / Scheduled</h4>
+                                            <p className="text-sm text-gray-500">No upcoming tasks</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white rounded-lg shadow p-6">
+                                    <h3 className="text-lg font-medium text-gray-800 mb-4">Recent Activity</h3>
+                                    <p className="text-gray-500">No recent activity</p>
+                                </div>
+                            </>
+                        )}
                     </motion.div>
                 </main>
             </div>

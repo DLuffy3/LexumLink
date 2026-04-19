@@ -12,7 +12,6 @@ namespace LexumLinkApp.Server.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<User> Users { get; set; } = new List<User>();
-        public ICollection<OrganizationMembership> Memberships { get; set; } = new List<OrganizationMembership>();
         public ICollection<Client> Clients { get; set; } = new List<Client>();
         public ICollection<Case> Cases { get; set; } = new List<Case>();
         public ICollection<ClientClaim> Claims { get; set; } = new List<ClientClaim>();

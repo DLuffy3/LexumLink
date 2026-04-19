@@ -9,11 +9,11 @@ namespace LexumLinkApp.Server.Models
         public Guid OrganizationId { get; set; }
         public Guid ClientId { get; set; }
         public string CaseNumber { get; set; } = string.Empty;
-        public string Status { get; set; } = "open"; // open, in_progress, closed, critical
+        public string Status { get; set; } = "open";
         public DateTime? IncidentDate { get; set; }
         public string? Description { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         public Organization Organization { get; set; } = null!;
         public Client Client { get; set; } = null!;

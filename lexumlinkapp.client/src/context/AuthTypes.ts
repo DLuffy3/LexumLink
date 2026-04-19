@@ -3,6 +3,7 @@ export interface User {
     email: string;
     firstName: string;
     lastName: string;
+    isSuperAdmin: boolean;
 }
 
 export interface Organization {
@@ -13,12 +14,11 @@ export interface Organization {
 
 export interface AuthContextType {
     user: User | null;
-    organizations: Organization[];
     activeOrganization: Organization | null;
     loading: boolean;
-    signIn: (email: string, password: string) => Promise<void>;
-    signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
+    hasOrganization: boolean;
+    isSuperAdmin: boolean;
+    signIn: (email: string, password: string) => Promise<{ user: User; organization: Organization | null; hasOrganization: boolean }>;
     signOut: () => void;
     createOrganization: (name: string) => Promise<void>;
-    switchOrganization: (orgId: string) => Promise<void>;
 }
