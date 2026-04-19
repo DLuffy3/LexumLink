@@ -1,8 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/useAuth';
 import Sidebar from '../components/Sidebar';
 import { motion } from 'framer-motion';
 import api from '../services/api';
+
+interface Ticket {
+    id: string;
+    title: string;
+    description: string;
+    type: string;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+}
 
 export default function Settings() {
     const { user, activeOrganization } = useAuth();
@@ -12,6 +22,24 @@ export default function Settings() {
     const [ticketType, setTicketType] = useState<'bug' | 'feature'>('bug');
     const [submitting, setSubmitting] = useState(false);
     const [message, setMessage] = useState('');
+    const [myTickets, setMyTickets] = useState<Ticket[]>([]);
+    const [loadingTickets, setLoadingTickets] = useState(false);
+
+    useEffect(() => {
+        fetchMyTickets();
+    }, []);
+
+    const fetchMyTickets = async () => {
+        setLoadingTickets(true);
+        try {
+            const res = await api.get('/tickets');
+            setMyTickets(res.data);
+        } catch (err) {
+            console.error('Failed to fetch tickets', err);
+        } finally {
+            setLoadingTickets(false);
+        }
+    };
 
     const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
@@ -32,6 +60,7 @@ export default function Settings() {
             setMessage('Ticket submitted successfully. Thank you!');
             setTicketTitle('');
             setTicketDescription('');
+            fetchMyTickets();
         } catch (err) {
             console.error(err);
             setMessage('Failed to submit ticket. Please try again later.');
@@ -40,18 +69,23 @@ export default function Settings() {
         }
     };
 
+    const getStatusBadge = (status: string) => {
+        const colors: Record<string, string> = {
+            new: 'bg-blue-100 text-blue-800',
+            active: 'bg-yellow-100 text-yellow-800',
+            critical: 'bg-red-100 text-red-800',
+            complete: 'bg-green-100 text-green-800',
+        };
+        return colors[status] || 'bg-gray-100 text-gray-800';
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
             <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
-            {/* Main content */}
-            <div>
-                {/* Top toggle button */}
+            <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
                 <div className="fixed top-4 left-4 z-30">
-                    <button
-                        onClick={toggleSidebar}
-                        className="p-2 rounded-md bg-white shadow-md text-gray-500 hover:text-gray-700 focus:outline-none"
-                    >
+                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-white shadow-md text-gray-500 hover:text-gray-700">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -90,26 +124,50 @@ export default function Settings() {
                             </div>
                         </div>
 
-                        {/* Organization Section */}
+                        {/* My Tickets Section */}
                         <div className="bg-white rounded-lg shadow p-6 mb-6">
-                            <h2 className="text-lg font-semibold text-gray-800 mb-4">Organization Settings</h2>
-                            <div className="space-y-3">
-                                <p className="text-sm text-gray-600">
-                                    <span className="font-medium">Role:</span> {activeOrganization?.role || 'Member'}
-                                </p>
-                                <p className="text-sm text-gray-600">
-                                    <span className="font-medium">Organization ID:</span> {activeOrganization?.id}
-                                </p>
-                                <button
-                                    onClick={() => alert('Coming soon: Invite team members')}
-                                    className="mt-2 bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
-                                >
-                                    Invite Team Members
-                                </button>
-                            </div>
+                            <h2 className="text-lg font-semibold text-gray-800 mb-4">My Tickets</h2>
+                            {loadingTickets ? (
+                                <p className="text-gray-500">Loading tickets...</p>
+                            ) : (
+                                <div className="overflow-x-auto">
+                                    <table className="min-w-full divide-y divide-gray-200">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-200">
+                                            {myTickets.length === 0 ? (
+                                                <tr>
+                                                    <td colSpan={4} className="px-4 py-3 text-center text-gray-500">
+                                                        No tickets submitted yet.
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                                myTickets.map(ticket => (
+                                                    <tr key={ticket.id}>
+                                                        <td className="px-4 py-3 text-sm text-gray-900">{ticket.title}</td>
+                                                        <td className="px-4 py-3 text-sm capitalize">{ticket.type}</td>
+                                                        <td className="px-4 py-3">
+                                                            <span className={`px-2 py-1 text-xs rounded-full ${getStatusBadge(ticket.status)}`}>
+                                                                {ticket.status}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-4 py-3 text-sm text-gray-500">{new Date(ticket.createdAt).toLocaleDateString()}</td>
+                                                    </tr>
+                                                ))
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
                         </div>
 
-                        {/* Support / Ticket Section */}
+                        {/* Submit Ticket Section */}
                         <div className="bg-white rounded-lg shadow p-6">
                             <h2 className="text-lg font-semibold text-gray-800 mb-4">Report a Bug or Request a Feature</h2>
                             {message && (
@@ -144,9 +202,7 @@ export default function Settings() {
                                     </div>
                                 </div>
                                 <div className="mb-4">
-                                    <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Title *
-                                    </label>
+                                    <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
                                     <input
                                         type="text"
                                         id="title"
@@ -157,9 +213,7 @@ export default function Settings() {
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Description
-                                    </label>
+                                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                                     <textarea
                                         id="description"
                                         rows={4}

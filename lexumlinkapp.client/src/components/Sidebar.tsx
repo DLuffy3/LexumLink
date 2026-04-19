@@ -62,6 +62,18 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                         })}
                     </nav>
                 </div>
+                {user?.isSuperAdmin && (
+                    <Link
+                        to="/admin/tickets"
+                        className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${location.pathname === '/admin/tickets' ? 'bg-red-100 text-red-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                            }`}
+                    >
+                        <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z" />
+                        </svg>
+                        Tickets
+                    </Link>
+                )}
                 <div className="p-4 border-t">
                     <div className="flex items-center">
                         <div className="flex-1 min-w-0">

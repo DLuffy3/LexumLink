@@ -58,6 +58,7 @@ Thumbs.db
 data/
 pgdata/
 migrations/
+wwwroot/
 
 # Publish profiles
 **/PublishProfiles/
