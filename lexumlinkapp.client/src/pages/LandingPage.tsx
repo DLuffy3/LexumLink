@@ -16,7 +16,6 @@ export default function LandingPage() {
                     </motion.h1>
                     <div className="space-x-4">
                         <Link to="/signin" className="text-gray-600 hover:text-red-700 transition-colors duration-200">Sign In</Link>
-                        <Link to="/signup" className="bg-red-700 text-white px-5 py-2 rounded-full hover:bg-red-800 transition-all duration-200 shadow-md hover:shadow-lg">Sign Up</Link>
                     </div>
                 </div>
             </nav>

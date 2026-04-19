@@ -57,6 +57,7 @@ Thumbs.db
 # Local PostgreSQL data (if you store it in the repo – you shouldn't)
 data/
 pgdata/
+migrations/
 
 # Publish profiles
 **/PublishProfiles/

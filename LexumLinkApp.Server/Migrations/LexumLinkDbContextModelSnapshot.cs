@@ -98,6 +98,9 @@ namespace LexumLinkApp.Server.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrganizationId");
@@ -219,28 +222,6 @@ namespace LexumLinkApp.Server.Migrations
                     b.ToTable("Organizations");
                 });
 
-            modelBuilder.Entity("LexumLinkApp.Server.Models.OrganizationMembership", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("OrganizationId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("JoinedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("UserId", "OrganizationId");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.ToTable("OrganizationMemberships");
-                });
-
             modelBuilder.Entity("LexumLinkApp.Server.Models.Ticket", b =>
                 {
                     b.Property<Guid>("Id")
@@ -299,6 +280,9 @@ namespace LexumLinkApp.Server.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsSuperAdmin")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -397,25 +381,6 @@ namespace LexumLinkApp.Server.Migrations
                     b.Navigation("Uploader");
                 });
 
-            modelBuilder.Entity("LexumLinkApp.Server.Models.OrganizationMembership", b =>
-                {
-                    b.HasOne("LexumLinkApp.Server.Models.Organization", "Organization")
-                        .WithMany("Memberships")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LexumLinkApp.Server.Models.User", "User")
-                        .WithMany("OrganizationMemberships")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Organization");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("LexumLinkApp.Server.Models.Ticket", b =>
                 {
                     b.HasOne("LexumLinkApp.Server.Models.Organization", "Organization")
@@ -437,7 +402,8 @@ namespace LexumLinkApp.Server.Migrations
                 {
                     b.HasOne("LexumLinkApp.Server.Models.Organization", "Organization")
                         .WithMany("Users")
-                        .HasForeignKey("OrganizationId");
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Organization");
                 });
@@ -466,8 +432,6 @@ namespace LexumLinkApp.Server.Migrations
 
                     b.Navigation("Documents");
 
-                    b.Navigation("Memberships");
-
                     b.Navigation("Tickets");
 
                     b.Navigation("Users");
@@ -475,8 +439,6 @@ namespace LexumLinkApp.Server.Migrations
 
             modelBuilder.Entity("LexumLinkApp.Server.Models.User", b =>
                 {
-                    b.Navigation("OrganizationMemberships");
-
                     b.Navigation("Tickets");
 
                     b.Navigation("UploadedDocuments");

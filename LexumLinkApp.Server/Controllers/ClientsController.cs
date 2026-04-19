@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LexumLinkApp.Server.Data;
 using LexumLinkApp.Server.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace LexumLinkApp.Server.Controllers
 {
@@ -32,12 +34,31 @@ namespace LexumLinkApp.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateClient([FromBody] Client client)
+        [Authorize]
+        public async Task<IActionResult> CreateClient([FromBody] ClientRequest request)
         {
-            client.Id = Guid.NewGuid();
-            client.OrganizationId = GetOrganizationId();
-            client.CreatedAt = DateTime.UtcNow;
-            client.UpdatedAt = DateTime.UtcNow;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!Guid.TryParse(userIdClaim, out var userId))
+                return Unauthorized("Invalid user token");
+
+            var orgIdClaim = User.FindFirst("orgId")?.Value;
+            if (!Guid.TryParse(orgIdClaim, out var orgId))
+                return BadRequest("No active organization selected");
+
+            var client = new Client
+            {
+                Id = Guid.NewGuid(),
+                OrganizationId = orgId,
+                UserId = userId,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                Phone = request.Phone,
+                IdNumber = request.IdNumber,
+                Address = request.Address,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
 
             _context.Clients.Add(client);
             await _context.SaveChangesAsync();
