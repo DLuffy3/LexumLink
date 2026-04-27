@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-import Sidebar from '../components/Sidebar';
+import { useAuth } from '../context/useAuth';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import api from '../services/api';
-import { useAuth } from '../context/useAuth';
 import Spinner from '../components/Spinner';
+import Sidebar from '../components/Sidebar';
+import TodoList from '../components/TodoList';
 
 const COLORS = ['#10b981', '#f59e0b', '#ef4444'];
 
@@ -226,10 +227,8 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 </div>
-
-                                <div className="bg-white rounded-lg shadow p-6">
-                                    <h3 className="text-lg font-medium text-gray-800 mb-4">Recent Activity</h3>
-                                    <p className="text-gray-500">No recent activity</p>
+                                <div className="mt-8">
+                                    <TodoList />
                                 </div>
                             </>
                         )}
