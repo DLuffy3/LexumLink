@@ -4,6 +4,7 @@ import api from '../services/api';
 import { useAuth } from '../context/useAuth';
 import Sidebar from '../components/Sidebar';
 import { motion } from 'framer-motion';
+import Spinner from '../components/Spinner';
 
 interface Client {
     id: string;
@@ -98,7 +99,18 @@ export default function Clients() {
         client.lastName.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    if (loading) return <div className="p-6">Loading clients...</div>;
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+                <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
+                    <main className="p-6 pt-16">
+                        <Spinner />
+                    </main>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">

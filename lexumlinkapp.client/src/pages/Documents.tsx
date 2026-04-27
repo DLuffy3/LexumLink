@@ -3,6 +3,7 @@ import { useAuth } from '../context/useAuth';
 import Sidebar from '../components/Sidebar';
 import api from '../services/api';
 import { motion } from 'framer-motion';
+import Spinner from '../components/Spinner';
 
 interface Client {
     id: string;
@@ -181,7 +182,9 @@ export default function Documents() {
                         </div>
 
                         {loading ? (
-                            <div className="text-center py-10">Loading documents...</div>
+                            <div className="flex justify-center items-center h-64">
+                                <Spinner size={50} />
+                            </div>
                         ) : error ? (
                             <div className="text-red-600 py-10">{error}</div>
                         ) : filteredDocuments.length === 0 ? (

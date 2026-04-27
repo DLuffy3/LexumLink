@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import { AxiosError } from 'axios';
+import Spinner from '../components/Spinner';
 
 export default function SignIn() {
     const [email, setEmail] = useState('');
@@ -37,7 +38,11 @@ export default function SignIn() {
                 <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">Sign In</h2>
                 <p className="text-center text-gray-500 mb-6">Welcome back</p>
 
-                {error && (
+                { loading? (
+                    <div className = "flex items-center justify-center" >
+                        <Spinner size={24} color="#fff" />
+                    </div>
+                ) : error && (
                     <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-3 rounded mb-4">
                         {error}
                     </div>

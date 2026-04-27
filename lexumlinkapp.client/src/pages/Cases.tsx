@@ -4,6 +4,7 @@ import api from '../services/api';
 import { useAuth } from '../context/useAuth';
 import Sidebar from '../components/Sidebar';
 import { motion } from 'framer-motion';
+import Spinner from '../components/Spinner';
 
 interface Case {
     id: string;
@@ -67,15 +68,8 @@ export default function Cases() {
             <div className="min-h-screen bg-gray-50">
                 <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
                 <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
-                    <div className="fixed top-4 left-4 z-30">
-                        <button onClick={toggleSidebar} className="p-2 rounded-md bg-white shadow-md">
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        </button>
-                    </div>
                     <main className="p-6 pt-16">
-                        <div className="text-center">Loading cases...</div>
+                        <Spinner />
                     </main>
                 </div>
             </div>
