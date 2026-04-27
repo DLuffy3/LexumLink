@@ -3,14 +3,11 @@ import { AuthProvider } from './context/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { OrganizationGuard } from './components/OrganizationGuard';
 import { SuperAdminGuard } from './components/SuperAdminGaurd';
+import { Suspense, lazy } from 'react';
+import Spinner from './components/Spinner';
 import LandingPage from './pages/LandingPage';
 import SignIn from './pages/SignIn';
-import Dashboard from './pages/Dashboard';
-import Clients from './pages/Clients';
 import ClientDetail from './pages/ClientDetail';
-import Cases from './pages/Cases';
-import Claims from './pages/Claims';
-import Documents from './pages/Documents';
 import Settings from './pages/Settings';
 import CreateUser from './pages/CreateUser';
 import SuperAdminDashboard from './pages/SuperAdminDashboard';
@@ -20,6 +17,11 @@ import SuperAdminTickets from './pages/SuperAdminTickets';
 import './App.css';
 
 function App() {
+    const Dashboard = lazy(() => import('./pages/Dashboard'));
+    const Clients = lazy(() => import('./pages/Clients'));
+    const Cases = lazy(() => import('./pages/Cases'));
+    const Claims = lazy(() => import('./pages/Claims'));
+    const Documents = lazy(() => import('./pages/Documents'));
     return (
         <BrowserRouter>
             <AuthProvider>
@@ -27,18 +29,22 @@ function App() {
                     <Route path="/" element={<LandingPage />} />
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/dashboard" element={
-                        <ProtectedRoute>
+                        <Suspense fallback={<Spinner/>}>
+                          <ProtectedRoute>
                             <OrganizationGuard>
                                 <Dashboard />
                             </OrganizationGuard>
-                        </ProtectedRoute>
+                          </ProtectedRoute>
+                        </Suspense>
                     } />
                     <Route path="/clients" element={
-                        <ProtectedRoute>
-                            <OrganizationGuard>
-                                <Clients />
-                            </OrganizationGuard>
-                        </ProtectedRoute>
+                        <Suspense fallback={<Spinner />}>
+                            <ProtectedRoute>
+                                <OrganizationGuard>
+                                    <Clients />
+                                </OrganizationGuard>
+                            </ProtectedRoute>
+                        </Suspense>
                     } />
                     <Route path="/clients/:id" element={
                         <ProtectedRoute>
@@ -48,32 +54,31 @@ function App() {
                         </ProtectedRoute>
                     } />
                     <Route path="/cases" element={
-                        <ProtectedRoute>
-                            <OrganizationGuard>
-                                <Cases />
-                            </OrganizationGuard>
-                        </ProtectedRoute>
+                        <Suspense fallback={<Spinner />}>
+                            <ProtectedRoute>
+                                <OrganizationGuard>
+                                    <Cases />
+                                </OrganizationGuard>
+                            </ProtectedRoute>
+                        </Suspense>
                     } />
                     <Route path="/claims" element={
-                        <ProtectedRoute>
-                            <OrganizationGuard>
-                                <Claims />
-                            </OrganizationGuard>
-                        </ProtectedRoute>
+                        <Suspense fallback={<Spinner />}>
+                            <ProtectedRoute>
+                                <OrganizationGuard>
+                                    <Claims />
+                                </OrganizationGuard>
+                            </ProtectedRoute>
+                        </Suspense>
                     } />
                     <Route path="/documents" element={
-                        <ProtectedRoute>
-                            <OrganizationGuard>
-                                <Documents />
-                            </OrganizationGuard>
-                        </ProtectedRoute>
-                    } />
-                    <Route path="/documents" element={
-                        <ProtectedRoute>
-                            <OrganizationGuard>
-                                <Documents />
-                            </OrganizationGuard>
-                        </ProtectedRoute>
+                        <Suspense fallback={<Spinner />}>
+                            <ProtectedRoute>
+                                <OrganizationGuard>
+                                    <Documents />
+                                </OrganizationGuard>
+                            </ProtectedRoute>
+                        </Suspense>
                     } />
                     <Route path="/settings" element={
                         <ProtectedRoute>

@@ -6,6 +6,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import api from '../services/api';
 import { useAuth } from '../context/useAuth';
+import Spinner from '../components/Spinner';
 
 const COLORS = ['#10b981', '#f59e0b', '#ef4444'];
 
@@ -130,7 +131,7 @@ export default function Dashboard() {
                     >
                         {loading ? (
                             <div className="flex justify-center items-center h-64">
-                                <div className="text-gray-500">Loading dashboard data...</div>
+                                <Spinner size={50} />
                             </div>
                         ) : error ? (
                             <div className="bg-red-100 text-red-700 p-4 rounded">{error}</div>
@@ -182,17 +183,18 @@ export default function Dashboard() {
                                     <div className="bg-white rounded-lg shadow p-6">
                                         <h3 className="text-lg font-medium text-gray-800 mb-4">Claims Status</h3>
                                         {pieData.length > 0 ? (
-                                            <div className="flex justify-center">
+                                            <div className="flex justify-center w-full py-4">
                                                 {/* @ts-expect-error - recharts types incompatible with React 19 */}
-                                                <PieChart width={300} height={300}>
+                                                <PieChart width={280} height={280}>
                                                     {/* @ts-expect-error - recharts types incompatible with React 19 */}
                                                     <Pie
                                                         data={pieData}
                                                         cx="50%"
                                                         cy="50%"
+                                                        innerRadius={40} 
+                                                        outerRadius={90}
                                                         labelLine={false}
-                                                        label={({ name, percent }) => `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`}
-                                                        outerRadius={80}
+                                                        label={({ percent }) => `${((percent ?? 0) * 100).toFixed(0)}%`}
                                                         fill="#8884d8"
                                                         dataKey="value"
                                                     >
@@ -203,7 +205,7 @@ export default function Dashboard() {
                                                     </Pie>
                                                     <Tooltip />
                                                     {/* @ts-expect-error - recharts types incompatible with React 19 */}
-                                                    <Legend />
+                                                    <Legend verticalAlign="bottom" height={36} />
                                                 </PieChart>
                                             </div>
                                         ) : (
