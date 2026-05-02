@@ -14,6 +14,9 @@ import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import NewCase from './pages/NewCase';
 import NewClaim from './pages/NewClaim';
 import SuperAdminTickets from './pages/SuperAdminTickets';
+import EditClient from './pages/EditClient';
+import EditCase from './pages/EditCase';
+import EditClaim from './pages/EditClaim';
 import './App.css';
 
 function App() {
@@ -120,6 +123,27 @@ function App() {
                             <SuperAdminGuard>
                                 <SuperAdminTickets />
                             </SuperAdminGuard>
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/clients/:id/edit" element={
+                        <ProtectedRoute>
+                            <OrganizationGuard>
+                                <EditClient />
+                            </OrganizationGuard>
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/cases/:id/edit" element={
+                        <ProtectedRoute>
+                            <OrganizationGuard>
+                                <EditCase />
+                            </OrganizationGuard>
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/claims/:id/edit" element={
+                        <ProtectedRoute>
+                            <OrganizationGuard>
+                                <EditClaim />
+                            </OrganizationGuard>
                         </ProtectedRoute>
                     } />
                     <Route path="*" element={<Navigate to="/" replace />} />
