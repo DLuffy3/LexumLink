@@ -11,27 +11,8 @@ namespace LexumLinkApp.Server.Controllers
     {
         private readonly LexumLinkDbContext _context;
         public ClientsController(LexumLinkDbContext context) => _context = context;
-
-        [HttpGet]
-        public async Task<IActionResult> GetClients()
-        {
-            var orgId = GetOrganizationId();
-            var clients = await _context.Clients
-                .Where(c => c.OrganizationId == orgId)
-                .OrderBy(c => c.LastName)
-                .ToListAsync();
-            return Ok(clients);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetClient(Guid id)
-        {
-            var orgId = GetOrganizationId();
-            var client = await _context.Clients
-                .FirstOrDefaultAsync(c => c.Id == id && c.OrganizationId == orgId);
-            if (client == null) return NotFound();
-            return Ok(client);
-        }
+        
+        #region Create
 
         [HttpPost]
         [Authorize]
@@ -65,25 +46,57 @@ namespace LexumLinkApp.Server.Controllers
             return Ok(client);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateClient(Guid id, [FromBody] Client updated)
+        #endregion Create
+
+        #region Read
+
+        [HttpGet]
+        public async Task<IActionResult> GetClients()
         {
             var orgId = GetOrganizationId();
-            var existing = await _context.Clients
+            var clients = await _context.Clients
+                .Where(c => c.OrganizationId == orgId)
+                .OrderBy(c => c.LastName)
+                .ToListAsync();
+            return Ok(clients);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetClient(Guid id)
+        {
+            var orgId = GetOrganizationId();
+            var client = await _context.Clients
                 .FirstOrDefaultAsync(c => c.Id == id && c.OrganizationId == orgId);
+            if (client == null) return NotFound();
+            return Ok(client);
+        }
+
+        #endregion Read
+
+        #region Update
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateClient(Guid id, [FromBody] UpdateClientRequest request)
+        {
+            var orgId = GetOrganizationId();
+            var existing = await _context.Clients.FirstOrDefaultAsync(c => c.Id == id && c.OrganizationId == orgId);
             if (existing == null) return NotFound();
 
-            existing.FirstName = updated.FirstName;
-            existing.LastName = updated.LastName;
-            existing.Email = updated.Email;
-            existing.Phone = updated.Phone;
-            existing.IdNumber = updated.IdNumber;
-            existing.Address = updated.Address;
+            existing.FirstName = request.FirstName;
+            existing.LastName = request.LastName;
+            existing.Email = request.Email;
+            existing.Phone = request.Phone;
+            existing.IdNumber = request.IdNumber;
+            existing.Address = request.Address;
             existing.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return Ok(existing);
         }
+
+        #endregion Update
+
+        #region Delete
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteClient(Guid id)
@@ -97,5 +110,7 @@ namespace LexumLinkApp.Server.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+        #endregion Delete
     }
 }
