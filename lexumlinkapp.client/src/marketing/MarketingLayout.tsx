@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { T, Logo } from './ui';
+import ThemeToggle from '../components/ThemeToggle';
 
 const NAV = [
     { label: 'Home', to: '/' },
@@ -31,7 +32,7 @@ function Navbar() {
             className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
             style={
                 scrolled
-                    ? { background: 'rgba(8,7,15,0.82)', backdropFilter: 'blur(18px)', borderBottom: `1px solid ${T.border}` }
+                    ? { background: 'var(--nav-bg)', backdropFilter: 'blur(18px)', borderBottom: `1px solid ${T.border}` }
                     : { background: 'transparent' }
             }
         >
@@ -64,6 +65,7 @@ function Navbar() {
                 </div>
 
                 <div className="flex items-center gap-3">
+                    <ThemeToggle />
                     <Link
                         to="/signin"
                         className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold tracking-[0.1em] uppercase transition-colors duration-300"
@@ -92,7 +94,7 @@ function Navbar() {
             {open && (
                 <div
                     className="md:hidden px-6 py-6 flex flex-col gap-4 animate-fade-in-up"
-                    style={{ background: 'rgba(12,11,24,0.97)', backdropFilter: 'blur(18px)', borderBottom: `1px solid ${T.border}` }}
+                    style={{ background: 'var(--nav-menu-bg)', backdropFilter: 'blur(18px)', borderBottom: `1px solid ${T.border}` }}
                 >
                     {NAV.map((item) => (
                         <NavLink
@@ -105,9 +107,12 @@ function Navbar() {
                             {item.label}
                         </NavLink>
                     ))}
-                    <Link to="/signin" className="text-sm tracking-widest uppercase" style={{ color: T.text }}>
-                        Sign In →
-                    </Link>
+                    <div className="flex items-center gap-3 pt-2">
+                        <Link to="/signin" className="text-sm tracking-widest uppercase" style={{ color: T.text }}>
+                            Sign In →
+                        </Link>
+                        <ThemeToggle />
+                    </div>
                 </div>
             )}
         </nav>
@@ -179,7 +184,7 @@ function Footer() {
                                     <li key={l.label}>
                                         <Link
                                             to={l.to}
-                                            className="text-sm transition-colors duration-200 hover:text-white"
+                                            className="text-sm transition-colors duration-200 hover:text-[var(--text)]"
                                             style={{ color: T.faint }}
                                         >
                                             {l.label}

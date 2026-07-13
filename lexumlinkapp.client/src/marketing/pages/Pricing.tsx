@@ -143,7 +143,7 @@ export default function Pricing() {
                         <button
                             onClick={() => setAnnual((a) => !a)}
                             className="relative w-14 h-7 rounded-full transition-colors duration-300"
-                            style={{ background: annual ? T.violet : 'rgba(255,255,255,0.12)' }}
+                            style={{ background: annual ? T.violet : 'var(--overlay-strong)' }}
                             aria-label="Toggle annual billing"
                         >
                             <span className="absolute top-1 w-5 h-5 rounded-full bg-white transition-all duration-300" style={{ left: annual ? '2rem' : '0.25rem' }} />
@@ -180,7 +180,7 @@ export default function Pricing() {
                                 ))}
                             </div>
                             {COMPARE.map((row, i) => (
-                                <div key={row.label} className="grid grid-cols-4 px-6 py-4 items-center" style={{ background: i % 2 ? 'transparent' : 'rgba(255,255,255,0.015)', borderTop: `1px solid ${T.border}` }}>
+                                <div key={row.label} className="grid grid-cols-4 px-6 py-4 items-center" style={{ background: i % 2 ? 'transparent' : 'var(--overlay-weak)', borderTop: `1px solid ${T.border}` }}>
                                     <span className="text-sm" style={{ color: T.muted }}>{row.label}</span>
                                     {row.values.map((v, j) => (
                                         <span key={j} className="text-sm text-center" style={{ color: v === '✓' ? T.violetLight : v === '—' ? T.faint : T.text }}>{v}</span>

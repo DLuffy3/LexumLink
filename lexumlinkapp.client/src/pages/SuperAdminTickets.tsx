@@ -59,7 +59,7 @@ export default function SuperAdminTickets() {
             critical: 'bg-red-500/15 text-red-300',
             complete: 'bg-green-500/15 text-green-300',
         };
-        return colors[status] || 'bg-white/5 text-[#F3F2FA]';
+        return colors[status] || 'bg-[var(--overlay-weak)] text-[var(--text)]';
     };
 
     if (!user?.isSuperAdmin) {
@@ -67,12 +67,12 @@ export default function SuperAdminTickets() {
     }
 
     return (
-        <div className="min-h-screen bg-[#08070F] text-[#F3F2FA]">
+        <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
             <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
             <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
                 <div className="fixed top-4 left-4 z-30">
-                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[#12111F] border border-white/10 text-[#9E9CB8] hover:text-white">
+                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[var(--surface)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)]">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -81,36 +81,36 @@ export default function SuperAdminTickets() {
 
                 <main className="p-6 pt-16">
                     <div className="max-w-6xl mx-auto">
-                        <h1 className="text-2xl font-bold text-[#F3F2FA] mb-6">Ticket Management</h1>
+                        <h1 className="text-2xl font-bold text-[var(--text)] mb-6">Ticket Management</h1>
 
                         {loading ? (
                             <div className="text-center py-10">Loading tickets...</div>
                         ) : tickets.length === 0 ? (
-                            <div className="text-center text-[#9E9CB8] py-10">No tickets submitted yet.</div>
+                            <div className="text-center text-[var(--muted)] py-10">No tickets submitted yet.</div>
                         ) : (
-                            <div className="bg-[#12111F] rounded-lg shadow overflow-hidden">
-                                <table className="min-w-full divide-y divide-white/10">
-                                    <thead className="bg-white/5">
+                            <div className="bg-[var(--surface)] rounded-lg shadow overflow-hidden">
+                                <table className="min-w-full divide-y divide-[var(--border)]">
+                                    <thead className="bg-[var(--overlay-weak)]">
                                         <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase">Title</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase">Type</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase">Submitted By</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase">Organization</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase">Status</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase">Actions</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase">Title</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase">Type</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase">Submitted By</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase">Organization</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase">Status</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-white/10">
+                                    <tbody className="divide-y divide-[var(--border)]">
                                         {tickets.map(ticket => (
                                             <tr key={ticket.id}>
                                                 <td className="px-6 py-4">
-                                                    <div className="font-medium text-[#F3F2FA]">{ticket.title}</div>
-                                                    {ticket.description && <div className="text-sm text-[#9E9CB8] mt-1">{ticket.description}</div>}
+                                                    <div className="font-medium text-[var(--text)]">{ticket.title}</div>
+                                                    {ticket.description && <div className="text-sm text-[var(--muted)] mt-1">{ticket.description}</div>}
                                                 </td>
                                                 <td className="px-6 py-4 capitalize">{ticket.type}</td>
                                                 <td className="px-6 py-4">
                                                     {ticket.user ? `${ticket.user.firstName} ${ticket.user.lastName}` : 'Unknown'}
-                                                    <div className="text-xs text-[#9E9CB8]">{ticket.user?.email}</div>
+                                                    <div className="text-xs text-[var(--muted)]">{ticket.user?.email}</div>
                                                 </td>
                                                 <td className="px-6 py-4">{ticket.organization.name}</td>
                                                 <td className="px-6 py-4">
@@ -123,7 +123,7 @@ export default function SuperAdminTickets() {
                                                         value={ticket.status}
                                                         onChange={(e) => updateStatus(ticket.id, e.target.value)}
                                                         disabled={updatingId === ticket.id}
-                                                        className="bg-white/5 border border-white/10 text-[#F3F2FA] rounded px-2 py-1 text-sm"
+                                                        className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] rounded px-2 py-1 text-sm"
                                                     >
                                                         <option value="new">New</option>
                                                         <option value="active">Active</option>

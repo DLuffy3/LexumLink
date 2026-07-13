@@ -120,12 +120,12 @@ export default function Dashboard() {
     const totalClaims = pieData.reduce((sum, item) => sum + item.value, 0);
 
     return (
-        <div className="min-h-screen bg-[#08070F] text-[#F3F2FA]">
+        <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
             <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
             <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
                 <div className="fixed top-4 left-4 z-30">
-                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[#12111F] border border-white/10 text-[#9E9CB8] hover:text-white focus:outline-none">
+                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[var(--surface)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] focus:outline-none">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -148,20 +148,20 @@ export default function Dashboard() {
                         ) : (
                             <>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                                    <div className="bg-[#12111F] rounded-lg shadow p-6 border-l-4 border-[#8B7CF6] hover:shadow-md transition-all">
+                                    <div className="bg-[var(--surface)] rounded-lg shadow p-6 border-l-4 border-[#8B7CF6] hover:shadow-md transition-all">
                                         <div className="flex items-center">
                                             <div className="p-2 bg-[#8B7CF6]/15 rounded-full">
-                                                <svg className="w-6 h-6 text-[#A78BFA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg className="w-6 h-6 text-[var(--brand-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                 </svg>
                                             </div>
                                             <div className="ml-3">
-                                                <p className="text-sm text-[#9E9CB8]">Active Cases</p>
-                                                <p className="text-2xl font-bold text-[#F3F2FA]">{stats.activeCases}</p>
+                                                <p className="text-sm text-[var(--muted)]">Active Cases</p>
+                                                <p className="text-2xl font-bold text-[var(--text)]">{stats.activeCases}</p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="bg-[#12111F] rounded-lg shadow p-6 border-l-4 border-yellow-400 hover:shadow-md transition-all">
+                                    <div className="bg-[var(--surface)] rounded-lg shadow p-6 border-l-4 border-yellow-400 hover:shadow-md transition-all">
                                         <div className="flex items-center">
                                             <div className="p-2 bg-yellow-500/15 rounded-full">
                                                 <svg className="w-6 h-6 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,12 +169,12 @@ export default function Dashboard() {
                                                 </svg>
                                             </div>
                                             <div className="ml-3">
-                                                <p className="text-sm text-[#9E9CB8]">Total Documents</p>
-                                                <p className="text-2xl font-bold text-[#F3F2FA]">{stats.pendingDocs}</p>
+                                                <p className="text-sm text-[var(--muted)]">Total Documents</p>
+                                                <p className="text-2xl font-bold text-[var(--text)]">{stats.pendingDocs}</p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="bg-[#12111F] rounded-lg shadow p-6 border-l-4 border-blue-400 hover:shadow-md transition-all">
+                                    <div className="bg-[var(--surface)] rounded-lg shadow p-6 border-l-4 border-blue-400 hover:shadow-md transition-all">
                                         <div className="flex items-center">
                                             <div className="p-2 bg-blue-500/15 rounded-full">
                                                 <svg className="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,16 +182,16 @@ export default function Dashboard() {
                                                 </svg>
                                             </div>
                                             <div className="ml-3">
-                                                <p className="text-sm text-[#9E9CB8]">RAF Claims</p>
-                                                <p className="text-2xl font-bold text-[#F3F2FA]">{stats.rafClaims}</p>
+                                                <p className="text-sm text-[var(--muted)]">RAF Claims</p>
+                                                <p className="text-2xl font-bold text-[var(--text)]">{stats.rafClaims}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                                    <div className="bg-[#12111F] rounded-lg shadow p-6">
-                                        <h3 className="text-lg font-medium text-[#F3F2FA] mb-4">Claims Status</h3>
+                                    <div className="bg-[var(--surface)] rounded-lg shadow p-6">
+                                        <h3 className="text-lg font-medium text-[var(--text)] mb-4">Claims Status</h3>
                                         {pieData.length > 0 ? (
                                             <div className="flex flex-col items-center w-full py-2">
                                                 <div className="relative" style={{ width: 280, height: 240 }}>
@@ -227,8 +227,8 @@ export default function Dashboard() {
                                                         </Pie>
                                                     </PieChart>
                                                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                                        <span className="font-['Grifter'] text-4xl font-bold text-[#F3F2FA] leading-none">{totalClaims}</span>
-                                                        <span className="text-xs tracking-wide text-[#9E9CB8] mt-1">Total Claims</span>
+                                                        <span className="font-['Grifter'] text-4xl font-bold text-[var(--text)] leading-none">{totalClaims}</span>
+                                                        <span className="text-xs tracking-wide text-[var(--muted)] mt-1">Total Claims</span>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-5">
@@ -237,28 +237,28 @@ export default function Dashboard() {
                                                         return (
                                                             <div key={entry.name} className="flex items-center gap-2">
                                                                 <span className="w-2.5 h-2.5 rounded-full" style={{ background: `linear-gradient(135deg, ${from}, ${to})` }} />
-                                                                <span className="text-sm text-[#9E9CB8]">{entry.name}</span>
-                                                                <span className="text-sm font-semibold text-[#F3F2FA]">{entry.value}</span>
+                                                                <span className="text-sm text-[var(--muted)]">{entry.name}</span>
+                                                                <span className="text-sm font-semibold text-[var(--text)]">{entry.value}</span>
                                                             </div>
                                                         );
                                                     })}
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className="text-center text-[#9E9CB8]">No claim data available</div>
+                                            <div className="text-center text-[var(--muted)]">No claim data available</div>
                                         )}
                                     </div>
 
-                                    <div className="bg-[#12111F] rounded-lg shadow p-6">
-                                        <h3 className="text-lg font-medium text-[#F3F2FA] mb-4">Calendar</h3>
+                                    <div className="bg-[var(--surface)] rounded-lg shadow p-6">
+                                        <h3 className="text-lg font-medium text-[var(--text)] mb-4">Calendar</h3>
                                         <Calendar
                                             onChange={(value) => setSelectedDate(value as Date)}
                                             value={selectedDate}
                                             className="rounded-md border-0"
                                         />
                                         <div className="mt-4">
-                                            <h4 className="font-medium text-[#9E9CB8]">Upcoming / Scheduled</h4>
-                                            <p className="text-sm text-[#9E9CB8]">No upcoming tasks</p>
+                                            <h4 className="font-medium text-[var(--muted)]">Upcoming / Scheduled</h4>
+                                            <p className="text-sm text-[var(--muted)]">No upcoming tasks</p>
                                         </div>
                                     </div>
                                 </div>

@@ -12,7 +12,8 @@ body,
     flex-direction: column;
     min-height: 100vh;
     text-align: left;
-    background: #08070F;
+    background: var(--bg);
+    color: var(--text);
 }
 
 th, td {

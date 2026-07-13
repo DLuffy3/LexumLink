@@ -101,7 +101,7 @@ export default function Clients() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#08070F] text-[#F3F2FA]">
+            <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
                 <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
                 <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
                     <main className="p-6 pt-16">
@@ -113,7 +113,7 @@ export default function Clients() {
     }
 
     return (
-        <div className="min-h-screen bg-[#08070F] text-[#F3F2FA]">
+        <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
             <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
             {/* Main content */}
@@ -122,7 +122,7 @@ export default function Clients() {
                 <div className="fixed top-4 left-4 z-30">
                     <button
                         onClick={toggleSidebar}
-                        className="p-2 rounded-md bg-[#12111F] border border-white/10 text-[#9E9CB8] hover:text-white focus:outline-none"
+                        className="p-2 rounded-md bg-[var(--surface)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] focus:outline-none"
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -138,14 +138,14 @@ export default function Clients() {
                         className="w-full"
                     >
                         <div className="flex justify-between items-center mb-6">
-                            <h1 className="text-2xl font-bold text-[#F3F2FA]">Clients</h1>
+                            <h1 className="text-2xl font-bold text-[var(--text)]">Clients</h1>
                             <div className="flex gap-4">
                                 <input
                                     type="text"
                                     placeholder="Search by name..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded px-3 py-2 w-64 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded px-3 py-2 w-64 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                 />
                                 <button
                                     onClick={() => setIsModalOpen(true)}
@@ -163,28 +163,28 @@ export default function Clients() {
                             </div>
                         )}
 
-                        <div className="bg-[#12111F] rounded-lg shadow overflow-hidden">
-                            <table className="min-w-full divide-y divide-white/10">
-                                <thead className="bg-white/5">
+                        <div className="bg-[var(--surface)] rounded-lg shadow overflow-hidden">
+                            <table className="min-w-full divide-y divide-[var(--border)]">
+                                <thead className="bg-[var(--overlay-weak)]">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase tracking-wider">Name</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase tracking-wider">Email</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase tracking-wider">Phone</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase tracking-wider">Actions</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Name</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Email</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Phone</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-white/10">
+                                <tbody className="divide-y divide-[var(--border)]">
                                     {filteredClients.map(client => (  
                                         <tr key={client.id}>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <Link to={`/clients/${client.id}`} className="text-[#A78BFA] hover:underline">
+                                                <Link to={`/clients/${client.id}`} className="text-[var(--brand-accent)] hover:underline">
                                                     {client.firstName} {client.lastName}
                                                 </Link>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">{client.email}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{client.phone}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <Link to={`/clients/${client.id}/edit`} className="text-[#A78BFA] hover:text-white mr-3">
+                                                <Link to={`/clients/${client.id}/edit`} className="text-[var(--brand-accent)] hover:text-[var(--text)] mr-3">
                                                     Edit
                                                 </Link>
                                             </td>
@@ -193,7 +193,7 @@ export default function Clients() {
                                 </tbody>
                             </table>
                             {filteredClients.length === 0 && (
-                                <div className="p-6 text-center text-[#9E9CB8]">
+                                <div className="p-6 text-center text-[var(--muted)]">
                                     {searchQuery ? 'No clients match your search.' : 'No clients found. Click "Add Client" to create one.'}
                                 </div>
                             )}
@@ -207,15 +207,15 @@ export default function Clients() {
                 <div className="fixed inset-0 z-50 overflow-y-auto">
                     <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
                         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-                            <div className="absolute inset-0 bg-black/70"></div>
+                            <div className="absolute inset-0 bg-[var(--backdrop)]"></div>
                         </div>
 
-                        <div className="inline-block align-bottom bg-[#12111F] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                        <div className="inline-block align-bottom bg-[var(--surface)] rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                             <form onSubmit={handleSubmit}>
-                                <div className="bg-[#12111F] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                <div className="bg-[var(--surface)] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                     <div className="sm:flex sm:items-start">
                                         <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                                            <h3 className="text-lg leading-6 font-medium text-[#F3F2FA] mb-4">Add New Client</h3>
+                                            <h3 className="text-lg leading-6 font-medium text-[var(--text)] mb-4">Add New Client</h3>
                                             <div className="space-y-3">
                                                 <div className="grid grid-cols-2 gap-3">
                                                     <input
@@ -224,7 +224,7 @@ export default function Clients() {
                                                         placeholder="First name *"
                                                         value={formData.firstName}
                                                         onChange={handleInputChange}
-                                                        className="w-full px-3 py-2 bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                                        className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                                         required
                                                     />
                                                     <input
@@ -233,7 +233,7 @@ export default function Clients() {
                                                         placeholder="Last name *"
                                                         value={formData.lastName}
                                                         onChange={handleInputChange}
-                                                        className="w-full px-3 py-2 bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                                        className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                                         required
                                                     />
                                                 </div>
@@ -243,7 +243,7 @@ export default function Clients() {
                                                     placeholder="Email"
                                                     value={formData.email}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-3 py-2 bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                                    className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                                 />
                                                 <input
                                                     type="tel"
@@ -251,7 +251,7 @@ export default function Clients() {
                                                     placeholder="Phone"
                                                     value={formData.phone}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-3 py-2 bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                                    className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                                 />
                                                 <input
                                                     type="text"
@@ -259,7 +259,7 @@ export default function Clients() {
                                                     placeholder="ID Number"
                                                     value={formData.idNumber}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-3 py-2 bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                                    className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                                 />
                                                 <textarea
                                                     name="address"
@@ -267,14 +267,14 @@ export default function Clients() {
                                                     rows={2}
                                                     value={formData.address}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-3 py-2 bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                                    className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                                 />
                                             </div>
                                             {error && <div className="mt-2 text-sm text-red-300">{error}</div>}
                                         </div>
                                     </div>
                                 </div>
-                                <div className="bg-white/5 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                <div className="bg-[var(--overlay-weak)] px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                                     <button
                                         type="submit"
                                         disabled={submitting}
@@ -285,7 +285,7 @@ export default function Clients() {
                                     <button
                                         type="button"
                                         onClick={() => setIsModalOpen(false)}
-                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-white/10 shadow-sm px-4 py-2 bg-white/5 text-base font-medium text-[#9E9CB8] hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B7CF6] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-[var(--border)] shadow-sm px-4 py-2 bg-[var(--overlay-weak)] text-base font-medium text-[var(--muted)] hover:bg-[var(--overlay-weak)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B7CF6] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                                     >
                                         Cancel
                                     </button>

@@ -77,28 +77,28 @@ export default function NewClaim() {
     const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
     return (
-        <div className="min-h-screen bg-[#08070F] text-[#F3F2FA]">
+        <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
             <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
             <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
                 <div className="fixed top-4 left-4 z-30">
-                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[#12111F] border border-white/10 text-[#9E9CB8] hover:text-white shadow-md">
+                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[var(--surface)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] shadow-md">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
                 </div>
                 <main className="p-6 pt-16">
-                    <div className="max-w-2xl mx-auto bg-[#12111F] rounded-lg shadow p-6">
+                    <div className="max-w-2xl mx-auto bg-[var(--surface)] rounded-lg shadow p-6">
                         <h1 className="text-2xl font-bold mb-6">Add New RAF Claim</h1>
                         {error && <div className="bg-red-500/12 border border-red-500/30 text-red-300 p-3 rounded mb-4">{error}</div>}
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-[#9E9CB8] mb-1">Case *</label>
+                                <label className="block text-sm font-medium text-[var(--muted)] mb-1">Case *</label>
                                 <select
                                     name="caseId"
                                     value={formData.caseId}
                                     onChange={handleChange}
-                                    className="w-full bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                     required
                                 >
                                     <option value="">Select a case</option>
@@ -110,55 +110,55 @@ export default function NewClaim() {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-[#9E9CB8] mb-1">Claim Number *</label>
+                                <label className="block text-sm font-medium text-[var(--muted)] mb-1">Claim Number *</label>
                                 <input
                                     type="text"
                                     name="claimNumber"
                                     value={formData.claimNumber}
                                     onChange={handleChange}
-                                    className="w-full bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-[#9E9CB8] mb-1">RAF Reference</label>
+                                <label className="block text-sm font-medium text-[var(--muted)] mb-1">RAF Reference</label>
                                 <input
                                     type="text"
                                     name="rafReference"
                                     value={formData.rafReference}
                                     onChange={handleChange}
-                                    className="w-full bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-[#9E9CB8] mb-1">Amount Requested (R)</label>
+                                <label className="block text-sm font-medium text-[var(--muted)] mb-1">Amount Requested (R)</label>
                                 <input
                                     type="number"
                                     step="0.01"
                                     name="amountRequested"
                                     value={formData.amountRequested}
                                     onChange={handleChange}
-                                    className="w-full bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-[#9E9CB8] mb-1">Amount Awarded (R)</label>
+                                <label className="block text-sm font-medium text-[var(--muted)] mb-1">Amount Awarded (R)</label>
                                 <input
                                     type="number"
                                     step="0.01"
                                     name="amountAwarded"
                                     value={formData.amountAwarded}
                                     onChange={handleChange}
-                                    className="w-full bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-[#9E9CB8] mb-1">Status</label>
+                                <label className="block text-sm font-medium text-[var(--muted)] mb-1">Status</label>
                                 <select
                                     name="status"
                                     value={formData.status}
                                     onChange={handleChange}
-                                    className="w-full bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                 >
                                     <option value="in_progress">In Progress</option>
                                     <option value="completed">Completed</option>
