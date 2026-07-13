@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-export default function Spinner({ size = 40, color = '#b91c1c' }) {
+export default function Spinner({ size = 40, color = '#8B7CF6' }) {
     return (
         <div className="flex justify-center items-center" style={{ minHeight: '200px' }}>
             <motion.div

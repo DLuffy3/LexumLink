@@ -46,11 +46,11 @@ export default function Claims() {
 
     const getStatusBadge = (status: string) => {
         const colors: Record<string, string> = {
-            in_progress: 'bg-yellow-100 text-yellow-800',
-            completed: 'bg-green-100 text-green-800',
-            critical: 'bg-red-100 text-red-800',
+            in_progress: 'bg-yellow-500/15 text-yellow-300',
+            completed: 'bg-green-500/15 text-green-300',
+            critical: 'bg-red-500/15 text-red-300',
         };
-        return colors[status] || 'bg-gray-100 text-gray-800';
+        return colors[status] || 'bg-white/5 text-[#F3F2FA]';
     };
 
     // Filter claims by client name or claim number
@@ -61,7 +61,7 @@ export default function Claims() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-[#08070F] text-[#F3F2FA]">
                 <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
                 <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
                     <main className="p-6 pt-16">
@@ -74,18 +74,18 @@ export default function Claims() {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-[#08070F] text-[#F3F2FA]">
                 <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
                 <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
                     <div className="fixed top-4 left-4 z-30">
-                        <button onClick={toggleSidebar} className="p-2 rounded-md bg-white shadow-md">
+                        <button onClick={toggleSidebar} className="p-2 rounded-md bg-[#12111F] border border-white/10 text-[#9E9CB8] hover:text-white">
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
                     </div>
                     <main className="p-6 pt-16">
-                        <div className="bg-red-100 text-red-700 p-4 rounded">{error}</div>
+                        <div className="bg-red-500/12 border border-red-500/30 text-red-300 p-4 rounded">{error}</div>
                     </main>
                 </div>
             </div>
@@ -93,12 +93,12 @@ export default function Claims() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-[#08070F] text-[#F3F2FA]">
             <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
             <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
                 <div className="fixed top-4 left-4 z-30">
-                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-white shadow-md text-gray-500 hover:text-gray-700">
+                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[#12111F] border border-white/10 text-[#9E9CB8] hover:text-white">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -113,36 +113,36 @@ export default function Claims() {
                         className="w-full"
                     >
                         <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
-                            <h1 className="text-2xl font-bold text-gray-800">RAF Claims</h1>
+                            <h1 className="text-2xl font-bold text-[#F3F2FA]">RAF Claims</h1>
                             <div className="flex gap-4">
                                 <input
                                     type="text"
                                     placeholder="Search by client or claim #..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="border rounded px-3 py-2 w-64"
+                                    className="bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded px-3 py-2 w-64 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                 />
-                                <Link to="/claims/new" className="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-800">
+                                <Link to="/claims/new" className="bg-[#6D5EF5] hover:bg-[#5B4FE0] text-white px-4 py-2 rounded-md">
                                     Add Claim
                                 </Link>
                             </div>
                         </div>
-                        <div className="bg-white rounded-lg shadow overflow-hidden">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
+                        <div className="bg-[#12111F] rounded-lg shadow overflow-hidden">
+                            <table className="min-w-full divide-y divide-white/10">
+                                <thead className="bg-white/5">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Claim #</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RAF Ref</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount Requested</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase tracking-wider">Claim #</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase tracking-wider">Client</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase tracking-wider">RAF Ref</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase tracking-wider">Amount Requested</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase tracking-wider">Status</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-[#9E9CB8] uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-200">
+                                <tbody className="divide-y divide-white/10">
                                     {filteredClaims.length === 0 ? (
                                         <tr>
-                                            <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                                            <td colSpan={6} className="px-6 py-12 text-center text-[#9E9CB8]">
                                                 {searchQuery ? 'No claims match your search.' : 'No claims found. Click "Add Claim" to create one.'}
                                             </td>
                                         </tr>
@@ -150,7 +150,7 @@ export default function Claims() {
                                         filteredClaims.map((claim) => (
                                             <tr key={claim.id}>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <Link to={`/claims/${claim.id}`} className="text-red-700 hover:underline">
+                                                    <Link to={`/claims/${claim.id}`} className="text-[#A78BFA] hover:underline">
                                                         {claim.claimNumber}
                                                     </Link>
                                                 </td>
@@ -165,7 +165,7 @@ export default function Claims() {
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <Link to={`/claims/${claim.id}/edit`} className="text-indigo-600 hover:text-indigo-900 mr-3">
+                                                    <Link to={`/claims/${claim.id}/edit`} className="text-[#A78BFA] hover:text-white mr-3">
                                                         Edit
                                                     </Link>
                                                 </td>
