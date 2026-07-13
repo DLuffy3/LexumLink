@@ -5,7 +5,12 @@ import { OrganizationGuard } from './components/OrganizationGuard';
 import { SuperAdminGuard } from './components/SuperAdminGaurd';
 import { Suspense, lazy } from 'react';
 import Spinner from './components/Spinner';
-import LandingPage from './pages/LandingPage';
+import MarketingLayout from './marketing/MarketingLayout';
+import Home from './marketing/pages/Home';
+import About from './marketing/pages/About';
+import Services from './marketing/pages/Services';
+import Pricing from './marketing/pages/Pricing';
+import Contact from './marketing/pages/Contact';
 import SignIn from './pages/SignIn';
 import ClientDetail from './pages/ClientDetail';
 import Settings from './pages/Settings';
@@ -29,7 +34,13 @@ function App() {
         <BrowserRouter>
             <AuthProvider>
                 <Routes>
-                    <Route path="/" element={<LandingPage />} />
+                    <Route element={<MarketingLayout />}>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/services" element={<Services />} />
+                        <Route path="/pricing" element={<Pricing />} />
+                        <Route path="/contact" element={<Contact />} />
+                    </Route>
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/dashboard" element={
                         <Suspense fallback={<Spinner/>}>

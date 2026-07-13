@@ -31,12 +31,15 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
             initial={{ x: -280 }}
             animate={{ x: sidebarOpen ? 0 : -280 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="fixed top-0 left-0 z-40 w-64 h-screen bg-white border-r border-gray-200 shadow-lg"
+            className="fixed top-0 left-0 z-40 w-64 h-screen bg-[#0C0B18] border-r border-white/10"
         >
             <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between p-4 border-b">
-                    <h2 className="text-xl font-bold text-red-700">LexumLink</h2>
-                    <button onClick={toggleSidebar} className="text-gray-500 hover:text-gray-700">
+                <div className="flex items-center justify-between p-4 border-b border-white/10">
+                    <h2 className="font-['Mooxy'] text-xl font-black tracking-tight">
+                        <span style={{ background: 'linear-gradient(135deg,#A78BFA,#6D5EF5)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Lexum</span>
+                        <span className="text-[#F3F2FA]">Link</span>
+                    </h2>
+                    <button onClick={toggleSidebar} className="text-[#9E9CB8] hover:text-white">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -50,7 +53,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                                 <Link
                                     key={item.name}
                                     to={item.href}
-                                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${isActive ? 'bg-red-100 text-red-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${isActive ? 'bg-[#8B7CF6]/15 text-[#A78BFA]' : 'text-[#9E9CB8] hover:bg-white/5 hover:text-white'
                                         }`}
                                 >
                                     <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,7 +68,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                 {user?.isSuperAdmin && (
                     <Link
                         to="/admin/tickets"
-                        className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${location.pathname === '/admin/tickets' ? 'bg-red-100 text-red-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                        className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${location.pathname === '/admin/tickets' ? 'bg-[#8B7CF6]/15 text-[#A78BFA]' : 'text-[#9E9CB8] hover:bg-white/5 hover:text-white'
                             }`}
                     >
                         <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,13 +77,13 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                         Tickets
                     </Link>
                 )}
-                <div className="p-4 border-t">
+                <div className="p-4 border-t border-white/10">
                     <div className="flex items-center">
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">{user?.firstName} {user?.lastName}</p>
-                            <p className="text-xs text-gray-500 truncate">{activeOrganization?.name}</p>
+                            <p className="text-sm font-medium text-[#F3F2FA] truncate">{user?.firstName} {user?.lastName}</p>
+                            <p className="text-xs text-[#6D6B85] truncate">{activeOrganization?.name}</p>
                         </div>
-                        <button onClick={handleSignOut} className="ml-2 text-red-600 hover:text-red-800">
+                        <button onClick={handleSignOut} className="ml-2 text-[#A78BFA] hover:text-white">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>

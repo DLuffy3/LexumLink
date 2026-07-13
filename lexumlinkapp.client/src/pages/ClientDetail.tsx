@@ -64,24 +64,24 @@ export default function ClientDetail() {
 
     const getStatusBadge = (status: string) => {
         const colors: Record<string, string> = {
-            completed: 'bg-green-100 text-green-800',
-            in_progress: 'bg-yellow-100 text-yellow-800',
-            critical: 'bg-red-100 text-red-800',
+            completed: 'bg-green-500/15 text-green-300',
+            in_progress: 'bg-yellow-500/15 text-yellow-300',
+            critical: 'bg-red-500/15 text-red-300',
         };
-        return colors[status] || 'bg-gray-100 text-gray-800';
+        return colors[status] || 'bg-white/5 text-[#F3F2FA]';
     };
 
     if (loading) return <div className="p-6 text-center">Loading client details...</div>;
-    if (error) return <div className="p-6 text-red-600">{error}</div>;
+    if (error) return <div className="p-6 text-red-300">{error}</div>;
     if (!client) return <div className="p-6 text-center">Client not found</div>;
 
     return (
-        <div className="p-6">
+        <div className="p-6 bg-[#08070F] text-[#F3F2FA]">
             <div className="mb-6">
-                <Link to="/clients" className="text-red-600 hover:underline">&larr; Back to Clients</Link>
+                <Link to="/clients" className="text-[#A78BFA] hover:underline">&larr; Back to Clients</Link>
             </div>
-            <div className="bg-white rounded-lg shadow p-6 mb-6">
-                <h1 className="text-2xl font-bold text-gray-800 mb-4">{client.firstName} {client.lastName}</h1>
+            <div className="bg-[#12111F] rounded-lg shadow p-6 mb-6">
+                <h1 className="text-2xl font-bold text-[#F3F2FA] mb-4">{client.firstName} {client.lastName}</h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div><span className="font-medium">Email:</span> {client.email}</div>
                     <div><span className="font-medium">Phone:</span> {client.phone}</div>
@@ -90,33 +90,33 @@ export default function ClientDetail() {
                     <div><span className="font-medium">Member since:</span> {new Date(client.createdAt).toLocaleDateString()}</div>
                 </div>
                 <div className="mt-4">
-                    <Link to={`/clients/${id}/edit`} className="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-800">Edit Client</Link>
+                    <Link to={`/clients/${id}/edit`} className="bg-[#6D5EF5] text-white px-4 py-2 rounded-md hover:bg-[#5B4FE0]">Edit Client</Link>
                 </div>
             </div>
 
             {/* Claims Section */}
-            <div className="bg-white rounded-lg shadow p-6 mb-6">
+            <div className="bg-[#12111F] rounded-lg shadow p-6 mb-6">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-semibold text-gray-800">Claims</h2>
-                    <Link to={`/claims/new?clientId=${id}`} className="text-red-600 hover:underline">+ New Claim</Link>
+                    <h2 className="text-xl font-semibold text-[#F3F2FA]">Claims</h2>
+                    <Link to={`/claims/new?clientId=${id}`} className="text-[#A78BFA] hover:underline">+ New Claim</Link>
                 </div>
                 {claims.length === 0 ? (
-                    <p className="text-gray-500">No claims for this client.</p>
+                    <p className="text-[#9E9CB8]">No claims for this client.</p>
                 ) : (
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-white/10">
+                        <thead className="bg-white/5">
                             <tr>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Claim #</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">RAF Ref</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">Claim #</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">RAF Ref</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">Amount</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">Status</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">Date</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200">
+                        <tbody className="divide-y divide-white/10">
                             {claims.map(claim => (
                                 <tr key={claim.id}>
-                                    <td className="px-4 py-2"><Link to={`/claims/${claim.id}`} className="text-red-700 hover:underline">{claim.claimNumber}</Link></td>
+                                    <td className="px-4 py-2"><Link to={`/claims/${claim.id}`} className="text-[#A78BFA] hover:underline">{claim.claimNumber}</Link></td>
                                     <td className="px-4 py-2">{claim.rafReference || '-'}</td>
                                     <td className="px-4 py-2">R {claim.amountRequested?.toLocaleString()}</td>
                                     <td className="px-4 py-2"><span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadge(claim.status)}`}>{claim.status.replace('_', ' ')}</span></td>
@@ -129,32 +129,32 @@ export default function ClientDetail() {
             </div>
 
             {/* Documents Section */}
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-[#12111F] rounded-lg shadow p-6">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-semibold text-gray-800">Documents</h2>
-                    <Link to={`/documents/upload?clientId=${id}`} className="text-red-600 hover:underline">+ Upload Document</Link>
+                    <h2 className="text-xl font-semibold text-[#F3F2FA]">Documents</h2>
+                    <Link to={`/documents/upload?clientId=${id}`} className="text-[#A78BFA] hover:underline">+ Upload Document</Link>
                 </div>
                 {documents.length === 0 ? (
-                    <p className="text-gray-500">No documents for this client.</p>
+                    <p className="text-[#9E9CB8]">No documents for this client.</p>
                 ) : (
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-white/10">
+                        <thead className="bg-white/5">
                             <tr>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">File Name</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Uploaded</th>
-                                <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">File Name</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">Type</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">Uploaded</th>
+                                <th className="px-4 py-2 text-right text-xs font-medium text-[#9E9CB8] uppercase">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200">
+                        <tbody className="divide-y divide-white/10">
                             {documents.map(doc => (
                                 <tr key={doc.id}>
                                     <td className="px-4 py-2">{doc.fileName}</td>
                                     <td className="px-4 py-2">{doc.documentType}</td>
                                     <td className="px-4 py-2">{new Date(doc.uploadedAt).toLocaleDateString()}</td>
                                     <td className="px-4 py-2 text-right">
-                                        <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="text-red-600 hover:text-red-800 mr-2">View</a>
-                                        <Link to={`/documents/${doc.id}`} className="text-blue-600 hover:text-blue-800">Details</Link>
+                                        <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="text-[#A78BFA] hover:text-white mr-2">View</a>
+                                        <Link to={`/documents/${doc.id}`} className="text-blue-300 hover:text-blue-200">Details</Link>
                                     </td>
                                 </tr>
                             ))}
