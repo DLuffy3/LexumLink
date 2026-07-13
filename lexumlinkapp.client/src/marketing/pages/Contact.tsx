@@ -26,7 +26,7 @@ export default function Contact() {
     };
 
     const inputCls = 'w-full text-sm px-4 py-3 rounded-xl outline-none transition-all duration-300';
-    const inputStyle: React.CSSProperties = { background: 'rgba(255,255,255,0.03)', border: `1px solid ${T.border}`, color: T.text };
+    const inputStyle: React.CSSProperties = { background: 'var(--overlay-weak)', border: `1px solid ${T.border}`, color: T.text };
     const labelCls = 'text-[0.68rem] tracking-[0.15em] uppercase mb-2 block';
 
     return (

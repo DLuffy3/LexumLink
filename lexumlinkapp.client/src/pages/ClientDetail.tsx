@@ -68,7 +68,7 @@ export default function ClientDetail() {
             in_progress: 'bg-yellow-500/15 text-yellow-300',
             critical: 'bg-red-500/15 text-red-300',
         };
-        return colors[status] || 'bg-white/5 text-[#F3F2FA]';
+        return colors[status] || 'bg-[var(--overlay-weak)] text-[var(--text)]';
     };
 
     if (loading) return <div className="p-6 text-center">Loading client details...</div>;
@@ -76,12 +76,12 @@ export default function ClientDetail() {
     if (!client) return <div className="p-6 text-center">Client not found</div>;
 
     return (
-        <div className="p-6 bg-[#08070F] text-[#F3F2FA]">
+        <div className="p-6 bg-[var(--bg)] text-[var(--text)]">
             <div className="mb-6">
-                <Link to="/clients" className="text-[#A78BFA] hover:underline">&larr; Back to Clients</Link>
+                <Link to="/clients" className="text-[var(--brand-accent)] hover:underline">&larr; Back to Clients</Link>
             </div>
-            <div className="bg-[#12111F] rounded-lg shadow p-6 mb-6">
-                <h1 className="text-2xl font-bold text-[#F3F2FA] mb-4">{client.firstName} {client.lastName}</h1>
+            <div className="bg-[var(--surface)] rounded-lg shadow p-6 mb-6">
+                <h1 className="text-2xl font-bold text-[var(--text)] mb-4">{client.firstName} {client.lastName}</h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div><span className="font-medium">Email:</span> {client.email}</div>
                     <div><span className="font-medium">Phone:</span> {client.phone}</div>
@@ -95,28 +95,28 @@ export default function ClientDetail() {
             </div>
 
             {/* Claims Section */}
-            <div className="bg-[#12111F] rounded-lg shadow p-6 mb-6">
+            <div className="bg-[var(--surface)] rounded-lg shadow p-6 mb-6">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-semibold text-[#F3F2FA]">Claims</h2>
-                    <Link to={`/claims/new?clientId=${id}`} className="text-[#A78BFA] hover:underline">+ New Claim</Link>
+                    <h2 className="text-xl font-semibold text-[var(--text)]">Claims</h2>
+                    <Link to={`/claims/new?clientId=${id}`} className="text-[var(--brand-accent)] hover:underline">+ New Claim</Link>
                 </div>
                 {claims.length === 0 ? (
-                    <p className="text-[#9E9CB8]">No claims for this client.</p>
+                    <p className="text-[var(--muted)]">No claims for this client.</p>
                 ) : (
-                    <table className="min-w-full divide-y divide-white/10">
-                        <thead className="bg-white/5">
+                    <table className="min-w-full divide-y divide-[var(--border)]">
+                        <thead className="bg-[var(--overlay-weak)]">
                             <tr>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">Claim #</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">RAF Ref</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">Amount</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">Status</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">Date</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[var(--muted)] uppercase">Claim #</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[var(--muted)] uppercase">RAF Ref</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[var(--muted)] uppercase">Amount</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[var(--muted)] uppercase">Status</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[var(--muted)] uppercase">Date</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/10">
+                        <tbody className="divide-y divide-[var(--border)]">
                             {claims.map(claim => (
                                 <tr key={claim.id}>
-                                    <td className="px-4 py-2"><Link to={`/claims/${claim.id}`} className="text-[#A78BFA] hover:underline">{claim.claimNumber}</Link></td>
+                                    <td className="px-4 py-2"><Link to={`/claims/${claim.id}`} className="text-[var(--brand-accent)] hover:underline">{claim.claimNumber}</Link></td>
                                     <td className="px-4 py-2">{claim.rafReference || '-'}</td>
                                     <td className="px-4 py-2">R {claim.amountRequested?.toLocaleString()}</td>
                                     <td className="px-4 py-2"><span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadge(claim.status)}`}>{claim.status.replace('_', ' ')}</span></td>
@@ -129,31 +129,31 @@ export default function ClientDetail() {
             </div>
 
             {/* Documents Section */}
-            <div className="bg-[#12111F] rounded-lg shadow p-6">
+            <div className="bg-[var(--surface)] rounded-lg shadow p-6">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-semibold text-[#F3F2FA]">Documents</h2>
-                    <Link to={`/documents/upload?clientId=${id}`} className="text-[#A78BFA] hover:underline">+ Upload Document</Link>
+                    <h2 className="text-xl font-semibold text-[var(--text)]">Documents</h2>
+                    <Link to={`/documents/upload?clientId=${id}`} className="text-[var(--brand-accent)] hover:underline">+ Upload Document</Link>
                 </div>
                 {documents.length === 0 ? (
-                    <p className="text-[#9E9CB8]">No documents for this client.</p>
+                    <p className="text-[var(--muted)]">No documents for this client.</p>
                 ) : (
-                    <table className="min-w-full divide-y divide-white/10">
-                        <thead className="bg-white/5">
+                    <table className="min-w-full divide-y divide-[var(--border)]">
+                        <thead className="bg-[var(--overlay-weak)]">
                             <tr>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">File Name</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">Type</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-[#9E9CB8] uppercase">Uploaded</th>
-                                <th className="px-4 py-2 text-right text-xs font-medium text-[#9E9CB8] uppercase">Actions</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[var(--muted)] uppercase">File Name</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[var(--muted)] uppercase">Type</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-[var(--muted)] uppercase">Uploaded</th>
+                                <th className="px-4 py-2 text-right text-xs font-medium text-[var(--muted)] uppercase">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/10">
+                        <tbody className="divide-y divide-[var(--border)]">
                             {documents.map(doc => (
                                 <tr key={doc.id}>
                                     <td className="px-4 py-2">{doc.fileName}</td>
                                     <td className="px-4 py-2">{doc.documentType}</td>
                                     <td className="px-4 py-2">{new Date(doc.uploadedAt).toLocaleDateString()}</td>
                                     <td className="px-4 py-2 text-right">
-                                        <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="text-[#A78BFA] hover:text-white mr-2">View</a>
+                                        <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--brand-accent)] hover:text-[var(--text)] mr-2">View</a>
                                         <Link to={`/documents/${doc.id}`} className="text-blue-300 hover:text-blue-200">Details</Link>
                                     </td>
                                 </tr>

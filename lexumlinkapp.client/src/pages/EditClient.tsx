@@ -72,7 +72,7 @@ export default function EditClient() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#08070F] text-[#F3F2FA]">
+            <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
                 <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
                 <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
                     <main className="p-6 pt-16">
@@ -84,12 +84,12 @@ export default function EditClient() {
     }
 
     return (
-        <div className="min-h-screen bg-[#08070F] text-[#F3F2FA]">
+        <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
             <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
             <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
                 <div className="fixed top-4 left-4 z-30">
-                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[#12111F] border border-white/10 shadow-md text-[#9E9CB8] hover:text-white">
+                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[var(--surface)] border border-[var(--border)] shadow-md text-[var(--muted)] hover:text-[var(--text)]">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -97,7 +97,7 @@ export default function EditClient() {
                 </div>
 
                 <main className="p-6 pt-16">
-                    <div className="max-w-2xl mx-auto bg-[#12111F] rounded-lg shadow p-6">
+                    <div className="max-w-2xl mx-auto bg-[var(--surface)] rounded-lg shadow p-6">
                         <h1 className="text-2xl font-bold mb-6">Edit Client</h1>
                         {error && <div className="bg-red-500/12 border border-red-500/30 text-red-300 p-3 rounded mb-4">{error}</div>}
                         <form onSubmit={handleSubmit} className="space-y-4">
@@ -108,7 +108,7 @@ export default function EditClient() {
                                     placeholder="First name *"
                                     value={formData.firstName}
                                     onChange={handleChange}
-                                    className="bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] p-2 rounded focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                     required
                                 />
                                 <input
@@ -117,7 +117,7 @@ export default function EditClient() {
                                     placeholder="Last name *"
                                     value={formData.lastName}
                                     onChange={handleChange}
-                                    className="bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] p-2 rounded focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                                     required
                                 />
                             </div>
@@ -127,7 +127,7 @@ export default function EditClient() {
                                 placeholder="Email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] p-2 rounded w-full focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                             />
                             <input
                                 type="tel"
@@ -135,7 +135,7 @@ export default function EditClient() {
                                 placeholder="Phone"
                                 value={formData.phone}
                                 onChange={handleChange}
-                                className="bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] p-2 rounded w-full focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                             />
                             <input
                                 type="text"
@@ -143,7 +143,7 @@ export default function EditClient() {
                                 placeholder="ID Number"
                                 value={formData.idNumber}
                                 onChange={handleChange}
-                                className="bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] p-2 rounded w-full focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                             />
                             <textarea
                                 name="address"
@@ -151,7 +151,7 @@ export default function EditClient() {
                                 rows={3}
                                 value={formData.address}
                                 onChange={handleChange}
-                                className="bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] p-2 rounded w-full focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
                             />
                             <div className="flex gap-3">
                                 <button
@@ -164,7 +164,7 @@ export default function EditClient() {
                                 <button
                                     type="button"
                                     onClick={() => navigate('/clients')}
-                                    className="bg-white/10 text-[#F3F2FA] px-4 py-2 rounded hover:bg-white/20"
+                                    className="bg-[var(--overlay-med)] text-[var(--text)] px-4 py-2 rounded hover:bg-[var(--overlay-strong)]"
                                 >
                                     Cancel
                                 </button>

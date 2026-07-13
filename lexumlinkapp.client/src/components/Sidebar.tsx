@@ -1,6 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import { motion } from 'framer-motion';
+import ThemeToggle from './ThemeToggle';
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
@@ -31,15 +32,15 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
             initial={{ x: -280 }}
             animate={{ x: sidebarOpen ? 0 : -280 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="fixed top-0 left-0 z-40 w-64 h-screen bg-[#0C0B18] border-r border-white/10"
+            className="fixed top-0 left-0 z-40 w-64 h-screen bg-[var(--bg2)] border-r border-[var(--border)]"
         >
             <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between p-4 border-b border-white/10">
+                <div className="flex items-center justify-between p-4 border-b border-[var(--border)]">
                     <h2 className="font-['Mooxy'] text-xl font-black tracking-tight">
                         <span style={{ background: 'linear-gradient(135deg,#A78BFA,#6D5EF5)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Lexum</span>
-                        <span className="text-[#F3F2FA]">Link</span>
+                        <span className="text-[var(--text)]">Link</span>
                     </h2>
-                    <button onClick={toggleSidebar} className="text-[#9E9CB8] hover:text-white">
+                    <button onClick={toggleSidebar} className="text-[var(--muted)] hover:text-[var(--text)]">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -53,7 +54,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                                 <Link
                                     key={item.name}
                                     to={item.href}
-                                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${isActive ? 'bg-[#8B7CF6]/15 text-[#A78BFA]' : 'text-[#9E9CB8] hover:bg-white/5 hover:text-white'
+                                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${isActive ? 'bg-[#8B7CF6]/15 text-[var(--brand-accent)]' : 'text-[var(--muted)] hover:bg-[var(--overlay-weak)] hover:text-[var(--text)]'
                                         }`}
                                 >
                                     <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,7 +69,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                 {user?.isSuperAdmin && (
                     <Link
                         to="/admin/tickets"
-                        className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${location.pathname === '/admin/tickets' ? 'bg-[#8B7CF6]/15 text-[#A78BFA]' : 'text-[#9E9CB8] hover:bg-white/5 hover:text-white'
+                        className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${location.pathname === '/admin/tickets' ? 'bg-[#8B7CF6]/15 text-[var(--brand-accent)]' : 'text-[var(--muted)] hover:bg-[var(--overlay-weak)] hover:text-[var(--text)]'
                             }`}
                     >
                         <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -77,13 +78,17 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                         Tickets
                     </Link>
                 )}
-                <div className="p-4 border-t border-white/10">
+                <div className="p-4 border-t border-[var(--border)]">
+                    <div className="flex items-center gap-2 mb-3">
+                        <ThemeToggle />
+                        <span className="text-xs" style={{ color: 'var(--faint)' }}>Theme</span>
+                    </div>
                     <div className="flex items-center">
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-[#F3F2FA] truncate">{user?.firstName} {user?.lastName}</p>
-                            <p className="text-xs text-[#6D6B85] truncate">{activeOrganization?.name}</p>
+                            <p className="text-sm font-medium text-[var(--text)] truncate">{user?.firstName} {user?.lastName}</p>
+                            <p className="text-xs text-[var(--faint)] truncate">{activeOrganization?.name}</p>
                         </div>
-                        <button onClick={handleSignOut} className="ml-2 text-[#A78BFA] hover:text-white">
+                        <button onClick={handleSignOut} className="ml-2 text-[var(--brand-accent)] hover:text-[var(--text)]">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>

@@ -36,7 +36,7 @@ export default function TodoList() {
     };
 
     const getDueDateColor = (dueDate: string | null) => {
-        if (!dueDate) return 'border-white/10 bg-white/5';
+        if (!dueDate) return 'border-[var(--border)] bg-[var(--overlay-weak)]';
         const daysLeft = differenceInDays(new Date(dueDate), new Date());
         if (daysLeft >= 5) return 'border-l-4 border-green-400 bg-green-500/15';
         if (daysLeft >= 2 && daysLeft <= 4) return 'border-l-4 border-yellow-400 bg-yellow-500/15';
@@ -106,9 +106,9 @@ export default function TodoList() {
     if (loading) return <div className="text-center py-4">Loading tasks...</div>;
 
     return (
-        <div className="bg-[#12111F] rounded-lg shadow p-6">
+        <div className="bg-[var(--surface)] rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium text-[#F3F2FA]">My To‑Do List</h3>
+                <h3 className="text-lg font-medium text-[var(--text)]">My To‑Do List</h3>
                 <button
                     onClick={() => { resetForm(); setIsModalOpen(true); }}
                     className="bg-[#6D5EF5] hover:bg-[#5B4FE0] text-white px-3 py-1 rounded-md flex items-center gap-1"
@@ -118,7 +118,7 @@ export default function TodoList() {
             </div>
 
             {todos.length === 0 ? (
-                <p className="text-[#9E9CB8] text-center py-4">No tasks. Click "Add Task" to organize your day.</p>
+                <p className="text-[var(--muted)] text-center py-4">No tasks. Click "Add Task" to organize your day.</p>
             ) : (
                 <div className="space-y-2 max-h-96 overflow-y-auto pr-2">
                     {todos.map((todo) => (
@@ -132,28 +132,28 @@ export default function TodoList() {
                                         {todo.isCompleted ? (
                                             <span className="text-green-300 text-lg">✓</span>
                                         ) : (
-                                            <span className="text-[#6D6B85] text-lg">○</span>
+                                            <span className="text-[var(--faint)] text-lg">○</span>
                                         )}
                                     </button>
                                     <div className="flex-1">
-                                        <p className={`font-medium ${todo.isCompleted ? 'line-through text-[#9E9CB8]' : 'text-[#F3F2FA]'}`}>
+                                        <p className={`font-medium ${todo.isCompleted ? 'line-through text-[var(--muted)]' : 'text-[var(--text)]'}`}>
                                             {todo.title}
                                         </p>
                                         {todo.description && (
-                                            <p className="text-sm text-[#9E9CB8] mt-0.5">{todo.description}</p>
+                                            <p className="text-sm text-[var(--muted)] mt-0.5">{todo.description}</p>
                                         )}
                                         {todo.dueDate && (
-                                            <p className="text-xs text-[#6D6B85] mt-1">
+                                            <p className="text-xs text-[var(--faint)] mt-1">
                                                 Due: {format(new Date(todo.dueDate), 'MMM dd, yyyy')}
                                             </p>
                                         )}
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button onClick={() => openEditModal(todo)} className="text-[#9E9CB8] hover:text-white">
+                                    <button onClick={() => openEditModal(todo)} className="text-[var(--muted)] hover:text-[var(--text)]">
                                         <span className="text-sm">✎</span>
                                     </button>
-                                    <button onClick={() => deleteTodo(todo.id)} className="text-[#9E9CB8] hover:text-red-300">
+                                    <button onClick={() => deleteTodo(todo.id)} className="text-[var(--muted)] hover:text-red-300">
                                         <span className="text-sm">🗑</span>
                                     </button>
                                 </div>
@@ -167,11 +167,11 @@ export default function TodoList() {
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 overflow-y-auto">
                     <div className="flex items-center justify-center min-h-screen px-4">
-                        <div className="fixed inset-0 bg-black/70 transition-opacity" onClick={() => setIsModalOpen(false)} />
-                        <div className="bg-[#12111F] rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+                        <div className="fixed inset-0 bg-[var(--backdrop)] transition-opacity" onClick={() => setIsModalOpen(false)} />
+                        <div className="bg-[var(--surface)] rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
                             <form onSubmit={handleSubmit}>
-                                <div className="bg-[#12111F] px-4 pt-5 pb-4 sm:p-6">
-                                    <h3 className="text-lg font-medium text-[#F3F2FA] mb-4">
+                                <div className="bg-[var(--surface)] px-4 pt-5 pb-4 sm:p-6">
+                                    <h3 className="text-lg font-medium text-[var(--text)] mb-4">
                                         {editingId ? 'Edit Task' : 'New Task'}
                                     </h3>
                                     <div className="space-y-3">
@@ -180,7 +180,7 @@ export default function TodoList() {
                                             placeholder="Task title *"
                                             value={formData.title}
                                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                            className="w-full px-3 py-2 bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded-md focus:outline-none focus:ring-[#8B7CF6]/40 focus:border-[#8B7CF6]"
+                                            className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:ring-[#8B7CF6]/40 focus:border-[#8B7CF6]"
                                             required
                                         />
                                         <textarea
@@ -188,20 +188,20 @@ export default function TodoList() {
                                             rows={3}
                                             value={formData.description}
                                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                            className="w-full px-3 py-2 bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded-md"
+                                            className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md"
                                         />
                                         <div>
-                                            <label className="block text-sm font-medium text-[#9E9CB8] mb-1">Due Date (optional)</label>
+                                            <label className="block text-sm font-medium text-[var(--muted)] mb-1">Due Date (optional)</label>
                                             <input
                                                 type="date"
                                                 value={formData.dueDate}
                                                 onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                                                className="w-full px-3 py-2 bg-white/5 border border-white/10 text-[#F3F2FA] placeholder-[#6D6B85] rounded-md"
+                                                className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md"
                                             />
                                         </div>
                                     </div>
                                 </div>
-                                <div className="bg-white/5 px-4 py-3 sm:flex sm:flex-row-reverse">
+                                <div className="bg-[var(--overlay-weak)] px-4 py-3 sm:flex sm:flex-row-reverse">
                                     <button
                                         type="submit"
                                         disabled={submitting}
@@ -212,7 +212,7 @@ export default function TodoList() {
                                     <button
                                         type="button"
                                         onClick={() => setIsModalOpen(false)}
-                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-white/10 shadow-sm px-4 py-2 bg-[#12111F] text-[#9E9CB8] hover:bg-white/5 sm:mt-0 sm:w-auto"
+                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-[var(--border)] shadow-sm px-4 py-2 bg-[var(--surface)] text-[var(--muted)] hover:bg-[var(--overlay-weak)] sm:mt-0 sm:w-auto"
                                     >
                                         Cancel
                                     </button>

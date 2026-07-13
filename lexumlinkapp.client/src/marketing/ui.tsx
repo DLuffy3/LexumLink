@@ -4,18 +4,18 @@ import { Link } from 'react-router-dom';
 // ─── Design tokens (dark-purple concept) ──────────────────────────────────────
 
 export const T = {
-    bg: '#08070F',
-    bg2: '#0C0B18',
-    panel: '#12111F',
-    panel2: '#17162A',
-    border: 'rgba(255,255,255,0.08)',
+    bg: 'var(--bg)',
+    bg2: 'var(--bg2)',
+    panel: 'var(--surface)',
+    panel2: 'var(--surface2)',
+    border: 'var(--border)',
     borderStrong: 'rgba(139,124,246,0.35)',
     violet: '#8B7CF6',
-    violetLight: '#A78BFA',
+    violetLight: 'var(--brand-accent)',
     indigo: '#6D5EF5',
-    text: '#F3F2FA',
-    muted: '#9E9CB8',
-    faint: '#6D6B85',
+    text: 'var(--text)',
+    muted: 'var(--muted)',
+    faint: 'var(--faint)',
     brandGradient: 'linear-gradient(135deg,#A78BFA,#6D5EF5)',
 } as const;
 
@@ -154,7 +154,7 @@ export function GhostButton({
     const style: React.CSSProperties = {
         border: `1px solid ${T.border}`,
         color: T.text,
-        background: 'rgba(255,255,255,0.02)',
+        background: 'var(--overlay-weak)',
     };
     if (to) return <Link to={to} className={cls} style={style}>{children}</Link>;
     return <a href={href} className={cls} style={style}>{children}</a>;

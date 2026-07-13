@@ -46,7 +46,7 @@ function DashboardMockup() {
                     { label: 'Active Cases', value: '312' },
                     { label: 'Settled', value: 'R173M' },
                 ].map((s) => (
-                    <div key={s.label} className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${T.border}` }}>
+                    <div key={s.label} className="rounded-xl p-3" style={{ background: 'var(--overlay-weak)', border: `1px solid ${T.border}` }}>
                         <div className="text-[0.6rem] tracking-wide" style={{ color: T.faint }}>{s.label}</div>
                         <div className="font-['Grifter'] text-lg font-bold mt-1" style={{ color: T.text }}>{s.value}</div>
                     </div>
@@ -59,7 +59,7 @@ function DashboardMockup() {
                     <div className="text-white/80 text-[0.62rem] tracking-wide uppercase">Workflow</div>
                     <div className="text-white font-['Grifter'] text-base font-bold leading-tight mt-2">Case velocity up 24% this quarter</div>
                 </div>
-                <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${T.border}` }}>
+                <div className="rounded-xl p-3" style={{ background: 'var(--overlay-weak)', border: `1px solid ${T.border}` }}>
                     <div className="text-[0.6rem] mb-2" style={{ color: T.faint }}>Cases by month</div>
                     <div className="flex items-end gap-1.5 h-16">
                         {[40, 62, 48, 72, 58, 85, 66].map((h, i) => (
@@ -70,7 +70,7 @@ function DashboardMockup() {
             </div>
 
             {/* case list */}
-            <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${T.border}` }}>
+            <div className="rounded-xl p-3" style={{ background: 'var(--overlay-weak)', border: `1px solid ${T.border}` }}>
                 <div className="flex items-center justify-between mb-2">
                     <span className="text-[0.6rem] tracking-[0.15em] uppercase" style={{ color: T.violetLight }}>Active Cases</span>
                     <span className="text-[0.6rem]" style={{ color: T.faint }}>4 of 312</span>
@@ -161,7 +161,7 @@ function TrustBar() {
                 <p className="text-center text-xs tracking-[0.2em] uppercase mb-6" style={{ color: T.faint }}>Built for the teams that manage client cases</p>
                 <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4">
                     {TRUST.map((t) => (
-                        <span key={t} className="font-['Grifter'] text-lg font-bold tracking-tight" style={{ color: 'rgba(255,255,255,0.35)' }}>{t}</span>
+                        <span key={t} className="font-['Grifter'] text-lg font-bold tracking-tight" style={{ color: 'var(--faint)' }}>{t}</span>
                     ))}
                 </div>
             </div>

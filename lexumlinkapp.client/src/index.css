@@ -2,6 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Theme tokens ────────────────────────────────────────── */
+/* Dark is the default theme (also under html.dark). */
+:root,
+html.dark {
+    --bg: #08070F;
+    --bg2: #0C0B18;
+    --surface: #12111F;
+    --surface2: #17162A;
+    --border: rgba(255, 255, 255, 0.08);
+    --overlay-weak: rgba(255, 255, 255, 0.05);
+    --overlay-med: rgba(255, 255, 255, 0.10);
+    --overlay-strong: rgba(255, 255, 255, 0.20);
+    --text: #F3F2FA;
+    --muted: #9E9CB8;
+    --faint: #6D6B85;
+    --brand-accent: #A78BFA;
+    --backdrop: rgba(0, 0, 0, 0.70);
+    --nav-bg: rgba(8, 7, 15, 0.82);
+    --nav-menu-bg: rgba(12, 11, 24, 0.97);
+    --card-glass: rgba(18, 17, 31, 0.85);
+    color-scheme: dark;
+}
+
+html.light {
+    --bg: #F4F5FA;
+    --bg2: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface2: #EEEFF6;
+    --border: rgba(20, 19, 40, 0.12);
+    --overlay-weak: rgba(20, 19, 40, 0.04);
+    --overlay-med: rgba(20, 19, 40, 0.07);
+    --overlay-strong: rgba(20, 19, 40, 0.14);
+    --text: #16152A;
+    --muted: #5B5A72;
+    --faint: #8B8AA3;
+    --brand-accent: #6D5EF5;
+    --backdrop: rgba(20, 19, 40, 0.45);
+    --nav-bg: rgba(255, 255, 255, 0.82);
+    --nav-menu-bg: rgba(255, 255, 255, 0.97);
+    --card-glass: rgba(255, 255, 255, 0.92);
+    color-scheme: light;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 /* Brand fonts — bundled by Vite from src/assets/fonts */
 @font-face {
     font-family: 'Mooxy';
@@ -86,16 +135,16 @@
 
 /* Native select dropdown options on dark UI */
 select option {
-    background: #12111f;
-    color: #f3f2fa;
+    background: var(--surface);
+    color: var(--text);
 }
 
-/* Autofill (Chrome) — keep dark background & light text */
+/* Autofill (Chrome) — keep themed text colour */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-    -webkit-text-fill-color: #f3f2fa;
-    caret-color: #f3f2fa;
+    -webkit-text-fill-color: var(--text);
+    caret-color: var(--text);
     transition: background-color 9999s ease-in-out 0s;
 }
 
@@ -103,18 +152,18 @@ input:-webkit-autofill:focus {
 .react-calendar {
     width: 100%;
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
     border-radius: 0.75rem;
     padding: 0.5rem;
     font-family: inherit;
-    color: #f3f2fa;
+    color: var(--text);
 }
 .react-calendar button {
-    color: #d7d5e8;
+    color: var(--muted);
     border-radius: 0.5rem;
 }
 .react-calendar__navigation button {
-    color: #f3f2fa;
+    color: var(--text);
     background: transparent;
     font-weight: 600;
 }
@@ -124,10 +173,10 @@ input:-webkit-autofill:focus {
 }
 .react-calendar__navigation button:disabled {
     background: transparent;
-    color: #6d6b85;
+    color: var(--faint);
 }
 .react-calendar__month-view__weekdays {
-    color: #9e9cb8;
+    color: var(--muted);
     text-transform: uppercase;
     font-size: 0.7rem;
 }
@@ -135,7 +184,7 @@ input:-webkit-autofill:focus {
     text-decoration: none;
 }
 .react-calendar__month-view__days__day--neighboringMonth {
-    color: #55536b;
+    color: var(--faint);
 }
 .react-calendar__tile {
     background: transparent;
