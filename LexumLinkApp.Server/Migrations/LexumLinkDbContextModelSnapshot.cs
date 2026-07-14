@@ -28,6 +28,9 @@ namespace LexumLinkApp.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("AssignedUserId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("CaseNumber")
                         .IsRequired()
                         .HasColumnType("text");
@@ -35,7 +38,13 @@ namespace LexumLinkApp.Server.Migrations
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime?>("ClosedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeadlineDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
@@ -55,6 +64,8 @@ namespace LexumLinkApp.Server.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AssignedUserId");
 
                     b.HasIndex("ClientId");
 
@@ -344,6 +355,11 @@ namespace LexumLinkApp.Server.Migrations
 
             modelBuilder.Entity("LexumLinkApp.Server.Models.Case", b =>
                 {
+                    b.HasOne("LexumLinkApp.Server.Models.User", "AssignedUser")
+                        .WithMany()
+                        .HasForeignKey("AssignedUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("LexumLinkApp.Server.Models.Client", "Client")
                         .WithMany("Cases")
                         .HasForeignKey("ClientId")
@@ -355,6 +371,8 @@ namespace LexumLinkApp.Server.Migrations
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AssignedUser");
 
                     b.Navigation("Client");
 
