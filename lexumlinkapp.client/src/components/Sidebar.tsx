@@ -37,7 +37,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
             <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between p-4 border-b border-[var(--border)]">
                     <h2 className="font-['Mooxy'] text-xl font-black tracking-tight">
-                        <span style={{ background: 'linear-gradient(135deg,#A78BFA,#6D5EF5)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Lexum</span>
+                        <span style={{ background: 'var(--grad-text)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Lexum</span>
                         <span className="text-[var(--text)]">Link</span>
                     </h2>
                     <button onClick={toggleSidebar} className="text-[var(--muted)] hover:text-[var(--text)]">
@@ -54,7 +54,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                                 <Link
                                     key={item.name}
                                     to={item.href}
-                                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${isActive ? 'bg-[#8B7CF6]/15 text-[var(--brand-accent)]' : 'text-[var(--muted)] hover:bg-[var(--overlay-weak)] hover:text-[var(--text)]'
+                                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${isActive ? 'bg-[var(--brand-soft)] text-[var(--brand-accent)]' : 'text-[var(--muted)] hover:bg-[var(--overlay-weak)] hover:text-[var(--text)]'
                                         }`}
                                 >
                                     <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,7 +69,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                 {user?.isSuperAdmin && (
                     <Link
                         to="/admin/tickets"
-                        className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${location.pathname === '/admin/tickets' ? 'bg-[#8B7CF6]/15 text-[var(--brand-accent)]' : 'text-[var(--muted)] hover:bg-[var(--overlay-weak)] hover:text-[var(--text)]'
+                        className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${location.pathname === '/admin/tickets' ? 'bg-[var(--brand-soft)] text-[var(--brand-accent)]' : 'text-[var(--muted)] hover:bg-[var(--overlay-weak)] hover:text-[var(--text)]'
                             }`}
                     >
                         <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

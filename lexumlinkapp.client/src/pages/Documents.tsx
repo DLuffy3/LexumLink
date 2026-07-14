@@ -154,11 +154,11 @@ export default function Documents() {
                                     placeholder="Search by client name..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded px-3 py-2 w-64 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded px-3 py-2 w-64 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 />
                                 <button
                                     onClick={() => setShowUploadModal(true)}
-                                    className="bg-[#6D5EF5] hover:bg-[#5B4FE0] text-white px-4 py-2 rounded-md"
+                                    className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white px-4 py-2 rounded-md"
                                 >
                                     + Upload Document
                                 </button>
@@ -242,7 +242,7 @@ export default function Documents() {
                                         <select
                                             value={selectedClientId}
                                             onChange={(e) => setSelectedClientId(e.target.value)}
-                                            className="mt-1 block w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] rounded-md p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                            className="mt-1 block w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] rounded-md p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                             required
                                         >
                                             <option value="">Select a client</option>
@@ -269,13 +269,13 @@ export default function Documents() {
                                 <button
                                     onClick={handleUpload}
                                     disabled={uploading}
-                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#6D5EF5] text-base font-medium text-white hover:bg-[#5B4FE0] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B7CF6] sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
+                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[var(--brand)] text-base font-medium text-white hover:bg-[var(--brand-hover)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-ring)] sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
                                 >
                                     {uploading ? 'Uploading...' : 'Upload'}
                                 </button>
                                 <button
                                     onClick={() => setShowUploadModal(false)}
-                                    className="mt-3 w-full inline-flex justify-center rounded-md border border-[var(--border)] shadow-sm px-4 py-2 bg-[var(--overlay-weak)] text-base font-medium text-[var(--muted)] hover:bg-[var(--overlay-weak)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B7CF6] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                    className="mt-3 w-full inline-flex justify-center rounded-md border border-[var(--border)] shadow-sm px-4 py-2 bg-[var(--overlay-weak)] text-base font-medium text-[var(--muted)] hover:bg-[var(--overlay-weak)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-ring)] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                                 >
                                     Cancel
                                 </button>

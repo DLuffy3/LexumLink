@@ -108,7 +108,7 @@ export default function EditClient() {
                                     placeholder="First name *"
                                     value={formData.firstName}
                                     onChange={handleChange}
-                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                     required
                                 />
                                 <input
@@ -117,7 +117,7 @@ export default function EditClient() {
                                     placeholder="Last name *"
                                     value={formData.lastName}
                                     onChange={handleChange}
-                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                     required
                                 />
                             </div>
@@ -127,7 +127,7 @@ export default function EditClient() {
                                 placeholder="Email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                             />
                             <input
                                 type="tel"
@@ -135,7 +135,7 @@ export default function EditClient() {
                                 placeholder="Phone"
                                 value={formData.phone}
                                 onChange={handleChange}
-                                className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                             />
                             <input
                                 type="text"
@@ -143,7 +143,7 @@ export default function EditClient() {
                                 placeholder="ID Number"
                                 value={formData.idNumber}
                                 onChange={handleChange}
-                                className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                             />
                             <textarea
                                 name="address"
@@ -151,13 +151,13 @@ export default function EditClient() {
                                 rows={3}
                                 value={formData.address}
                                 onChange={handleChange}
-                                className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                             />
                             <div className="flex gap-3">
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="bg-[#6D5EF5] text-white px-4 py-2 rounded hover:bg-[#5B4FE0] disabled:opacity-50"
+                                    className="bg-[var(--brand)] text-white px-4 py-2 rounded hover:bg-[var(--brand-hover)] disabled:opacity-50"
                                 >
                                     {submitting ? 'Saving...' : 'Save Changes'}
                                 </button>

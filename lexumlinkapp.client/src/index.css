@@ -3,45 +3,68 @@
 @tailwind utilities;
 
 /* ── Theme tokens ────────────────────────────────────────── */
-/* Dark is the default theme (also under html.dark). */
+/* Brand palette: burgundy #5E0006, cream #EED9B9, black, white.   */
+/* Dark is the default theme (also under html.dark).              */
 :root,
 html.dark {
-    --bg: #08070F;
-    --bg2: #0C0B18;
-    --surface: #12111F;
-    --surface2: #17162A;
-    --border: rgba(255, 255, 255, 0.08);
-    --overlay-weak: rgba(255, 255, 255, 0.05);
-    --overlay-med: rgba(255, 255, 255, 0.10);
-    --overlay-strong: rgba(255, 255, 255, 0.20);
-    --text: #F3F2FA;
-    --muted: #9E9CB8;
-    --faint: #6D6B85;
-    --brand-accent: #A78BFA;
-    --backdrop: rgba(0, 0, 0, 0.70);
-    --nav-bg: rgba(8, 7, 15, 0.82);
-    --nav-menu-bg: rgba(12, 11, 24, 0.97);
-    --card-glass: rgba(18, 17, 31, 0.85);
+    --bg: #0C0708;
+    --bg2: #150C0D;
+    --surface: #1B1012;
+    --surface2: #241618;
+    --border: rgba(238, 217, 185, 0.14);
+    --overlay-weak: rgba(238, 217, 185, 0.05);
+    --overlay-med: rgba(238, 217, 185, 0.10);
+    --overlay-strong: rgba(238, 217, 185, 0.18);
+    --text: #F2E7D5;
+    --muted: #C3B29A;
+    --faint: #8E7E69;
+    /* Accent = readable per mode: cream on dark, burgundy on light */
+    --brand-accent: #EED9B9;
+    --brand: #5E0006;
+    --brand-hover: #7A0008;
+    --brand-soft: rgba(238, 217, 185, 0.12);
+    --brand-border: rgba(238, 217, 185, 0.30);
+    --brand-ring: rgba(238, 217, 185, 0.40);
+    /* Fills (buttons) stay constant burgundy w/ white text; text/logo gradient flips */
+    --grad-fill: linear-gradient(135deg, #7A0008, #5E0006);
+    --grad-text: linear-gradient(135deg, #F2E7D5, #C99A6B);
+    --glow-1: rgba(122, 0, 8, 0.32);
+    --glow-2: rgba(94, 0, 6, 0.22);
+    --grid-line: rgba(238, 217, 185, 0.05);
+    --backdrop: rgba(0, 0, 0, 0.72);
+    --nav-bg: rgba(12, 7, 8, 0.82);
+    --nav-menu-bg: rgba(21, 12, 13, 0.97);
+    --card-glass: rgba(27, 16, 18, 0.85);
     color-scheme: dark;
 }
 
 html.light {
-    --bg: #F4F5FA;
-    --bg2: #FFFFFF;
-    --surface: #FFFFFF;
-    --surface2: #EEEFF6;
-    --border: rgba(20, 19, 40, 0.12);
-    --overlay-weak: rgba(20, 19, 40, 0.04);
-    --overlay-med: rgba(20, 19, 40, 0.07);
-    --overlay-strong: rgba(20, 19, 40, 0.14);
-    --text: #16152A;
-    --muted: #5B5A72;
-    --faint: #8B8AA3;
-    --brand-accent: #6D5EF5;
-    --backdrop: rgba(20, 19, 40, 0.45);
-    --nav-bg: rgba(255, 255, 255, 0.82);
-    --nav-menu-bg: rgba(255, 255, 255, 0.97);
-    --card-glass: rgba(255, 255, 255, 0.92);
+    --bg: #EED9B9;
+    --bg2: #F4E7D3;
+    --surface: #FBF5EC;
+    --surface2: #F3E7D4;
+    --border: rgba(94, 0, 6, 0.15);
+    --overlay-weak: rgba(94, 0, 6, 0.04);
+    --overlay-med: rgba(94, 0, 6, 0.08);
+    --overlay-strong: rgba(94, 0, 6, 0.16);
+    --text: #2A0A0C;
+    --muted: #6B4A45;
+    --faint: #9C7F79;
+    --brand-accent: #5E0006;
+    --brand: #5E0006;
+    --brand-hover: #7A0008;
+    --brand-soft: rgba(94, 0, 6, 0.10);
+    --brand-border: rgba(94, 0, 6, 0.28);
+    --brand-ring: rgba(94, 0, 6, 0.35);
+    --grad-fill: linear-gradient(135deg, #7A0008, #5E0006);
+    --grad-text: linear-gradient(135deg, #7A0008, #5E0006);
+    --glow-1: rgba(94, 0, 6, 0.10);
+    --glow-2: rgba(94, 0, 6, 0.06);
+    --grid-line: rgba(94, 0, 6, 0.06);
+    --backdrop: rgba(42, 10, 12, 0.45);
+    --nav-bg: rgba(238, 217, 185, 0.85);
+    --nav-menu-bg: rgba(251, 245, 236, 0.97);
+    --card-glass: rgba(251, 245, 236, 0.92);
     color-scheme: light;
 }
 
@@ -116,21 +139,21 @@ body {
     animation: shake 0.3s ease-in-out;
 }
 
-/* ── Dark scrollbars ─────────────────────────────────────── */
+/* ── Themed scrollbars ───────────────────────────────────── */
 * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(139, 124, 246, 0.4) transparent;
+    scrollbar-color: var(--brand-border) transparent;
 }
 *::-webkit-scrollbar {
     width: 10px;
     height: 10px;
 }
 *::-webkit-scrollbar-thumb {
-    background: rgba(139, 124, 246, 0.35);
+    background: var(--brand-border);
     border-radius: 6px;
 }
 *::-webkit-scrollbar-thumb:hover {
-    background: rgba(139, 124, 246, 0.55);
+    background: var(--brand-ring);
 }
 
 /* Native select dropdown options on dark UI */
@@ -169,7 +192,7 @@ input:-webkit-autofill:focus {
 }
 .react-calendar__navigation button:enabled:hover,
 .react-calendar__navigation button:enabled:focus {
-    background: rgba(139, 124, 246, 0.12);
+    background: var(--brand-soft);
 }
 .react-calendar__navigation button:disabled {
     background: transparent;
@@ -192,18 +215,18 @@ input:-webkit-autofill:focus {
 }
 .react-calendar__tile:enabled:hover,
 .react-calendar__tile:enabled:focus {
-    background: rgba(139, 124, 246, 0.14);
+    background: var(--brand-soft);
 }
 .react-calendar__tile--now {
-    background: rgba(139, 124, 246, 0.18);
-    color: #c9bcff;
+    background: var(--brand-soft);
+    color: var(--brand-accent);
 }
 .react-calendar__tile--active,
 .react-calendar__tile--active:enabled:hover,
 .react-calendar__tile--active:enabled:focus {
-    background: linear-gradient(135deg, #a78bfa, #6d5ef5);
+    background: var(--grad-fill);
     color: #fff;
 }
 .react-calendar__month-view__days__day--weekend {
-    color: #c99bf0;
+    color: var(--brand-accent);
 }

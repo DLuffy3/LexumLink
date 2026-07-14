@@ -40,15 +40,15 @@ export default function SignIn() {
         >
             {/* glow */}
             <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute -top-32 right-0 w-[520px] h-[520px] rounded-full blur-[120px]" style={{ background: 'radial-gradient(circle,rgba(139,124,246,0.22),transparent 70%)' }} />
-                <div className="absolute bottom-[-8rem] left-[-6rem] w-[440px] h-[440px] rounded-full blur-[120px]" style={{ background: 'radial-gradient(circle,rgba(109,94,245,0.16),transparent 70%)' }} />
+                <div className="absolute -top-32 right-0 w-[520px] h-[520px] rounded-full blur-[120px]" style={{ background: 'radial-gradient(circle,var(--glow-1),transparent 70%)' }} />
+                <div className="absolute bottom-[-8rem] left-[-6rem] w-[440px] h-[440px] rounded-full blur-[120px]" style={{ background: 'radial-gradient(circle,var(--glow-2),transparent 70%)' }} />
             </div>
 
             {/* top nav */}
             <nav className="absolute top-0 left-0 right-0 z-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-8 h-[72px] flex items-center justify-between">
                     <Link to="/" className="font-['Mooxy'] text-2xl font-black tracking-tight" aria-label="LexumLink home">
-                        <span style={{ background: 'linear-gradient(135deg,#A78BFA,#6D5EF5)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Lexum</span>
+                        <span style={{ background: 'var(--grad-text)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Lexum</span>
                         <span style={{ color: 'var(--text)' }}>Link</span>
                     </Link>
                     <div className="flex items-center gap-3">
@@ -88,7 +88,7 @@ export default function SignIn() {
                         placeholder="Email address"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-lg bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] outline-none transition-all focus:border-[#8B7CF6] focus:ring-2 focus:ring-[#8B7CF6]/40"
+                        className="w-full px-4 py-2.5 rounded-lg bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] outline-none transition-all focus:border-[var(--brand-accent)] focus:ring-2 focus:ring-[var(--brand-ring)]"
                         required
                     />
                     <input
@@ -96,14 +96,14 @@ export default function SignIn() {
                         placeholder="Password"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-lg bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] outline-none transition-all focus:border-[#8B7CF6] focus:ring-2 focus:ring-[#8B7CF6]/40"
+                        className="w-full px-4 py-2.5 rounded-lg bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] outline-none transition-all focus:border-[var(--brand-accent)] focus:ring-2 focus:ring-[var(--brand-ring)]"
                         required
                     />
                     <button
                         type="submit"
                         disabled={loading}
                         className="w-full text-white font-semibold py-2.5 rounded-lg transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
-                        style={{ background: 'linear-gradient(135deg,#A78BFA,#6D5EF5)', boxShadow: '0 8px 30px rgba(109,94,245,0.35)' }}
+                        style={{ background: 'var(--grad-fill)', boxShadow: '0 8px 30px rgba(94,0,6,0.40)' }}
                     >
                         {loading ? (
                             <div className="flex items-center justify-center">

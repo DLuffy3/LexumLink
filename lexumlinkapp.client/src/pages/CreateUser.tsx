@@ -122,7 +122,7 @@ export default function CreateUser() {
                                 </select>
                             )}
 
-                            <button type="submit" disabled={loading} className="w-full bg-[#6D5EF5] hover:bg-[#5B4FE0] text-white py-2 rounded disabled:opacity-50">
+                            <button type="submit" disabled={loading} className="w-full bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white py-2 rounded disabled:opacity-50">
                                 {loading ? 'Creating...' : 'Create User'}
                             </button>
                         </form>

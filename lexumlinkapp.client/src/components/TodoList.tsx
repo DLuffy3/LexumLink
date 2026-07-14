@@ -111,7 +111,7 @@ export default function TodoList() {
                 <h3 className="text-lg font-medium text-[var(--text)]">My To‑Do List</h3>
                 <button
                     onClick={() => { resetForm(); setIsModalOpen(true); }}
-                    className="bg-[#6D5EF5] hover:bg-[#5B4FE0] text-white px-3 py-1 rounded-md flex items-center gap-1"
+                    className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white px-3 py-1 rounded-md flex items-center gap-1"
                 >
                     <span className="text-lg font-bold">+</span> Add Task
                 </button>
@@ -130,9 +130,9 @@ export default function TodoList() {
                                 <div className="flex items-start gap-2 flex-1">
                                     <button onClick={() => toggleComplete(todo.id)} className="mt-0.5">
                                         {todo.isCompleted ? (
-                                            <span className="text-green-300 text-lg">✓</span>
+                                            <i className="fa-solid fa-circle-check text-green-300 text-lg" />
                                         ) : (
-                                            <span className="text-[var(--faint)] text-lg">○</span>
+                                            <i className="fa-regular fa-circle text-[var(--faint)] text-lg" />
                                         )}
                                     </button>
                                     <div className="flex-1">
@@ -180,7 +180,7 @@ export default function TodoList() {
                                             placeholder="Task title *"
                                             value={formData.title}
                                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                            className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:ring-[#8B7CF6]/40 focus:border-[#8B7CF6]"
+                                            className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:ring-[var(--brand-ring)] focus:border-[var(--brand-accent)]"
                                             required
                                         />
                                         <textarea
@@ -205,7 +205,7 @@ export default function TodoList() {
                                     <button
                                         type="submit"
                                         disabled={submitting}
-                                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#6D5EF5] hover:bg-[#5B4FE0] text-white sm:ml-3 sm:w-auto disabled:opacity-50"
+                                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white sm:ml-3 sm:w-auto disabled:opacity-50"
                                     >
                                         {submitting ? 'Saving...' : (editingId ? 'Update' : 'Add')}
                                     </button>

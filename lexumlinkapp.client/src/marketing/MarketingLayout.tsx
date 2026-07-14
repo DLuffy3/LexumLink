@@ -76,17 +76,17 @@ function Navbar() {
                     <Link
                         to="/contact"
                         className="hidden sm:inline-flex items-center px-5 py-2.5 rounded-full text-white text-xs font-semibold tracking-[0.08em] uppercase transition-all duration-300 hover:-translate-y-0.5"
-                        style={{ background: T.brandGradient, boxShadow: '0 6px 22px rgba(109,94,245,0.35)' }}
+                        style={{ background: T.brandGradient, boxShadow: '0 6px 22px rgba(94,0,6,0.40)' }}
                     >
                         Get Started
                     </Link>
                     <button
-                        className="md:hidden text-2xl leading-none"
+                        className="md:hidden text-xl leading-none"
                         style={{ color: T.text }}
                         onClick={() => setOpen((o) => !o)}
                         aria-label="Toggle menu"
                     >
-                        {open ? '✕' : '☰'}
+                        <i className={open ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'} />
                     </button>
                 </div>
             </div>
@@ -161,14 +161,19 @@ function Footer() {
                             One intelligent platform that connects people, processes, and information — so every client and case is tracked from start to finish.
                         </p>
                         <div className="flex gap-3 mt-6">
-                            {['in', '𝕏', 'f'].map((s) => (
+                            {[
+                                { icon: 'fa-brands fa-linkedin-in', label: 'LinkedIn' },
+                                { icon: 'fa-brands fa-x-twitter', label: 'X' },
+                                { icon: 'fa-brands fa-facebook-f', label: 'Facebook' },
+                            ].map((s) => (
                                 <a
-                                    key={s}
+                                    key={s.label}
                                     href="#"
-                                    className="w-9 h-9 rounded-full flex items-center justify-center text-xs transition-all duration-300 hover:-translate-y-0.5"
+                                    aria-label={s.label}
+                                    className="w-9 h-9 rounded-full flex items-center justify-center text-sm transition-all duration-300 hover:-translate-y-0.5 hover:text-[var(--text)]"
                                     style={{ border: `1px solid ${T.border}`, color: T.muted }}
                                 >
-                                    {s}
+                                    <i className={s.icon} />
                                 </a>
                             ))}
                         </div>

@@ -92,7 +92,7 @@ export default function NewCase() {
                                     name="clientId"
                                     value={formData.clientId}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                     required
                                 >
                                     <option value="">Select a client</option>
@@ -110,7 +110,7 @@ export default function NewCase() {
                                     name="caseNumber"
                                     value={formData.caseNumber}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                     required
                                 />
                             </div>
@@ -121,7 +121,7 @@ export default function NewCase() {
                                     name="incidentDate"
                                     value={formData.incidentDate}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                     required
                                 />
                             </div>
@@ -131,7 +131,7 @@ export default function NewCase() {
                                     name="status"
                                     value={formData.status}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 >
                                     <option value="open">Open</option>
                                     <option value="in_progress">In Progress</option>
@@ -146,13 +146,13 @@ export default function NewCase() {
                                     rows={4}
                                     value={formData.description}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 />
                             </div>
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-[#6D5EF5] text-white py-2 rounded hover:bg-[#5B4FE0] disabled:opacity-50"
+                                className="w-full bg-[var(--brand)] text-white py-2 rounded hover:bg-[var(--brand-hover)] disabled:opacity-50"
                             >
                                 {loading ? 'Creating...' : 'Create Case'}
                             </button>

@@ -90,7 +90,7 @@ export default function ClientDetail() {
                     <div><span className="font-medium">Member since:</span> {new Date(client.createdAt).toLocaleDateString()}</div>
                 </div>
                 <div className="mt-4">
-                    <Link to={`/clients/${id}/edit`} className="bg-[#6D5EF5] text-white px-4 py-2 rounded-md hover:bg-[#5B4FE0]">Edit Client</Link>
+                    <Link to={`/clients/${id}/edit`} className="bg-[var(--brand)] text-white px-4 py-2 rounded-md hover:bg-[var(--brand-hover)]">Edit Client</Link>
                 </div>
             </div>
 

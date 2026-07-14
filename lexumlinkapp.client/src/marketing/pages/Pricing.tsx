@@ -66,7 +66,7 @@ function PriceCard({ plan, annual }: { plan: Plan; annual: boolean }) {
             className="relative rounded-2xl p-8 h-full flex flex-col transition-all duration-300 hover:-translate-y-1"
             style={
                 plan.featured
-                    ? { background: `linear-gradient(160deg,rgba(139,124,246,0.14),${T.panel})`, border: `1px solid ${T.borderStrong}`, boxShadow: '0 30px 80px rgba(109,94,245,0.22)' }
+                    ? { background: `linear-gradient(160deg,var(--brand-soft),${T.panel})`, border: `1px solid ${T.borderStrong}`, boxShadow: '0 30px 80px rgba(94,0,6,0.25)' }
                     : { background: T.panel, border: `1px solid ${T.border}` }
             }
         >
@@ -85,7 +85,7 @@ function PriceCard({ plan, annual }: { plan: Plan; annual: boolean }) {
             <ul className="space-y-3 mb-8 flex-1">
                 {plan.features.map((f) => (
                     <li key={f} className="flex items-center gap-3 text-sm" style={{ color: T.muted }}>
-                        <span className="flex-shrink-0" style={{ color: T.violetLight }}>✓</span>
+                        <i className="fa-solid fa-check flex-shrink-0" style={{ color: T.violetLight }} />
                         {f}
                     </li>
                 ))}
@@ -96,7 +96,7 @@ function PriceCard({ plan, annual }: { plan: Plan; annual: boolean }) {
                 className="block w-full text-center py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:-translate-y-0.5"
                 style={
                     plan.featured
-                        ? { background: T.brandGradient, color: '#fff', boxShadow: '0 8px 30px rgba(109,94,245,0.35)' }
+                        ? { background: T.brandGradient, color: '#fff', boxShadow: '0 8px 30px rgba(94,0,6,0.40)' }
                         : { border: `1px solid ${T.borderStrong}`, color: T.text }
                 }
             >
@@ -183,7 +183,7 @@ export default function Pricing() {
                                 <div key={row.label} className="grid grid-cols-4 px-6 py-4 items-center" style={{ background: i % 2 ? 'transparent' : 'var(--overlay-weak)', borderTop: `1px solid ${T.border}` }}>
                                     <span className="text-sm" style={{ color: T.muted }}>{row.label}</span>
                                     {row.values.map((v, j) => (
-                                        <span key={j} className="text-sm text-center" style={{ color: v === '✓' ? T.violetLight : v === '—' ? T.faint : T.text }}>{v}</span>
+                                        <span key={j} className="text-sm text-center" style={{ color: v === '✓' ? T.violetLight : v === '—' ? T.faint : T.text }}>{v === '✓' ? <i className="fa-solid fa-check" /> : v === '—' ? <i className="fa-solid fa-minus" /> : v}</span>
                                     ))}
                                 </div>
                             ))}

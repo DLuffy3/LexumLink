@@ -140,7 +140,7 @@ export default function EditClaim() {
                                     name="caseId"
                                     value={formData.caseId}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                     required
                                 >
                                     <option value="">Select a case</option>
@@ -158,7 +158,7 @@ export default function EditClaim() {
                                     name="claimNumber"
                                     value={formData.claimNumber}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                     required
                                 />
                             </div>
@@ -169,7 +169,7 @@ export default function EditClaim() {
                                     name="rafReference"
                                     value={formData.rafReference}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 />
                             </div>
                             <div>
@@ -180,7 +180,7 @@ export default function EditClaim() {
                                     name="amountRequested"
                                     value={formData.amountRequested ?? ''}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 />
                             </div>
                             <div>
@@ -191,7 +191,7 @@ export default function EditClaim() {
                                     name="amountAwarded"
                                     value={formData.amountAwarded ?? ''}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 />
                             </div>
                             <div>
@@ -200,7 +200,7 @@ export default function EditClaim() {
                                     name="status"
                                     value={formData.status}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 >
                                     <option value="in_progress">In Progress</option>
                                     <option value="completed">Completed</option>
@@ -211,7 +211,7 @@ export default function EditClaim() {
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="bg-[#6D5EF5] text-white px-4 py-2 rounded hover:bg-[#5B4FE0] disabled:opacity-50"
+                                    className="bg-[var(--brand)] text-white px-4 py-2 rounded hover:bg-[var(--brand-hover)] disabled:opacity-50"
                                 >
                                     {submitting ? 'Saving...' : 'Save Changes'}
                                 </button>

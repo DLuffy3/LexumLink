@@ -208,7 +208,7 @@ export default function Settings() {
                                         id="title"
                                         value={ticketTitle}
                                         onChange={(e) => setTicketTitle(e.target.value)}
-                                        className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:ring-[#8B7CF6]/40 focus:border-[#8B7CF6]"
+                                        className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:ring-[var(--brand-ring)] focus:border-[var(--brand-accent)]"
                                         required
                                     />
                                 </div>
@@ -219,13 +219,13 @@ export default function Settings() {
                                         rows={4}
                                         value={ticketDescription}
                                         onChange={(e) => setTicketDescription(e.target.value)}
-                                        className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:ring-[#8B7CF6]/40 focus:border-[#8B7CF6]"
+                                        className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:ring-[var(--brand-ring)] focus:border-[var(--brand-accent)]"
                                     />
                                 </div>
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="bg-[#6D5EF5] hover:bg-[#5B4FE0] text-white px-4 py-2 rounded-md disabled:opacity-50"
+                                    className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white px-4 py-2 rounded-md disabled:opacity-50"
                                 >
                                     {submitting ? 'Submitting...' : 'Submit Ticket'}
                                 </button>
