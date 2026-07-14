@@ -145,12 +145,12 @@ export default function Clients() {
                                     placeholder="Search by name..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded px-3 py-2 w-64 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded px-3 py-2 w-64 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 />
                                 <button
                                     onClick={() => setIsModalOpen(true)}
                                     disabled={!activeOrganization}
-                                    className={`bg-[#6D5EF5] hover:bg-[#5B4FE0] text-white px-4 py-2 rounded-md ${!activeOrganization ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    className={`bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white px-4 py-2 rounded-md ${!activeOrganization ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 >
                                     Add Client
                                 </button>
@@ -224,7 +224,7 @@ export default function Clients() {
                                                         placeholder="First name *"
                                                         value={formData.firstName}
                                                         onChange={handleInputChange}
-                                                        className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                                        className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                                         required
                                                     />
                                                     <input
@@ -233,7 +233,7 @@ export default function Clients() {
                                                         placeholder="Last name *"
                                                         value={formData.lastName}
                                                         onChange={handleInputChange}
-                                                        className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                                        className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                                         required
                                                     />
                                                 </div>
@@ -243,7 +243,7 @@ export default function Clients() {
                                                     placeholder="Email"
                                                     value={formData.email}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                                    className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                                 />
                                                 <input
                                                     type="tel"
@@ -251,7 +251,7 @@ export default function Clients() {
                                                     placeholder="Phone"
                                                     value={formData.phone}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                                    className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                                 />
                                                 <input
                                                     type="text"
@@ -259,7 +259,7 @@ export default function Clients() {
                                                     placeholder="ID Number"
                                                     value={formData.idNumber}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                                    className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                                 />
                                                 <textarea
                                                     name="address"
@@ -267,7 +267,7 @@ export default function Clients() {
                                                     rows={2}
                                                     value={formData.address}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                                    className="w-full px-3 py-2 bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded-md focus:outline-none focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                                 />
                                             </div>
                                             {error && <div className="mt-2 text-sm text-red-300">{error}</div>}
@@ -278,14 +278,14 @@ export default function Clients() {
                                     <button
                                         type="submit"
                                         disabled={submitting}
-                                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#6D5EF5] text-base font-medium text-white hover:bg-[#5B4FE0] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B7CF6] sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
+                                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[var(--brand)] text-base font-medium text-white hover:bg-[var(--brand-hover)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-ring)] sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
                                     >
                                         {submitting ? 'Saving...' : 'Save'}
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setIsModalOpen(false)}
-                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-[var(--border)] shadow-sm px-4 py-2 bg-[var(--overlay-weak)] text-base font-medium text-[var(--muted)] hover:bg-[var(--overlay-weak)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8B7CF6] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-[var(--border)] shadow-sm px-4 py-2 bg-[var(--overlay-weak)] text-base font-medium text-[var(--muted)] hover:bg-[var(--overlay-weak)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--brand-ring)] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                                     >
                                         Cancel
                                     </button>

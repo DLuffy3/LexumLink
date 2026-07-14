@@ -98,7 +98,7 @@ export default function NewClaim() {
                                     name="caseId"
                                     value={formData.caseId}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                     required
                                 >
                                     <option value="">Select a case</option>
@@ -116,7 +116,7 @@ export default function NewClaim() {
                                     name="claimNumber"
                                     value={formData.claimNumber}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                     required
                                 />
                             </div>
@@ -127,7 +127,7 @@ export default function NewClaim() {
                                     name="rafReference"
                                     value={formData.rafReference}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 />
                             </div>
                             <div>
@@ -138,7 +138,7 @@ export default function NewClaim() {
                                     name="amountRequested"
                                     value={formData.amountRequested}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 />
                             </div>
                             <div>
@@ -149,7 +149,7 @@ export default function NewClaim() {
                                     name="amountAwarded"
                                     value={formData.amountAwarded}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 />
                             </div>
                             <div>
@@ -158,7 +158,7 @@ export default function NewClaim() {
                                     name="status"
                                     value={formData.status}
                                     onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[#8B7CF6] focus:ring-[#8B7CF6]/40"
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 >
                                     <option value="in_progress">In Progress</option>
                                     <option value="completed">Completed</option>
@@ -168,7 +168,7 @@ export default function NewClaim() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-[#6D5EF5] text-white py-2 rounded hover:bg-[#5B4FE0] disabled:opacity-50"
+                                className="w-full bg-[var(--brand)] text-white py-2 rounded hover:bg-[var(--brand-hover)] disabled:opacity-50"
                             >
                                 {loading ? 'Creating...' : 'Create Claim'}
                             </button>

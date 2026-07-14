@@ -11,11 +11,11 @@ import TodoList from '../components/TodoList';
 
 // On-theme donut gradients, keyed by claim status so colours stay stable
 const SLICE_GRADIENTS: Record<string, [string, string]> = {
-    'Completed': ['#A78BFA', '#7C6CF5'],
-    'In Progress': ['#8B7CF6', '#6D5EF5'],
-    'Critical': ['#F472B6', '#DB2777'],
+    'Completed': ['#7A0008', '#5E0006'],
+    'In Progress': ['#C9A24B', '#A8823B'],
+    'Critical': ['#C1121F', '#8E0C16'],
 };
-const FALLBACK_GRADIENT: [string, string] = ['#8B7CF6', '#6D5EF5'];
+const FALLBACK_GRADIENT: [string, string] = ['#7A0008', '#5E0006'];
 const gradId = (name: string) => `grad-${name.replace(/\s+/g, '')}`;
 
 interface Case {
@@ -148,9 +148,9 @@ export default function Dashboard() {
                         ) : (
                             <>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                                    <div className="bg-[var(--surface)] rounded-lg shadow p-6 border-l-4 border-[#8B7CF6] hover:shadow-md transition-all">
+                                    <div className="bg-[var(--surface)] rounded-lg shadow p-6 border-l-4 border-[var(--brand-accent)] hover:shadow-md transition-all">
                                         <div className="flex items-center">
-                                            <div className="p-2 bg-[#8B7CF6]/15 rounded-full">
+                                            <div className="p-2 bg-[var(--brand-soft)] rounded-full">
                                                 <svg className="w-6 h-6 text-[var(--brand-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                 </svg>

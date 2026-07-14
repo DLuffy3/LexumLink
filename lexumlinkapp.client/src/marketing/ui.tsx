@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// ─── Design tokens (dark-purple concept) ──────────────────────────────────────
+// ─── Design tokens (burgundy / cream brand) ───────────────────────────────────
 
 export const T = {
     bg: 'var(--bg)',
@@ -9,14 +9,16 @@ export const T = {
     panel: 'var(--surface)',
     panel2: 'var(--surface2)',
     border: 'var(--border)',
-    borderStrong: 'rgba(139,124,246,0.35)',
-    violet: '#8B7CF6',
+    borderStrong: 'var(--brand-border)',
+    violet: 'var(--brand-accent)',
     violetLight: 'var(--brand-accent)',
-    indigo: '#6D5EF5',
+    indigo: 'var(--brand)',
     text: 'var(--text)',
     muted: 'var(--muted)',
     faint: 'var(--faint)',
-    brandGradient: 'linear-gradient(135deg,#A78BFA,#6D5EF5)',
+    // Fill gradient for buttons/badges (white text on top); flips-per-mode text gradient for clipped headings/logo.
+    brandGradient: 'var(--grad-fill)',
+    textGradient: 'var(--grad-text)',
 } as const;
 
 // ─── Scroll-reveal (no external deps) ─────────────────────────────────────────
@@ -99,7 +101,7 @@ export function Accent({ children }: { children: React.ReactNode }) {
     return (
         <span
             style={{
-                background: T.brandGradient,
+                background: T.textGradient,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
             }}
@@ -124,7 +126,7 @@ export function PrimaryButton({
         `group inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-white font-semibold text-sm tracking-wide transition-all duration-300 hover:-translate-y-0.5 ${className}`;
     const style: React.CSSProperties = {
         background: T.brandGradient,
-        boxShadow: '0 8px 30px rgba(109,94,245,0.35)',
+        boxShadow: '0 8px 30px rgba(94,0,6,0.40)',
     };
     const inner = (
         <>
@@ -165,7 +167,7 @@ export function Logo({ className = 'text-2xl' }: { className?: string }) {
         <span className={`font-['Mooxy'] font-black tracking-tight ${className}`}>
             <span
                 style={{
-                    background: T.brandGradient,
+                    background: T.textGradient,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                 }}
@@ -190,12 +192,12 @@ export function PageHero({
         <section className="relative pt-40 pb-20 overflow-hidden" style={{ background: T.bg }}>
             <div
                 className="absolute inset-0 pointer-events-none"
-                style={{ background: `radial-gradient(ellipse 60% 50% at 50% 0%, rgba(139,124,246,0.16) 0%, transparent 60%)` }}
+                style={{ background: `radial-gradient(ellipse 60% 50% at 50% 0%, var(--glow-1) 0%, transparent 60%)` }}
             />
             <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
-                    backgroundImage: 'linear-gradient(rgba(139,124,246,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(139,124,246,0.05) 1px,transparent 1px)',
+                    backgroundImage: 'linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px)',
                     backgroundSize: '72px 72px',
                     maskImage: 'radial-gradient(ellipse 60% 70% at 50% 20%,black,transparent)',
                     WebkitMaskImage: 'radial-gradient(ellipse 60% 70% at 50% 20%,black,transparent)',
@@ -222,11 +224,11 @@ export function GlowField() {
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div
                 className="absolute -top-32 -right-24 w-[520px] h-[520px] rounded-full blur-[120px]"
-                style={{ background: 'radial-gradient(circle,rgba(139,124,246,0.22),transparent 70%)' }}
+                style={{ background: 'radial-gradient(circle,var(--glow-1),transparent 70%)' }}
             />
             <div
                 className="absolute bottom-[-10rem] left-[-8rem] w-[460px] h-[460px] rounded-full blur-[120px]"
-                style={{ background: 'radial-gradient(circle,rgba(109,94,245,0.16),transparent 70%)' }}
+                style={{ background: 'radial-gradient(circle,var(--glow-2),transparent 70%)' }}
             />
         </div>
     );

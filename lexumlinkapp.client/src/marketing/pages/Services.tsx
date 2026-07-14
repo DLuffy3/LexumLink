@@ -9,49 +9,49 @@ interface Service {
 
 const SERVICES: Service[] = [
     {
-        icon: '👤',
+        icon: 'fa-solid fa-user-shield',
         title: 'Secure Client Management',
         desc: 'Store all client information in one secure location — personal details, contacts, case history, and documents, available whenever they are needed.',
         points: ['Centralised client profiles', 'Quick client search', 'Complete client history', 'Secure data storage'],
     },
     {
-        icon: '📂',
+        icon: 'fa-solid fa-folder-open',
         title: 'Case Management',
         desc: 'Give every client one or multiple cases and track each through its full lifecycle for complete visibility.',
         points: ['Open new cases', 'Assign case handlers', 'Monitor progress', 'Update status & close cases'],
     },
     {
-        icon: '📄',
+        icon: 'fa-solid fa-file-lines',
         title: 'Document Management',
         desc: 'Upload and organise every supporting document against the client profile for easy retrieval.',
         points: ['Medical records', 'SAPS reports', 'Legal documents', 'Identification documents'],
     },
     {
-        icon: '🔄',
+        icon: 'fa-solid fa-arrows-rotate',
         title: 'Workflow Tracking',
         desc: 'Guide each case through predefined stages so no important step is ever missed.',
         points: ['Client registered → consultation', 'Documents collected → submitted', 'Review → settlement', 'Case closed'],
     },
     {
-        icon: '⏰',
+        icon: 'fa-solid fa-clock',
         title: 'Task & Reminder Management',
         desc: 'Keep staff organised with automatic reminders that reduce delays and improve client service.',
         points: ['Client follow-ups', 'Missing documentation', 'Court dates & deadlines', 'Medical assessments'],
     },
     {
-        icon: '📊',
+        icon: 'fa-solid fa-chart-pie',
         title: 'Dashboard & Reporting',
         desc: 'Monitor performance from a centralised dashboard with reports that surface operational insight.',
         points: ['Total & active cases', 'Completed cases', 'Pending tasks', 'Workflow statistics'],
     },
     {
-        icon: '🔐',
+        icon: 'fa-solid fa-lock',
         title: 'Secure Role-Based Access',
         desc: 'Protect sensitive information with permissions tailored to each person’s role.',
         points: ['Administrator', 'Case Manager & Manager', 'Consultant', 'Receptionist'],
     },
     {
-        icon: '💬',
+        icon: 'fa-solid fa-comments',
         title: 'Better Client Service',
         desc: 'With instant access to client information and case updates, your team responds faster and more accurately.',
         points: ['Answer enquiries quickly', 'Accurate progress updates', 'Reduce waiting times', 'More professional service'],
@@ -85,7 +85,7 @@ export default function Services() {
                             <Reveal key={s.title} delay={(i % 2) * 0.08}>
                                 <div className="group h-full rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1" style={{ background: T.panel, border: `1px solid ${T.border}` }}>
                                     <div className="flex items-start gap-4">
-                                        <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{ background: 'rgba(139,124,246,0.12)', border: `1px solid ${T.borderStrong}` }}>{s.icon}</div>
+                                        <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{ background: 'var(--brand-soft)', border: `1px solid ${T.borderStrong}` }}><i className={s.icon} style={{ color: T.violetLight }} /></div>
                                         <div>
                                             <h3 className="font-semibold text-lg mb-2" style={{ color: T.text }}>{s.title}</h3>
                                             <p className="text-sm leading-[1.7]" style={{ color: T.muted }}>{s.desc}</p>
@@ -94,7 +94,7 @@ export default function Services() {
                                     <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-2.5">
                                         {s.points.map((p) => (
                                             <div key={p} className="flex items-center gap-2 text-xs" style={{ color: T.muted }}>
-                                                <span className="flex-shrink-0" style={{ color: T.violetLight }}>✓</span>
+                                                <i className="fa-solid fa-check flex-shrink-0" style={{ color: T.violetLight }} />
                                                 {p}
                                             </div>
                                         ))}

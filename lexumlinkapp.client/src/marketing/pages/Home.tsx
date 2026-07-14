@@ -6,12 +6,12 @@ import { T, Reveal, SectionLabel, SectionTitle, Accent, PrimaryButton, GhostButt
 const TRUST = ['Attorneys', 'RAF Consultants', 'Claims Admins', 'Medical-Legal', 'Insurers'];
 
 const FEATURES = [
-    { icon: '👤', title: 'Secure Client Management', desc: 'Every client profile — details, contacts, history, documents — in one secure, searchable place.' },
-    { icon: '📂', title: 'Case Management', desc: 'Open, assign, monitor, and close cases with full visibility across every stage of the lifecycle.' },
-    { icon: '📄', title: 'Document Management', desc: 'Upload and organise medical records, SAPS reports, and legal files against each client profile.' },
-    { icon: '🔄', title: 'Workflow Tracking', desc: 'Guide each case through defined stages so no step — from registration to settlement — is missed.' },
-    { icon: '⏰', title: 'Tasks & Reminders', desc: 'Automated reminders for follow-ups, deadlines, court dates, and medical assessments.' },
-    { icon: '📊', title: 'Dashboards & Reporting', desc: 'Track clients, active cases, pending tasks, and performance from a single live dashboard.' },
+    { icon: 'fa-solid fa-user-shield', title: 'Secure Client Management', desc: 'Every client profile — details, contacts, history, documents — in one secure, searchable place.' },
+    { icon: 'fa-solid fa-folder-open', title: 'Case Management', desc: 'Open, assign, monitor, and close cases with full visibility across every stage of the lifecycle.' },
+    { icon: 'fa-solid fa-file-lines', title: 'Document Management', desc: 'Upload and organise medical records, SAPS reports, and legal files against each client profile.' },
+    { icon: 'fa-solid fa-arrows-rotate', title: 'Workflow Tracking', desc: 'Guide each case through defined stages so no step — from registration to settlement — is missed.' },
+    { icon: 'fa-solid fa-clock', title: 'Tasks & Reminders', desc: 'Automated reminders for follow-ups, deadlines, court dates, and medical assessments.' },
+    { icon: 'fa-solid fa-chart-pie', title: 'Dashboards & Reporting', desc: 'Track clients, active cases, pending tasks, and performance from a single live dashboard.' },
 ];
 
 const STEPS = [
@@ -21,7 +21,7 @@ const STEPS = [
 ];
 
 const CASE_ROWS = [
-    { name: 'Ndlovu — RAF Claim', stage: 'Case Submitted', tone: '#8B7CF6' },
+    { name: 'Ndlovu — RAF Claim', stage: 'Case Submitted', tone: '#B23A41' },
     { name: 'Botha — Personal Injury', stage: 'Documents Collected', tone: '#4ADE80' },
     { name: 'Mokoena — Urgent', stage: 'Review in Progress', tone: '#FBBF24' },
     { name: 'Dlamini — Medical Claim', stage: 'Consultation Done', tone: '#60A5FA' },
@@ -37,7 +37,7 @@ function DashboardMockup() {
         >
             <div
                 className="absolute top-0 left-0 right-0 h-[2px]"
-                style={{ background: 'linear-gradient(90deg,transparent,#8B7CF6,transparent)', backgroundSize: '200% 100%', animation: 'shimmer 3s linear infinite' }}
+                style={{ background: 'linear-gradient(90deg,transparent,var(--brand-accent),transparent)', backgroundSize: '200% 100%', animation: 'shimmer 3s linear infinite' }}
             />
             {/* top stat tiles */}
             <div className="grid grid-cols-3 gap-3 mb-4">
@@ -95,12 +95,12 @@ function Hero() {
             <div className="absolute inset-0 pointer-events-none">
                 <div
                     className="absolute inset-0"
-                    style={{ background: `radial-gradient(ellipse 70% 60% at 75% 35%, rgba(139,124,246,0.16) 0%, transparent 60%), radial-gradient(ellipse 60% 70% at 10% 90%, rgba(109,94,245,0.10) 0%, transparent 55%), linear-gradient(160deg,${T.bg} 0%,${T.bg2} 55%,${T.bg} 100%)` }}
+                    style={{ background: `radial-gradient(ellipse 70% 60% at 75% 35%, var(--glow-1) 0%, transparent 60%), radial-gradient(ellipse 60% 70% at 10% 90%, var(--glow-2) 0%, transparent 55%), linear-gradient(160deg,${T.bg} 0%,${T.bg2} 55%,${T.bg} 100%)` }}
                 />
                 <div
                     className="absolute inset-0"
                     style={{
-                        backgroundImage: 'linear-gradient(rgba(139,124,246,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(139,124,246,0.05) 1px,transparent 1px)',
+                        backgroundImage: 'linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px)',
                         backgroundSize: '72px 72px',
                         maskImage: 'radial-gradient(ellipse 70% 70% at 50% 40%,black,transparent)',
                         WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 40%,black,transparent)',
@@ -112,7 +112,7 @@ function Hero() {
                 <div>
                     <div
                         className="inline-flex items-center gap-3 rounded-full px-4 py-2 mb-7 animate-fade-in-up"
-                        style={{ border: `1px solid ${T.border}`, background: 'rgba(139,124,246,0.06)' }}
+                        style={{ border: `1px solid ${T.border}`, background: 'var(--brand-soft)' }}
                     >
                         <span className="w-2 h-2 rounded-full" style={{ background: T.violet, animation: 'pulseGlow 2s ease-in-out infinite' }} />
                         <span className="text-xs tracking-[0.18em] uppercase" style={{ color: T.violetLight }}>Cloud Client &amp; Case Management</span>
@@ -193,9 +193,9 @@ function Features() {
                             >
                                 <div
                                     className="w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-6 transition-all duration-300"
-                                    style={{ background: 'rgba(139,124,246,0.12)', border: `1px solid ${T.borderStrong}` }}
+                                    style={{ background: 'var(--brand-soft)', border: `1px solid ${T.borderStrong}` }}
                                 >
-                                    {f.icon}
+                                    <i className={f.icon} style={{ color: T.violetLight }} />
                                 </div>
                                 <h3 className="font-semibold text-lg mb-3 transition-colors duration-300" style={{ color: T.text }}>{f.title}</h3>
                                 <p className="text-sm leading-[1.7]" style={{ color: T.muted }}>{f.desc}</p>
@@ -227,7 +227,7 @@ function Workflow() {
                     {STEPS.map((s, i) => (
                         <Reveal key={s.num} delay={i * 0.1}>
                             <div className="rounded-2xl p-8 h-full" style={{ background: T.panel, border: `1px solid ${T.border}` }}>
-                                <div className="font-['Grifter'] text-5xl font-bold mb-4" style={{ background: T.brandGradient, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.num}</div>
+                                <div className="font-['Grifter'] text-5xl font-bold mb-4" style={{ background: T.textGradient, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.num}</div>
                                 <h3 className="font-semibold text-lg mb-2" style={{ color: T.text }}>{s.title}</h3>
                                 <p className="text-sm leading-[1.7]" style={{ color: T.muted }}>{s.desc}</p>
                             </div>

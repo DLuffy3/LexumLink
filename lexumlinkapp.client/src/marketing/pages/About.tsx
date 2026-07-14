@@ -1,9 +1,9 @@
 import { T, Reveal, SectionLabel, SectionTitle, Accent, PageHero, PrimaryButton, GhostButton, GlowField } from '../ui';
 
 const PILLARS = [
-    { icon: '🔗', title: 'Connected', desc: 'People, processes, and information in one place — no more scattered spreadsheets and folders.' },
-    { icon: '⚡', title: 'Efficient', desc: 'Less paperwork and fewer manual steps, so your team spends time on clients, not admin.' },
-    { icon: '🔍', title: 'Transparent', desc: 'Clear visibility into every case, at every stage, for everyone who needs it.' },
+    { icon: 'fa-solid fa-link', title: 'Connected', desc: 'People, processes, and information in one place — no more scattered spreadsheets and folders.' },
+    { icon: 'fa-solid fa-bolt', title: 'Efficient', desc: 'Less paperwork and fewer manual steps, so your team spends time on clients, not admin.' },
+    { icon: 'fa-solid fa-magnifying-glass', title: 'Transparent', desc: 'Clear visibility into every case, at every stage, for everyone who needs it.' },
 ];
 
 const USERS = [
@@ -60,7 +60,7 @@ export default function About() {
                         <div className="grid grid-cols-2 gap-4">
                             {STATS.map((s) => (
                                 <div key={s.label} className="rounded-2xl p-6" style={{ background: T.panel, border: `1px solid ${T.border}` }}>
-                                    <div className="font-['Grifter'] text-4xl font-bold" style={{ background: T.brandGradient, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.num}</div>
+                                    <div className="font-['Grifter'] text-4xl font-bold" style={{ background: T.textGradient, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.num}</div>
                                     <div className="text-sm mt-2 leading-snug" style={{ color: T.muted }}>{s.label}</div>
                                 </div>
                             ))}
@@ -93,7 +93,7 @@ export default function About() {
                         {PILLARS.map((p, i) => (
                             <Reveal key={p.title} delay={i * 0.1}>
                                 <div className="rounded-2xl p-8 h-full" style={{ background: T.panel, border: `1px solid ${T.border}` }}>
-                                    <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-6" style={{ background: 'rgba(139,124,246,0.12)', border: `1px solid ${T.borderStrong}` }}>{p.icon}</div>
+                                    <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-6" style={{ background: 'var(--brand-soft)', border: `1px solid ${T.borderStrong}` }}><i className={p.icon} style={{ color: T.violetLight }} /></div>
                                     <h3 className="font-semibold text-lg mb-3" style={{ color: T.text }}>{p.title}</h3>
                                     <p className="text-sm leading-[1.7]" style={{ color: T.muted }}>{p.desc}</p>
                                 </div>

@@ -102,7 +102,7 @@ export default function SuperAdminDashboard() {
                     <div className="max-w-2xl mx-auto bg-[var(--surface)] rounded-lg shadow p-6">
                         <div className="flex justify-between items-center mb-6">
                             <h1 className="text-2xl font-bold">Super Admin Dashboard</h1>
-                            <button onClick={signOut} className="bg-[#6D5EF5] hover:bg-[#5B4FE0] text-white px-4 py-2 rounded-md">Sign Out</button>
+                            <button onClick={signOut} className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white px-4 py-2 rounded-md">Sign Out</button>
                         </div>
                         <h2 className="text-xl font-semibold mb-4">Create New User</h2>
                         {message && <div className="mb-4 p-2 rounded bg-blue-500/15 text-blue-300">{message}</div>}
@@ -130,7 +130,7 @@ export default function SuperAdminDashboard() {
                                 </select>
                             )}
 
-                            <button type="submit" disabled={loading} className="w-full bg-[#6D5EF5] hover:bg-[#5B4FE0] text-white py-2 rounded disabled:opacity-50">
+                            <button type="submit" disabled={loading} className="w-full bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white py-2 rounded disabled:opacity-50">
                                 {loading ? 'Creating...' : 'Create User'}
                             </button>
                         </form>
