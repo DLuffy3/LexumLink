@@ -26,6 +26,7 @@ import './App.css';
 
 function App() {
     const Dashboard = lazy(() => import('./pages/Dashboard'));
+    const CalendarPage = lazy(() => import('./pages/Calendar'));
     const Clients = lazy(() => import('./pages/Clients'));
     const Cases = lazy(() => import('./pages/Cases'));
     const Claims = lazy(() => import('./pages/Claims'));
@@ -47,6 +48,15 @@ function App() {
                           <ProtectedRoute>
                             <OrganizationGuard>
                                 <Dashboard />
+                            </OrganizationGuard>
+                          </ProtectedRoute>
+                        </Suspense>
+                    } />
+                    <Route path="/calendar" element={
+                        <Suspense fallback={<Spinner />}>
+                          <ProtectedRoute>
+                            <OrganizationGuard>
+                                <CalendarPage />
                             </OrganizationGuard>
                           </ProtectedRoute>
                         </Suspense>
