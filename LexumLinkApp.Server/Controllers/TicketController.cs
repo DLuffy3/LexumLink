@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LexumLinkApp.Server.Data;
 using LexumLinkApp.Server.Models;
+using LexumLinkApp.Server.Services;
 using System.Security.Claims;
 
 namespace LexumLinkApp.Server.Controllers
@@ -13,10 +14,12 @@ namespace LexumLinkApp.Server.Controllers
     public class TicketsController : ControllerBase
     {
         private readonly LexumLinkDbContext _context;
+        private readonly INotificationService _notify;
 
-        public TicketsController(LexumLinkDbContext context)
+        public TicketsController(LexumLinkDbContext context, INotificationService notify)
         {
             _context = context;
+            _notify = notify;
         }
 
         private Guid GetUserId()
@@ -31,7 +34,7 @@ namespace LexumLinkApp.Server.Controllers
             return isSuperAdminClaim == "true";
         }
 
-        // GET: api/tickets (for regular users – only their own tickets)
+        // GET: api/tickets (for regular users ï¿½ only their own tickets)
         [HttpGet]
         public async Task<IActionResult> GetMyTickets()
         {
@@ -53,7 +56,7 @@ namespace LexumLinkApp.Server.Controllers
             return Ok(tickets);
         }
 
-        // GET: api/tickets/admin (for super admin – all tickets across all orgs)
+        // GET: api/tickets/admin (for super admin ï¿½ all tickets across all orgs)
         [HttpGet("admin")]
         public async Task<IActionResult> GetAllTickets()
         {
@@ -106,8 +109,14 @@ namespace LexumLinkApp.Server.Controllers
 
             _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
+            await _notify.NotifyTicketCreatedAsync(ticket);
 
-            return Ok(new { message = "Ticket created successfully", ticketId = ticket.Id });
+            return Ok(new
+            {
+                message = "Ticket created successfully",
+                ticketId = ticket.Id,
+                ticketNumber = INotificationService.TicketNumber(ticket.Id)
+            });
         }
 
         // PUT: api/tickets/{id}/status (for super admin)

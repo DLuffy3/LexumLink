@@ -4,13 +4,19 @@ using LexumLinkApp.Server.Data;
 using LexumLinkApp.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using LexumLinkApp.Server.Services;
 
 namespace LexumLinkApp.Server.Controllers
 {
     public class ClientsController : BaseApiController
     {
         private readonly LexumLinkDbContext _context;
-        public ClientsController(LexumLinkDbContext context) => _context = context;
+        private readonly INotificationService _notify;
+        public ClientsController(LexumLinkDbContext context, INotificationService notify)
+        {
+            _context = context;
+            _notify = notify;
+        }
         
         #region Create
 
@@ -43,6 +49,7 @@ namespace LexumLinkApp.Server.Controllers
 
             _context.Clients.Add(client);
             await _context.SaveChangesAsync();
+            await _notify.NotifyNewClientAsync(client);
             return Ok(client);
         }
 
