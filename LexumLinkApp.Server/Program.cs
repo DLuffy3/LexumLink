@@ -6,6 +6,8 @@ using LexumLinkApp.Server.Data;
 using System.Text;
 using LexumLinkApp.Server.Services;
 
+// (using LexumLinkApp.Server.Services above covers email + notifications)
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add DbContext
@@ -61,6 +63,12 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IJwtService, JwtService>();
+
+// Email + notifications
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddHostedService<DailyDigestService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

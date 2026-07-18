@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LexumLinkApp.Server.Data;
 using LexumLinkApp.Server.Models;
+using LexumLinkApp.Server.Services;
 using System.Security.Claims;
 
 namespace LexumLinkApp.Server.Controllers
@@ -13,10 +14,12 @@ namespace LexumLinkApp.Server.Controllers
     public class TodosController : ControllerBase
     {
         private readonly LexumLinkDbContext _context;
+        private readonly INotificationService _notify;
 
-        public TodosController(LexumLinkDbContext context)
+        public TodosController(LexumLinkDbContext context, INotificationService notify)
         {
             _context = context;
+            _notify = notify;
         }
 
         private Guid GetUserId()
@@ -75,6 +78,7 @@ namespace LexumLinkApp.Server.Controllers
 
             _context.Todos.Add(todo);
             await _context.SaveChangesAsync();
+            await _notify.NotifyTaskAssignedAsync(todo);
             return Ok(new { todo.Id, todo.Title, todo.Description, todo.DueDate, todo.IsCompleted });
         }
 

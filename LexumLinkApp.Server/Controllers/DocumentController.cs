@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LexumLinkApp.Server.Data;
 using LexumLinkApp.Server.Models;
+using LexumLinkApp.Server.Services;
 using System.Security.Claims;
 
 namespace LexumLinkApp.Server.Controllers
@@ -14,11 +15,13 @@ namespace LexumLinkApp.Server.Controllers
     {
         private readonly LexumLinkDbContext _context;
         private readonly IWebHostEnvironment _environment;
+        private readonly INotificationService _notify;
 
-        public DocumentsController(LexumLinkDbContext context, IWebHostEnvironment environment)
+        public DocumentsController(LexumLinkDbContext context, IWebHostEnvironment environment, INotificationService notify)
         {
             _context = context;
             _environment = environment;
+            _notify = notify;
         }
 
         private Guid GetOrganizationId()
@@ -112,6 +115,7 @@ namespace LexumLinkApp.Server.Controllers
 
             _context.Documents.Add(document);
             await _context.SaveChangesAsync();
+            await _notify.NotifyDocumentUploadedAsync(document, client.FirstName + " " + client.LastName);
 
             return Ok(new
             {
