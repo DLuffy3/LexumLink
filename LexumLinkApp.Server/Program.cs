@@ -82,12 +82,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Serve static files (e.g. uploaded avatars/documents) BEFORE auth so the
+// global fallback authorization policy doesn't block anonymous <img>/file requests.
+app.UseStaticFiles();
+
 // Important: UseRouting before CORS, UseCors before Authentication
 app.UseRouting();
 app.UseCors("AllowReactApp");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseStaticFiles();
 app.MapControllers();
 
 app.Run();

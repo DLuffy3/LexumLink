@@ -9,6 +9,7 @@ namespace LexumLinkApp.Server.Models
         public string PasswordHash { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+        public string? AvatarUrl { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public Guid? OrganizationId { get; set; }           
         public Organization? Organization { get; set; }  

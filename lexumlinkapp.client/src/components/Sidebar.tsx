@@ -1,6 +1,8 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import { motion } from 'framer-motion';
+import api, { SERVER_ORIGIN } from '../services/api';
 import ThemeToggle from './ThemeToggle';
 
 const navigation = [
@@ -22,11 +24,48 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
     const { user, activeOrganization, signOut } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const fileRef = useRef<HTMLInputElement | null>(null);
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [avatarError, setAvatarError] = useState('');
+
+    useEffect(() => {
+        let cancelled = false;
+        api.get('/profile/me')
+            .then((r) => { if (!cancelled) setAvatarUrl(r.data.avatarUrl ?? null); })
+            .catch(() => { });
+        return () => { cancelled = true; };
+    }, []);
 
     const handleSignOut = () => {
         signOut();
         navigate('/signin');
     };
+
+    const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setUploading(true);
+        setAvatarError('');
+        const formData = new FormData();
+        formData.append('file', file);
+        try {
+            const res = await api.post('/profile/avatar', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+            // Cache-bust so the browser reloads the new image instead of the cached one.
+            setAvatarUrl(res.data.avatarUrl ? `${res.data.avatarUrl}?t=${Date.now()}` : null);
+        } catch (err) {
+            const e2 = err as { response?: { data?: { error?: string } } };
+            setAvatarError(e2.response?.data?.error || 'Upload failed. Use a JPG or PNG under 10MB.');
+            console.error('Avatar upload failed', err);
+        } finally {
+            setUploading(false);
+            e.target.value = '';
+        }
+    };
+
+    const initials = `${(user?.firstName?.[0] || '').toUpperCase()}${(user?.lastName?.[0] || '').toUpperCase()}` || '?';
+    const navItemClass = (active: boolean) =>
+        `group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${active ? 'bg-[var(--brand-soft)] text-[var(--brand-accent)]' : 'text-[var(--muted)] hover:bg-[var(--overlay-weak)] hover:text-[var(--text)]'}`;
 
     return (
         <motion.aside
@@ -36,60 +75,78 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
             className="fixed top-0 left-0 z-40 w-64 h-screen bg-[var(--bg2)] border-r border-[var(--border)]"
         >
             <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between p-4 border-b border-[var(--border)]">
-                    <h2 className="font-['Mooxy'] text-xl font-black tracking-tight">
-                        <span style={{ background: 'var(--grad-text)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Lexum</span>
-                        <span className="text-[var(--text)]">Link</span>
-                    </h2>
-                    <button onClick={toggleSidebar} className="text-[var(--muted)] hover:text-[var(--text)]">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+                {/* Top: profile */}
+                <div className="p-4 border-b border-[var(--border)]">
+                    <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-3 min-w-0">
+                            <button
+                                onClick={() => fileRef.current?.click()}
+                                title="Change profile picture"
+                                className="relative w-11 h-11 flex-shrink-0"
+                            >
+                                <span
+                                    className="block w-11 h-11 rounded-full overflow-hidden flex items-center justify-center"
+                                    style={{ background: 'var(--brand-soft)', border: '1px solid var(--brand-border)' }}
+                                >
+                                    {avatarUrl ? (
+                                        <img key={avatarUrl} src={`${SERVER_ORIGIN}${avatarUrl}`} alt="Profile" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <span className="text-sm font-bold" style={{ color: 'var(--brand-accent)' }}>{initials}</span>
+                                    )}
+                                </span>
+                                <span
+                                    className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-white z-10"
+                                    style={{ background: 'var(--brand)', border: '2px solid var(--bg2)' }}
+                                >
+                                    <i className={`fa-solid ${uploading ? 'fa-spinner fa-spin' : 'fa-camera'}`} style={{ fontSize: 8 }} />
+                                </span>
+                            </button>
+                            <div className="min-w-0">
+                                <p className="text-sm font-semibold text-[var(--text)] truncate">{user?.firstName} {user?.lastName}</p>
+                                <p className="text-xs text-[var(--faint)] truncate">{activeOrganization?.name || 'No organisation'}</p>
+                            </div>
+                        </div>
+                        <button onClick={toggleSidebar} className="text-[var(--muted)] hover:text-[var(--text)] flex-shrink-0" aria-label="Collapse sidebar">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <input ref={fileRef} type="file" accept=".jpg,.jpeg,.png,.gif,.webp,.bmp" className="hidden" onChange={handleAvatarChange} />
+                    {avatarError && <p className="mt-2 text-xs pill-red px-2 py-1 rounded">{avatarError}</p>}
                 </div>
+
+                {/* Nav */}
                 <div className="flex-1 overflow-y-auto py-4">
                     <nav className="px-2 space-y-1">
-                        {navigation.map((item) => {
-                            const isActive = location.pathname === item.href;
-                            return (
-                                <Link
-                                    key={item.name}
-                                    to={item.href}
-                                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${isActive ? 'bg-[var(--brand-soft)] text-[var(--brand-accent)]' : 'text-[var(--muted)] hover:bg-[var(--overlay-weak)] hover:text-[var(--text)]'
-                                        }`}
-                                >
-                                    <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
-                                    </svg>
-                                    {item.name}
-                                </Link>
-                            );
-                        })}
+                        {navigation.map((item) => (
+                            <Link key={item.name} to={item.href} className={navItemClass(location.pathname === item.href)}>
+                                <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
+                                </svg>
+                                {item.name}
+                            </Link>
+                        ))}
+                        {user?.isSuperAdmin && (
+                            <Link to="/admin/tickets" className={navItemClass(location.pathname === '/admin/tickets')}>
+                                <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z" />
+                                </svg>
+                                Tickets
+                            </Link>
+                        )}
                     </nav>
                 </div>
-                {user?.isSuperAdmin && (
-                    <Link
-                        to="/admin/tickets"
-                        className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${location.pathname === '/admin/tickets' ? 'bg-[var(--brand-soft)] text-[var(--brand-accent)]' : 'text-[var(--muted)] hover:bg-[var(--overlay-weak)] hover:text-[var(--text)]'
-                            }`}
-                    >
-                        <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z" />
-                        </svg>
-                        Tickets
+
+                {/* Bottom: logo + theme + logout */}
+                <div className="p-4 border-t border-[var(--border)] flex items-center justify-between gap-2">
+                    <Link to="/" className="font-['Mooxy'] text-lg font-black tracking-tight" aria-label="LexumLink home">
+                        <span style={{ background: 'var(--grad-text)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Lexum</span>
+                        <span className="text-[var(--text)]">Link</span>
                     </Link>
-                )}
-                <div className="p-4 border-t border-[var(--border)]">
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-2">
                         <ThemeToggle />
-                        <span className="text-xs" style={{ color: 'var(--faint)' }}>Theme</span>
-                    </div>
-                    <div className="flex items-center">
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-[var(--text)] truncate">{user?.firstName} {user?.lastName}</p>
-                            <p className="text-xs text-[var(--faint)] truncate">{activeOrganization?.name}</p>
-                        </div>
-                        <button onClick={handleSignOut} className="ml-2 text-[var(--brand-accent)] hover:text-[var(--text)]">
+                        <button onClick={handleSignOut} title="Sign out" className="w-9 h-9 rounded-full flex items-center justify-center text-[var(--brand-accent)] hover:text-[var(--text)] hover:bg-[var(--overlay-weak)]">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>
