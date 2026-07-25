@@ -19,6 +19,7 @@
 **/TestResults/
 **/wwwroot/lib/
 **/appsettings.Development.json
+**/appsettings.Production.json
 
 # User secrets
 **/secrets.json
@@ -43,8 +44,7 @@ Thumbs.db
 *.tmp
 *.log
 
-# Package management
-**/package-lock.json
+# Package management — keep package-lock.json committed for reproducible installs
 **/yarn.lock
 **/pnpm-lock.yaml
 **/bun.lockb
@@ -57,7 +57,6 @@ Thumbs.db
 # Local PostgreSQL data (if you store it in the repo – you shouldn't)
 data/
 pgdata/
-migrations/
 wwwroot/
 
 # Publish profiles

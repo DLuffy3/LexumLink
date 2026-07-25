@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import { useAuth } from '../context/useAuth';
 import Sidebar from '../components/Sidebar';
 
 interface Case {
@@ -11,7 +10,6 @@ interface Case {
 }
 
 export default function NewClaim() {
-    const { activeOrganization } = useAuth();
     const navigate = useNavigate();
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [cases, setCases] = useState<Case[]>([]);
