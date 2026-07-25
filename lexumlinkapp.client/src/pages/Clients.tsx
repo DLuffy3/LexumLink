@@ -137,20 +137,20 @@ export default function Clients() {
                         transition={{ duration: 0.5 }}
                         className="w-full"
                     >
-                        <div className="flex justify-between items-center mb-6">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
                             <h1 className="text-2xl font-bold text-[var(--text)]">Clients</h1>
-                            <div className="flex gap-4">
+                            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                                 <input
                                     type="text"
                                     placeholder="Search by name..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded px-3 py-2 w-64 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
+                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded px-3 py-2 w-full sm:w-64 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 />
                                 <button
                                     onClick={() => setIsModalOpen(true)}
                                     disabled={!activeOrganization}
-                                    className={`bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white px-4 py-2 rounded-md ${!activeOrganization ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    className={`bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white px-4 py-2 rounded-md text-center whitespace-nowrap ${!activeOrganization ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 >
                                     Add Client
                                 </button>

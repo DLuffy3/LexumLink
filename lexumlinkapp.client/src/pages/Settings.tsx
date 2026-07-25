@@ -71,12 +71,12 @@ export default function Settings() {
 
     const getStatusBadge = (status: string) => {
         const colors: Record<string, string> = {
-            new: 'bg-blue-500/15 text-blue-300',
-            active: 'bg-yellow-500/15 text-yellow-300',
-            critical: 'bg-red-500/15 text-red-300',
-            complete: 'bg-green-500/15 text-green-300',
+            new: 'pill-blue',
+            active: 'pill-amber',
+            critical: 'pill-red',
+            complete: 'pill-green',
         };
-        return colors[status] || 'bg-[var(--overlay-weak)] text-[var(--text)]';
+        return colors[status] || 'pill-neutral';
     };
 
     return (
@@ -171,7 +171,7 @@ export default function Settings() {
                         <div className="bg-[var(--surface)] rounded-lg shadow p-6">
                             <h2 className="text-lg font-semibold text-[var(--text)] mb-4">Report a Bug or Request a Feature</h2>
                             {message && (
-                                <div className={`mb-4 p-3 rounded-md ${message.includes('success') ? 'bg-green-500/15 text-green-300' : 'bg-red-500/12 border border-red-500/30 text-red-300'}`}>
+                                <div className={`mb-4 p-3 rounded-md ${message.includes('success') ? 'pill-green' : 'pill-red'}`}>
                                     {message}
                                 </div>
                             )}

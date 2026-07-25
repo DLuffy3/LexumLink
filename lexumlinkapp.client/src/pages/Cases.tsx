@@ -49,12 +49,12 @@ export default function Cases() {
 
     const getStatusBadge = (status: string) => {
         const colors: Record<string, string> = {
-            open: 'bg-green-500/15 text-green-300',
-            in_progress: 'bg-yellow-500/15 text-yellow-300',
-            closed: 'bg-[var(--overlay-weak)] text-[var(--text)]',
-            critical: 'bg-red-500/15 text-red-300',
+            open: 'pill-green',
+            in_progress: 'pill-amber',
+            closed: 'pill-neutral',
+            critical: 'pill-red',
         };
-        return colors[status] || 'bg-[var(--overlay-weak)] text-[var(--text)]';
+        return colors[status] || 'pill-neutral';
     };
 
     // Filter cases based on client name or case number
@@ -116,17 +116,17 @@ export default function Cases() {
                         transition={{ duration: 0.5 }}
                         className="w-full"
                     >
-                        <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
                             <h1 className="text-2xl font-bold text-[var(--text)]">Cases</h1>
-                            <div className="flex gap-4">
+                            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                                 <input
                                     type="text"
                                     placeholder="Search by client or case number..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded px-3 py-2 w-64 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
+                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded px-3 py-2 w-full sm:w-64 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 />
-                                <Link to="/cases/new" className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white px-4 py-2 rounded-md">
+                                <Link to="/cases/new" className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white px-4 py-2 rounded-md text-center whitespace-nowrap">
                                     Add Case
                                 </Link>
                             </div>

@@ -14,16 +14,16 @@ interface Plan {
 const PLANS: Plan[] = [
     {
         name: 'Starter',
-        monthly: 149,
+        monthly: 249,
         blurb: 'For small teams getting organised.',
-        features: ['Up to 5 users', 'Unlimited clients', 'Case management', 'Document storage (2 GB)', 'Email support'],
+        features: ['Up to 5 users', 'Unlimited clients', 'Case management', 'Document storage (10 GB)', 'Email support'],
         cta: 'Get Started',
     },
     {
         name: 'Professional',
-        monthly: 599,
+        monthly: 649,
         blurb: 'For growing practices managing volume.',
-        features: ['Up to 20 users', 'Unlimited clients & cases', 'Full workflow automation', 'Document storage (25 GB)', 'Task & reminder engine', 'Dashboards & reporting', 'Priority support'],
+        features: ['Up to 20 users', 'Unlimited clients & cases', 'Full workflow automation', 'Document storage (20 GB)', 'Task & reminder engine', 'Dashboards & reporting', 'Priority support'],
         featured: true,
         cta: 'Start Free Trial',
     },
