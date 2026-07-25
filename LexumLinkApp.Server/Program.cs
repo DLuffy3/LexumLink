@@ -40,12 +40,16 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Add CORS policy
+// Add CORS policy — allowed origins come from config (Cors:AllowedOrigins),
+// defaulting to the local dev client. In single-site IIS hosting the SPA is
+// same-origin, so CORS is effectively a no-op there.
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+    ?? new[] { "http://localhost:5173" };
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")   // your frontend URL
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -92,5 +96,9 @@ app.UseCors("AllowReactApp");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// Serve the built React SPA for any non-API route (client-side routing / deep links).
+// AllowAnonymous so the global fallback auth policy doesn't block index.html.
+app.MapFallbackToFile("index.html").AllowAnonymous();
 
 app.Run();
