@@ -128,6 +128,37 @@ namespace LexumLinkApp.Server.Controllers
                 new { name = "Complete", value = openCases.Count - awaitingCases.Count },
             };
 
+            // ── Company health (each factor 0–100, higher = healthier) ──
+            var activeTasks = todos.Count(t => !t.IsCompleted);
+            var overdueCount = todos.Count(t => !t.IsCompleted && t.DueDate.HasValue && t.DueDate.Value < now);
+            var completedCount = todos.Count(t => t.IsCompleted);
+            var totalTasks = todos.Count;
+            var nearingCount = openCases.Count(c => c.DeadlineDate.HasValue && c.DeadlineDate.Value <= deadlineWindow);
+            var activeUsers = Math.Max(1, users.Count);
+
+            int Clamp(double v) => (int)Math.Round(Math.Max(0, Math.Min(100, v)));
+
+            var hOverdue = activeTasks == 0 ? 100 : Clamp(100.0 * (1 - (double)overdueCount / activeTasks));
+            var hDeadlines = openCases.Count == 0 ? 100 : Clamp(100.0 * (1 - (double)nearingCount / openCases.Count));
+            var hDocuments = openCases.Count == 0 ? 100 : Clamp(100.0 * (1 - (double)awaitingCases.Count / openCases.Count));
+            var loadPerPerson = (openCases.Count + activeTasks) / (double)activeUsers;
+            var hWorkload = Clamp(100 - Math.Max(0, loadPerPerson - 5) * 5); // 100 at ≤5/person, 0 at ≥25/person
+            var hCompleted = totalTasks == 0 ? 100 : Clamp(100.0 * completedCount / totalTasks);
+
+            var healthFactors = new[]
+            {
+                new { label = "Overdue", score = hOverdue },
+                new { label = "Deadlines", score = hDeadlines },
+                new { label = "Documents", score = hDocuments },
+                new { label = "Workload", score = hWorkload },
+                new { label = "Completed", score = hCompleted },
+            };
+            var companyHealth = new
+            {
+                overall = (int)Math.Round(healthFactors.Average(f => f.score)),
+                factors = healthFactors,
+            };
+
             return Ok(new
             {
                 summary = new
@@ -144,6 +175,7 @@ namespace LexumLinkApp.Server.Controllers
                 casesByStatus,
                 claimsByStatus,
                 documentsStatus,
+                companyHealth,
                 monthlyGrowth,
                 teamPerformance,
                 upcomingDeadlines,

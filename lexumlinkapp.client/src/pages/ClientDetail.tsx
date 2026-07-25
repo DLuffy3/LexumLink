@@ -64,11 +64,11 @@ export default function ClientDetail() {
 
     const getStatusBadge = (status: string) => {
         const colors: Record<string, string> = {
-            completed: 'bg-green-500/15 text-green-300',
-            in_progress: 'bg-yellow-500/15 text-yellow-300',
-            critical: 'bg-red-500/15 text-red-300',
+            completed: 'pill-green',
+            in_progress: 'pill-amber',
+            critical: 'pill-red',
         };
-        return colors[status] || 'bg-[var(--overlay-weak)] text-[var(--text)]';
+        return colors[status] || 'pill-neutral';
     };
 
     if (loading) return <div className="p-6 text-center">Loading client details...</div>;

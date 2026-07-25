@@ -105,7 +105,7 @@ export default function SuperAdminDashboard() {
                             <button onClick={signOut} className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white px-4 py-2 rounded-md">Sign Out</button>
                         </div>
                         <h2 className="text-xl font-semibold mb-4">Create New User</h2>
-                        {message && <div className="mb-4 p-2 rounded bg-blue-500/15 text-blue-300">{message}</div>}
+                        {message && <div className="mb-4 p-2 rounded pill-blue">{message}</div>}
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <input type="text" name="firstName" placeholder="First name" value={formData.firstName} onChange={handleInputChange} className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded" required />

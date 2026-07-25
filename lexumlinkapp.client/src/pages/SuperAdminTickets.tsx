@@ -54,12 +54,12 @@ export default function SuperAdminTickets() {
 
     const getStatusBadge = (status: string) => {
         const colors: Record<string, string> = {
-            new: 'bg-blue-500/15 text-blue-300',
-            active: 'bg-yellow-500/15 text-yellow-300',
-            critical: 'bg-red-500/15 text-red-300',
-            complete: 'bg-green-500/15 text-green-300',
+            new: 'pill-blue',
+            active: 'pill-amber',
+            critical: 'pill-red',
+            complete: 'pill-green',
         };
-        return colors[status] || 'bg-[var(--overlay-weak)] text-[var(--text)]';
+        return colors[status] || 'pill-neutral';
     };
 
     if (!user?.isSuperAdmin) {

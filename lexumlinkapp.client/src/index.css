@@ -230,3 +230,26 @@ input:-webkit-autofill:focus {
 .react-calendar__month-view__days__day--weekend {
     color: var(--brand-accent);
 }
+
+/* ── Status pills (readable in light & dark) ──────────────── */
+.pill-green,
+.pill-amber,
+.pill-red,
+.pill-blue,
+.pill-neutral,
+.pill-brand {
+    border: 1px solid transparent;
+}
+/* Dark theme (default) */
+.pill-green   { background: rgba(46, 139, 111, 0.20); color: #8ee6bf; border-color: rgba(46, 139, 111, 0.30); }
+.pill-amber   { background: rgba(201, 162, 75, 0.22); color: #f0cd84; border-color: rgba(201, 162, 75, 0.32); }
+.pill-red     { background: rgba(193, 18, 31, 0.22);  color: #f3a3a8; border-color: rgba(193, 18, 31, 0.34); }
+.pill-blue    { background: rgba(76, 134, 168, 0.22); color: #a9cde6; border-color: rgba(76, 134, 168, 0.34); }
+.pill-neutral { background: var(--overlay-weak); color: var(--muted); border-color: var(--border); }
+.pill-brand   { background: var(--brand-soft); color: var(--brand-accent); border-color: var(--brand-border); }
+
+/* Light theme — darker text on soft tint for contrast */
+html.light .pill-green { background: rgba(21, 128, 61, 0.14);  color: #15803d; border-color: rgba(21, 128, 61, 0.30); }
+html.light .pill-amber { background: rgba(180, 83, 9, 0.14);   color: #92600a; border-color: rgba(180, 83, 9, 0.30); }
+html.light .pill-red   { background: rgba(185, 28, 28, 0.12);  color: #b91c1c; border-color: rgba(185, 28, 28, 0.30); }
+html.light .pill-blue  { background: rgba(29, 78, 216, 0.12);  color: #1d4ed8; border-color: rgba(29, 78, 216, 0.30); }
