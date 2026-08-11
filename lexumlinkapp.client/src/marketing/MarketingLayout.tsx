@@ -36,9 +36,9 @@ function Navbar() {
                     : { background: 'transparent' }
             }
         >
-            <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between h-[72px]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between h-[104px]">
                 <Link to="/" aria-label="LexumLink home">
-                    <Logo />
+                    <Logo className="h-24 w-auto" />
                 </Link>
 
                 <div className="hidden md:flex items-center gap-9">
@@ -156,7 +156,7 @@ function Footer() {
             <div className="max-w-7xl mx-auto px-4 sm:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-12 mb-16">
                     <div>
-                        <Logo className="text-3xl" />
+                        <Logo className="h-32 w-auto" />
                         <p className="mt-4 text-sm leading-[1.7] max-w-[280px]" style={{ color: T.faint }}>
                             One intelligent platform that connects people, processes, and information — so every client and case is tracked from start to finish.
                         </p>
@@ -205,7 +205,16 @@ function Footer() {
                     className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs"
                     style={{ borderTop: `1px solid ${T.border}`, color: T.faint }}
                 >
-                    <span>&copy; {year} Lexum Link (Pty) Ltd. All rights reserved.</span>
+                    <span>
+                        &copy; {year} Lexum Link (Pty) Ltd. All rights reserved{' '}
+                        <a href="https://rockitart.co.za" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--text)] transition-colors" style={{ color: T.faint }}>
+                            RockitArt
+                        </a>
+                        {' & '}
+                        <a href="https://mokalengit.co.za" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--text)] transition-colors" style={{ color: T.faint }}>
+                            MokalengIT
+                        </a>
+                    </span>
                     <span className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full" style={{ background: '#4ADE80', boxShadow: '0 0 8px rgba(74,222,128,0.6)' }} />
                         All systems operational

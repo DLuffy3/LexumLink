@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/useAuth';
-import Sidebar from '../components/Sidebar';
+import HelpButton from '../components/HelpButton';
 import Spinner from '../components/Spinner';
 
 interface Case {
@@ -25,7 +25,6 @@ export default function EditClaim() {
     const { id } = useParams<{ id: string }>();
     const { activeOrganization } = useAuth();
     const navigate = useNavigate();
-    const [sidebarOpen, setSidebarOpen] = useState(true);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState('');
@@ -101,35 +100,27 @@ export default function EditClaim() {
         }
     };
 
-    const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
-
     if (loading) {
         return (
-            <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
-                <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-                <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
-                    <main className="p-6 pt-16">
-                        <Spinner />
-                    </main>
-                </div>
-            </div>
+            <main className="p-6 pt-16">
+                <Spinner />
+            </main>
         );
     }
 
     return (
-        <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
-            <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+        <>
+            <HelpButton
+                    title="Edit RAF Claim"
+                    description="Update a claim's status or amounts."
+                    steps={[
+                        'Add or adjust the requested and awarded amounts as they become known.',
+                        'Update the status as the claim moves through the RAF process.',
+                        'Click "Save Changes" to apply, or Cancel to leave without saving.',
+                    ]}
+                />
 
-            <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
-                <div className="fixed top-4 left-4 z-30">
-                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[var(--surface)] border border-[var(--border)] shadow-md text-[var(--muted)] hover:text-[var(--text)]">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-
-                <main className="p-6 pt-16">
+            <main className="p-6 pt-16">
                     <div className="max-w-2xl mx-auto bg-[var(--surface)] rounded-lg shadow p-6">
                         <h1 className="text-2xl font-bold mb-6">Edit RAF Claim</h1>
                         {error && <div className="bg-red-500/12 border border-red-500/30 text-red-300 p-3 rounded mb-4">{error}</div>}
@@ -225,8 +216,7 @@ export default function EditClaim() {
                             </div>
                         </form>
                     </div>
-                </main>
-            </div>
-        </div>
+            </main>
+        </>
     );
 }

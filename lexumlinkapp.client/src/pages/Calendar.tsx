@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../context/useAuth';
 import api from '../services/api';
-import Sidebar from '../components/Sidebar';
+import HelpButton from '../components/HelpButton';
 import Spinner from '../components/Spinner';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -74,7 +74,6 @@ function buildGrid(view: Date): Date[] {
 
 export default function Calendar() {
     const { activeOrganization } = useAuth();
-    const [sidebarOpen, setSidebarOpen] = useState(true);
     const [view, setView] = useState(() => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), 1); });
     const [selected, setSelected] = useState(() => new Date());
     const [items, setItems] = useState<CalItem[]>([]);
@@ -196,8 +195,6 @@ export default function Calendar() {
             setSaving(false);
         }
     };
-
-    const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
     const today = new Date();
     const inMonth = (d: Date) => d.getMonth() === view.getMonth();
 
@@ -205,144 +202,144 @@ export default function Calendar() {
     const labelCls = 'text-[0.68rem] tracking-[0.12em] uppercase mb-1.5 block text-[var(--muted)]';
 
     return (
-        <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
-            <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+        <>
+            <HelpButton
+                title="Calendar"
+                description="Track appointments, follow-ups, court dates, medical assessments and deadlines in one place."
+                steps={[
+                    'Click any date to add a new event.',
+                    'Choose the event type — appointment, follow-up, court date or medical assessment.',
+                    'Link the event to a client or case so it shows up on their record too.',
+                    'Click an existing event to edit or delete it.',
+                ]}
+                tips={['Use the arrows next to the month name to move forward or back.']}
+            />
 
-            <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
-                <div className="fixed top-4 left-4 z-30">
-                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[var(--surface)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)]">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
+            <main className="p-6 pt-16">
+                {/* Header */}
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h1 className="font-['Grifter'] text-3xl font-bold">{MONTHS[view.getMonth()]} {view.getFullYear()}</h1>
+                        <p className="text-sm text-[var(--muted)] mt-1">Appointments, follow-ups, court dates, medical assessments &amp; deadlines.</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button onClick={() => setView(new Date(view.getFullYear(), view.getMonth() - 1, 1))} className="w-9 h-9 rounded-lg border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--overlay-weak)]" aria-label="Previous month">
+                            <i className="fa-solid fa-chevron-left" />
+                        </button>
+                        <button onClick={() => { const n = new Date(); setView(new Date(n.getFullYear(), n.getMonth(), 1)); setSelected(n); }} className="px-3 h-9 rounded-lg border border-[var(--border)] text-sm text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--overlay-weak)]">
+                            Today
+                        </button>
+                        <button onClick={() => setView(new Date(view.getFullYear(), view.getMonth() + 1, 1))} className="w-9 h-9 rounded-lg border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--overlay-weak)]" aria-label="Next month">
+                            <i className="fa-solid fa-chevron-right" />
+                        </button>
+                        <button onClick={openAdd} className="ml-1 inline-flex items-center gap-2 px-4 h-9 rounded-lg text-white text-sm font-semibold bg-[var(--brand)] hover:bg-[var(--brand-hover)]">
+                            <i className="fa-solid fa-plus" /> Add event
+                        </button>
+                    </div>
                 </div>
 
-                <main className="p-6 pt-16">
-                    {/* Header */}
-                    <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-                        <div>
-                            <h1 className="font-['Grifter'] text-3xl font-bold">{MONTHS[view.getMonth()]} {view.getFullYear()}</h1>
-                            <p className="text-sm text-[var(--muted)] mt-1">Appointments, follow-ups, court dates, medical assessments &amp; deadlines.</p>
+                {error && <div className="bg-red-500/12 border border-red-500/30 text-red-300 p-4 rounded-lg mb-6">{error}</div>}
+
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+                    {/* Month grid */}
+                    <div className="rounded-xl bg-[var(--surface)] border border-[var(--border)] overflow-hidden">
+                        <div className="grid grid-cols-7 border-b border-[var(--border)]">
+                            {WEEKDAYS.map((w) => (
+                                <div key={w} className="px-2 py-3 text-center text-[0.68rem] tracking-widest uppercase text-[var(--muted)]">{w}</div>
+                            ))}
                         </div>
-                        <div className="flex items-center gap-2">
-                            <button onClick={() => setView(new Date(view.getFullYear(), view.getMonth() - 1, 1))} className="w-9 h-9 rounded-lg border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--overlay-weak)]" aria-label="Previous month">
-                                <i className="fa-solid fa-chevron-left" />
-                            </button>
-                            <button onClick={() => { const n = new Date(); setView(new Date(n.getFullYear(), n.getMonth(), 1)); setSelected(n); }} className="px-3 h-9 rounded-lg border border-[var(--border)] text-sm text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--overlay-weak)]">
-                                Today
-                            </button>
-                            <button onClick={() => setView(new Date(view.getFullYear(), view.getMonth() + 1, 1))} className="w-9 h-9 rounded-lg border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--overlay-weak)]" aria-label="Next month">
-                                <i className="fa-solid fa-chevron-right" />
-                            </button>
-                            <button onClick={openAdd} className="ml-1 inline-flex items-center gap-2 px-4 h-9 rounded-lg text-white text-sm font-semibold bg-[var(--brand)] hover:bg-[var(--brand-hover)]">
-                                <i className="fa-solid fa-plus" /> Add event
-                            </button>
-                        </div>
+                        {loading ? (
+                            <div className="py-20"><Spinner size={44} /></div>
+                        ) : (
+                            <div className="grid grid-cols-7">
+                                {grid.map((d, i) => {
+                                    const dayItems = itemsOn(d);
+                                    const isToday = sameDay(d, today);
+                                    const isSel = sameDay(d, selected);
+                                    return (
+                                        <button
+                                            key={i}
+                                            onClick={() => setSelected(new Date(d))}
+                                            className="text-left min-h-[92px] p-2 border-b border-r border-[var(--border)] transition-colors hover:bg-[var(--overlay-weak)] focus:outline-none"
+                                            style={{ background: isSel ? 'var(--brand-soft)' : undefined, opacity: inMonth(d) ? 1 : 0.4 }}
+                                        >
+                                            <div className="flex items-center justify-between mb-1">
+                                                <span
+                                                    className="text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full"
+                                                    style={isToday ? { background: 'var(--brand)', color: '#fff' } : { color: 'var(--text)' }}
+                                                >
+                                                    {d.getDate()}
+                                                </span>
+                                            </div>
+                                            <div className="space-y-1">
+                                                {dayItems.slice(0, 3).map((it) => (
+                                                    <div key={it.source + it.id} className="flex items-center gap-1.5 text-[0.68rem] leading-tight truncate" style={{ color: 'var(--text)' }}>
+                                                        <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: (TYPE_META[it.type]?.color) || 'var(--brand-accent)' }} />
+                                                        <span className="truncate">{it.title}</span>
+                                                    </div>
+                                                ))}
+                                                {dayItems.length > 3 && (
+                                                    <div className="text-[0.62rem] text-[var(--faint)]">+{dayItems.length - 3} more</div>
+                                                )}
+                                            </div>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
                     </div>
 
-                    {error && <div className="bg-red-500/12 border border-red-500/30 text-red-300 p-4 rounded-lg mb-6">{error}</div>}
-
-                    <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
-                        {/* Month grid */}
-                        <div className="rounded-xl bg-[var(--surface)] border border-[var(--border)] overflow-hidden">
-                            <div className="grid grid-cols-7 border-b border-[var(--border)]">
-                                {WEEKDAYS.map((w) => (
-                                    <div key={w} className="px-2 py-3 text-center text-[0.68rem] tracking-widest uppercase text-[var(--muted)]">{w}</div>
-                                ))}
+                    {/* Day agenda */}
+                    <div className="rounded-xl bg-[var(--surface)] border border-[var(--border)] p-5 h-fit">
+                        <div className="flex items-center justify-between mb-4">
+                            <div>
+                                <div className="text-xs uppercase tracking-widest text-[var(--muted)]">{WEEKDAYS[selected.getDay()]}</div>
+                                <div className="font-['Grifter'] text-xl font-bold">{MONTHS[selected.getMonth()].slice(0, 3)} {selected.getDate()}</div>
                             </div>
-                            {loading ? (
-                                <div className="py-20"><Spinner size={44} /></div>
-                            ) : (
-                                <div className="grid grid-cols-7">
-                                    {grid.map((d, i) => {
-                                        const dayItems = itemsOn(d);
-                                        const isToday = sameDay(d, today);
-                                        const isSel = sameDay(d, selected);
-                                        return (
+                            <button onClick={openAdd} className="w-8 h-8 rounded-lg text-white bg-[var(--brand)] hover:bg-[var(--brand-hover)]" aria-label="Add event"><i className="fa-solid fa-plus" /></button>
+                        </div>
+
+                        {itemsOn(selected).length === 0 ? (
+                            <div className="text-center text-sm text-[var(--muted)] py-10">Nothing scheduled.</div>
+                        ) : (
+                            <ul className="space-y-2">
+                                {itemsOn(selected).map((it) => {
+                                    const meta = TYPE_META[it.type] || { label: it.type, color: 'var(--brand-accent)', icon: 'fa-calendar' };
+                                    return (
+                                        <li key={it.source + it.id}>
                                             <button
-                                                key={i}
-                                                onClick={() => setSelected(new Date(d))}
-                                                className="text-left min-h-[92px] p-2 border-b border-r border-[var(--border)] transition-colors hover:bg-[var(--overlay-weak)] focus:outline-none"
-                                                style={{ background: isSel ? 'var(--brand-soft)' : undefined, opacity: inMonth(d) ? 1 : 0.4 }}
+                                                onClick={() => openEdit(it)}
+                                                className={`w-full text-left rounded-lg p-3 border border-[var(--border)] bg-[var(--overlay-weak)] ${it.editable ? 'hover:bg-[var(--overlay-med)] cursor-pointer' : 'cursor-default'}`}
+                                                style={{ borderLeft: `3px solid ${meta.color}` }}
                                             >
-                                                <div className="flex items-center justify-between mb-1">
-                                                    <span
-                                                        className="text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full"
-                                                        style={isToday ? { background: 'var(--brand)', color: '#fff' } : { color: 'var(--text)' }}
-                                                    >
-                                                        {d.getDate()}
-                                                    </span>
+                                                <div className="flex items-center gap-2 mb-0.5">
+                                                    <i className={`fa-solid ${meta.icon} text-xs`} style={{ color: meta.color }} />
+                                                    <span className="text-sm font-medium truncate">{it.title}</span>
                                                 </div>
-                                                <div className="space-y-1">
-                                                    {dayItems.slice(0, 3).map((it) => (
-                                                        <div key={it.source + it.id} className="flex items-center gap-1.5 text-[0.68rem] leading-tight truncate" style={{ color: 'var(--text)' }}>
-                                                            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: (TYPE_META[it.type]?.color) || 'var(--brand-accent)' }} />
-                                                            <span className="truncate">{it.title}</span>
-                                                        </div>
-                                                    ))}
-                                                    {dayItems.length > 3 && (
-                                                        <div className="text-[0.62rem] text-[var(--faint)]">+{dayItems.length - 3} more</div>
-                                                    )}
+                                                <div className="text-xs text-[var(--muted)] flex flex-wrap gap-x-3">
+                                                    <span>{it.allDay ? 'All day' : timeStr(it.start)}{!it.allDay && it.end ? ` – ${timeStr(it.end)}` : ''}</span>
+                                                    {it.clientName && <span><i className="fa-solid fa-user text-[0.6rem] mr-1" />{it.clientName}</span>}
+                                                    {!it.editable && <span className="text-[var(--faint)]">{meta.label}</span>}
                                                 </div>
                                             </button>
-                                        );
-                                    })}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        )}
+
+                        {/* Legend */}
+                        <div className="mt-5 pt-4 border-t border-[var(--border)] grid grid-cols-2 gap-2">
+                            {Object.entries(TYPE_META).map(([k, m]) => (
+                                <div key={k} className="flex items-center gap-2 text-[0.7rem] text-[var(--muted)]">
+                                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: m.color }} />
+                                    <span className="truncate">{m.label}</span>
                                 </div>
-                            )}
-                        </div>
-
-                        {/* Day agenda */}
-                        <div className="rounded-xl bg-[var(--surface)] border border-[var(--border)] p-5 h-fit">
-                            <div className="flex items-center justify-between mb-4">
-                                <div>
-                                    <div className="text-xs uppercase tracking-widest text-[var(--muted)]">{WEEKDAYS[selected.getDay()]}</div>
-                                    <div className="font-['Grifter'] text-xl font-bold">{MONTHS[selected.getMonth()].slice(0, 3)} {selected.getDate()}</div>
-                                </div>
-                                <button onClick={openAdd} className="w-8 h-8 rounded-lg text-white bg-[var(--brand)] hover:bg-[var(--brand-hover)]" aria-label="Add event"><i className="fa-solid fa-plus" /></button>
-                            </div>
-
-                            {itemsOn(selected).length === 0 ? (
-                                <div className="text-center text-sm text-[var(--muted)] py-10">Nothing scheduled.</div>
-                            ) : (
-                                <ul className="space-y-2">
-                                    {itemsOn(selected).map((it) => {
-                                        const meta = TYPE_META[it.type] || { label: it.type, color: 'var(--brand-accent)', icon: 'fa-calendar' };
-                                        return (
-                                            <li key={it.source + it.id}>
-                                                <button
-                                                    onClick={() => openEdit(it)}
-                                                    className={`w-full text-left rounded-lg p-3 border border-[var(--border)] bg-[var(--overlay-weak)] ${it.editable ? 'hover:bg-[var(--overlay-med)] cursor-pointer' : 'cursor-default'}`}
-                                                    style={{ borderLeft: `3px solid ${meta.color}` }}
-                                                >
-                                                    <div className="flex items-center gap-2 mb-0.5">
-                                                        <i className={`fa-solid ${meta.icon} text-xs`} style={{ color: meta.color }} />
-                                                        <span className="text-sm font-medium truncate">{it.title}</span>
-                                                    </div>
-                                                    <div className="text-xs text-[var(--muted)] flex flex-wrap gap-x-3">
-                                                        <span>{it.allDay ? 'All day' : timeStr(it.start)}{!it.allDay && it.end ? ` – ${timeStr(it.end)}` : ''}</span>
-                                                        {it.clientName && <span><i className="fa-solid fa-user text-[0.6rem] mr-1" />{it.clientName}</span>}
-                                                        {!it.editable && <span className="text-[var(--faint)]">{meta.label}</span>}
-                                                    </div>
-                                                </button>
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            )}
-
-                            {/* Legend */}
-                            <div className="mt-5 pt-4 border-t border-[var(--border)] grid grid-cols-2 gap-2">
-                                {Object.entries(TYPE_META).map(([k, m]) => (
-                                    <div key={k} className="flex items-center gap-2 text-[0.7rem] text-[var(--muted)]">
-                                        <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: m.color }} />
-                                        <span className="truncate">{m.label}</span>
-                                    </div>
-                                ))}
-                            </div>
+                            ))}
                         </div>
                     </div>
-                </main>
-            </div>
+                </div>
+            </main>
 
             {/* Modal */}
             {modalOpen && (
@@ -424,6 +421,6 @@ export default function Calendar() {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 }

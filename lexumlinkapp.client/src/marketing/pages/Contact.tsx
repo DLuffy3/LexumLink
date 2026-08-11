@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { T, Reveal, Accent, PageHero } from '../ui';
 
 const INFO = [
-    { icon: 'fa-solid fa-envelope', label: 'Email', value: 'hello@lexumlink.com' },
-    { icon: 'fa-solid fa-phone', label: 'Phone', value: '+27 (0) 11 123 4567' },
-    { icon: 'fa-solid fa-location-dot', label: 'Office', value: 'Sandton, Johannesburg, South Africa' },
+    { icon: 'fa-solid fa-envelope', label: 'Email', value: 'sales@lexumlink.co.za' },
+    { icon: 'fa-solid fa-mobile-screen', label: 'Cell', value: '073 476 0591' },
+    { icon: 'fa-solid fa-location-dot', label: 'Address', value: '1 Cavendish Road, Vincent, East London, 5201' },
     { icon: 'fa-solid fa-clock', label: 'Hours', value: 'Mon – Fri · 08:00 – 17:00 SAST' },
 ];
 
@@ -53,17 +53,17 @@ export default function Contact() {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                         <div>
                                             <label className={labelCls} style={{ color: T.violetLight }}>First Name</label>
-                                            <input name="firstName" value={form.firstName} onChange={handle} placeholder="Thabo" className={inputCls} style={inputStyle} required />
+                                            <input name="firstName" value={form.firstName} onChange={handle} placeholder="First Name" className={inputCls} style={inputStyle} required />
                                         </div>
                                         <div>
                                             <label className={labelCls} style={{ color: T.violetLight }}>Last Name</label>
-                                            <input name="lastName" value={form.lastName} onChange={handle} placeholder="Nkosi" className={inputCls} style={inputStyle} required />
+                                            <input name="lastName" value={form.lastName} onChange={handle} placeholder="Last Name" className={inputCls} style={inputStyle} required />
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                         <div>
                                             <label className={labelCls} style={{ color: T.violetLight }}>Email</label>
-                                            <input name="email" type="email" value={form.email} onChange={handle} placeholder="thabo@firm.co.za" className={inputCls} style={inputStyle} required />
+                                            <input name="email" type="email" value={form.email} onChange={handle} placeholder="email@firm.co.za" className={inputCls} style={inputStyle} required />
                                         </div>
                                         <div>
                                             <label className={labelCls} style={{ color: T.violetLight }}>Phone</label>
@@ -73,7 +73,7 @@ export default function Contact() {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                         <div>
                                             <label className={labelCls} style={{ color: T.violetLight }}>Organisation</label>
-                                            <input name="org" value={form.org} onChange={handle} placeholder="Nkosi Attorneys Inc." className={inputCls} style={inputStyle} />
+                                            <input name="org" value={form.org} onChange={handle} placeholder="Company Inc." className={inputCls} style={inputStyle} />
                                         </div>
                                         <div>
                                             <label className={labelCls} style={{ color: T.violetLight }}>Reason</label>

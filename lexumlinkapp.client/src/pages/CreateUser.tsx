@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/useAuth';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import Sidebar from '../components/Sidebar';
+import HelpButton from '../components/HelpButton';
 
 interface Organization {
     id: string;
@@ -12,7 +12,6 @@ interface Organization {
 export default function CreateUser() {
     const { isSuperAdmin } = useAuth();  
     const navigate = useNavigate();
-    const [sidebarOpen, setSidebarOpen] = useState(true);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -84,17 +83,17 @@ export default function CreateUser() {
     }
 
     return (
-        <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
-            <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-            <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
-                <div className="fixed top-4 left-4 z-30">
-                    <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-md bg-[var(--surface)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)]">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-                <main className="p-6 pt-16">
+        <>
+            <HelpButton
+                    title="Create New User"
+                    description="Super admin only — add a new operator and assign them to an organisation."
+                    steps={[
+                        'Fill in the new user\'s name, email and a temporary password.',
+                        'Either create a new organisation for them, or assign them to an existing one.',
+                        'Click "Create User" to save, or Cancel to go back.',
+                    ]}
+                />
+            <main className="p-6 pt-16">
                     <div className="max-w-2xl mx-auto bg-[var(--surface)] rounded-lg shadow p-6">
                         <h1 className="text-2xl font-bold mb-6">Create New User</h1>
                         {error && <div className="bg-red-500/12 border border-red-500/30 text-red-300 p-3 rounded mb-4">{error}</div>}
@@ -122,13 +121,17 @@ export default function CreateUser() {
                                 </select>
                             )}
 
-                            <button type="submit" disabled={loading} className="w-full bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white py-2 rounded disabled:opacity-50">
-                                {loading ? 'Creating...' : 'Create User'}
-                            </button>
+                            <div className="flex gap-3">
+                                <button type="submit" disabled={loading} className="flex-1 bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white py-2 rounded disabled:opacity-50">
+                                    {loading ? 'Creating...' : 'Create User'}
+                                </button>
+                                <button type="button" onClick={() => navigate('/super-admin')} className="flex-1 bg-[var(--overlay-med)] text-[var(--text)] py-2 rounded hover:bg-[var(--overlay-strong)]">
+                                    Cancel
+                                </button>
+                            </div>
                         </form>
                     </div>
-                </main>
-            </div>
-        </div>
+            </main>
+        </>
     );
 }

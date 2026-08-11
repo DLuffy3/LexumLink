@@ -16,30 +16,31 @@ const PLANS: Plan[] = [
         name: 'Starter',
         monthly: 249,
         blurb: 'For small teams getting organised.',
-        features: ['Up to 5 users', 'Unlimited clients', 'Case management', 'Document storage (10 GB)', 'Email support'],
+        features: ['1 user', '1 organisation', 'Limited clients', 'Case management', 'Document storage (5 GB)', 'Email support'],
         cta: 'Get Started',
     },
     {
         name: 'Professional',
         monthly: 649,
         blurb: 'For growing practices managing volume.',
-        features: ['Up to 20 users', 'Unlimited clients & cases', 'Full workflow automation', 'Document storage (20 GB)', 'Task & reminder engine', 'Dashboards & reporting', 'Priority support'],
+        features: ['Up to 5 users', '1 organisation', 'Unlimited clients & cases', 'Full workflow automation', 'Document storage (25 GB)', 'Task & reminder engine', 'Dashboards & reporting', 'Priority support'],
         featured: true,
-        cta: 'Start Free Trial',
+        cta: 'Get Started',
     },
     {
         name: 'Enterprise',
         monthly: null,
         blurb: 'For multi-branch firms and organisations.',
-        features: ['Unlimited users', 'Custom workflows & roles', 'Custom storage', 'API & integrations', 'Dedicated onboarding', '24/7 priority support'],
+        features: ['Unlimited organisations', '10 users per organisation', 'Custom workflows & roles', 'Custom storage', 'API & integrations', 'Dedicated onboarding', '24/7 priority support'],
         cta: 'Contact Sales',
     },
 ];
 
 const COMPARE: { label: string; values: [string, string, string] }[] = [
-    { label: 'Users', values: ['5', '20', 'Unlimited'] },
-    { label: 'Clients & cases', values: ['Unlimited', 'Unlimited', 'Unlimited'] },
-    { label: 'Document storage', values: ['2 GB', '25 GB', 'Custom'] },
+    { label: 'Organisations', values: ['1', '1', 'Unlimited'] },
+    { label: 'Users', values: ['1', '5', '10 per organisation'] },
+    { label: 'Clients & cases', values: ['Limited', 'Unlimited', 'Unlimited'] },
+    { label: 'Document storage', values: ['5 GB', '25 GB', 'Custom'] },
     { label: 'Workflow tracking', values: ['Basic', 'Full', 'Custom'] },
     { label: 'Tasks & reminders', values: ['—', '✓', '✓'] },
     { label: 'Dashboards & reporting', values: ['—', '✓', '✓'] },
@@ -49,7 +50,7 @@ const COMPARE: { label: string; values: [string, string, string] }[] = [
 ];
 
 const FAQ = [
-    { q: 'Is there a free trial?', a: 'Yes. The Professional plan includes a 14-day free trial with no card required, so your team can test the full workflow before committing.' },
+    { q: 'Is there a free trial?', a: 'We don’t currently offer a free trial on any plan, but you can cancel at any time and every plan includes onboarding support to get your team up and running quickly.' },
     { q: 'Can I change plans later?', a: 'Absolutely. Upgrade or downgrade at any time — changes apply from your next billing cycle and your data stays intact.' },
     { q: 'How is my data protected?', a: 'All data is stored securely in the cloud with role-based access controls, so confidential client information is only visible to authorised people.' },
     { q: 'Do you offer onboarding?', a: 'Every plan includes onboarding support. Enterprise customers get dedicated onboarding and, where needed, on-site training.' },
@@ -60,7 +61,7 @@ function PriceCard({ plan, annual }: { plan: Plan; annual: boolean }) {
     const price =
         plan.monthly === null
             ? 'Custom'
-            : `R${annual ? Math.round(plan.monthly * 0.8) : plan.monthly}`;
+            : `R${annual ? Math.round(plan.monthly * 0.9) : plan.monthly}`;
     return (
         <div
             className="relative rounded-2xl p-8 h-full flex flex-col transition-all duration-300 hover:-translate-y-1"
@@ -149,7 +150,7 @@ export default function Pricing() {
                             <span className="absolute top-1 w-5 h-5 rounded-full bg-white transition-all duration-300" style={{ left: annual ? '2rem' : '0.25rem' }} />
                         </button>
                         <span className="text-sm" style={{ color: annual ? T.text : T.faint }}>
-                            Annual <span style={{ color: T.violetLight }}>(save 20%)</span>
+                            Annual <span style={{ color: T.violetLight }}>(save 10%)</span>
                         </span>
                     </div>
 

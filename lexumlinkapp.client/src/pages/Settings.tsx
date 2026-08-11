@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/useAuth';
-import Sidebar from '../components/Sidebar';
+import HelpButton from '../components/HelpButton';
 import { motion } from 'framer-motion';
 import api from '../services/api';
 
@@ -16,7 +16,6 @@ interface Ticket {
 
 export default function Settings() {
     const { user, activeOrganization } = useAuth();
-    const [sidebarOpen, setSidebarOpen] = useState(true);
     const [ticketTitle, setTicketTitle] = useState('');
     const [ticketDescription, setTicketDescription] = useState('');
     const [ticketType, setTicketType] = useState<'bug' | 'feature'>('bug');
@@ -40,8 +39,6 @@ export default function Settings() {
             setLoadingTickets(false);
         }
     };
-
-    const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
     const handleSubmitTicket = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -80,19 +77,18 @@ export default function Settings() {
     };
 
     return (
-        <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
-            <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+        <>
+            <HelpButton
+                title="Settings"
+                description="Your account details, plus a way to report a bug or request a feature."
+                steps={[
+                    'Fill in the title and description of your issue or request.',
+                    'Choose whether it\'s a bug or a feature request.',
+                    'Submit — your ticket appears in the list below, and the team is notified.',
+                ]}
+            />
 
-            <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
-                <div className="fixed top-4 left-4 z-30">
-                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[var(--surface)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)]">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-
-                <main className="p-6 pt-16">
+            <main className="p-6 pt-16">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -232,8 +228,7 @@ export default function Settings() {
                             </form>
                         </div>
                     </motion.div>
-                </main>
-            </div>
-        </div>
+            </main>
+        </>
     );
 }

@@ -40,7 +40,7 @@ const SEG_COLORS = ['#C9A24B', '#C1626A', '#7A0008', '#C1121F', '#8E7E69', '#D9B
 const FACTOR_FULL: Record<string, string> = {
     Overdue: 'Overdue tasks',
     Deadlines: 'Cases approaching deadlines',
-    Documents: 'Missing documents',
+    Documents: 'Pending documents',
     Workload: 'Team workload',
     Completed: 'Completed tasks',
 };

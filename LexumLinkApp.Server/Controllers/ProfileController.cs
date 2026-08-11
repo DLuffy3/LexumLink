@@ -38,10 +38,29 @@ namespace LexumLinkApp.Server.Controllers
             if (request.File == null || request.File.Length == 0)
                 return BadRequest(new { error = "No file uploaded." });
 
-            var allowed = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp" };
+            // Mobile photo libraries and camera captures sometimes hand the browser a
+            // filename with no extension (or an unexpected one) even though the file
+            // itself is a perfectly normal image. Trust the browser-reported content
+            // type as a fallback whenever the extension alone doesn't pass, and derive
+            // a sensible extension from it so the file still lands with a valid name.
+            var allowedExt = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp" };
+            var mimeToExt = new Dictionary<string, string>
+            {
+                ["image/jpeg"] = ".jpg",
+                ["image/png"] = ".png",
+                ["image/gif"] = ".gif",
+                ["image/webp"] = ".webp",
+                ["image/bmp"] = ".bmp",
+            };
             var ext = Path.GetExtension(request.File.FileName).ToLowerInvariant();
-            if (!allowed.Contains(ext))
-                return BadRequest(new { error = "Unsupported format. Please use JPG, PNG, GIF, WEBP or BMP (HEIC is not supported)." });
+            var mime = request.File.ContentType?.ToLowerInvariant();
+            if (!allowedExt.Contains(ext))
+            {
+                if (mime != null && mimeToExt.TryGetValue(mime, out var derivedExt))
+                    ext = derivedExt;
+                else
+                    return BadRequest(new { error = "Unsupported format. Please use JPG, PNG, GIF, WEBP or BMP (HEIC is not supported)." });
+            }
             if (request.File.Length > 10 * 1024 * 1024)
                 return BadRequest(new { error = "Image is too large. Please use one 10MB or smaller." });
 
