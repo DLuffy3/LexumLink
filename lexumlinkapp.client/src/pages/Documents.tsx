@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/useAuth';
-import Sidebar from '../components/Sidebar';
-import api from '../services/api';
+import HelpButton from '../components/HelpButton';
+import api, { SERVER_ORIGIN } from '../services/api';
 import { motion } from 'framer-motion';
 import Spinner from '../components/Spinner';
 
@@ -33,7 +33,6 @@ const tabs = [
 
 export default function Documents() {
     const { activeOrganization } = useAuth();
-    const [sidebarOpen, setSidebarOpen] = useState(true);
     const [activeTab, setActiveTab] = useState('raf_forms');
     const [documents, setDocuments] = useState<Document[]>([]);
     const [loading, setLoading] = useState(true);
@@ -118,115 +117,112 @@ export default function Documents() {
         }
     };
 
-    const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
-
     const filteredDocuments = documents.filter(doc =>
         (doc.clientName && doc.clientName.toLowerCase().includes(searchQuery.toLowerCase()))
     );
 
-    if (!activeOrganization) return <div className="p-6">Loading...</div>;
+    if (!activeOrganization) return <main className="p-6 pt-16"><Spinner /></main>;
 
     return (
-        <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
-            <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+        <>
+            <HelpButton
+                title="Documents"
+                description="Supporting documents organised by category — RAF forms, police reports, medical, financial, identity and litigation."
+                steps={[
+                    'Use the tabs to filter by document type.',
+                    'Click "Upload Document" to add a new file.',
+                    'Select the client it belongs to and tag it with the right type.',
+                ]}
+                tips={['Larger files may take a moment to upload — wait for the confirmation before navigating away.']}
+            />
 
-            <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
-                <div className="fixed top-4 left-4 z-30">
-                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[var(--surface)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)]">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-
-                <main className="p-6 pt-16">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="w-full"
-                    >
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-                            <h1 className="text-2xl font-bold text-[var(--text)]">Documents</h1>
-                            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                                <input
-                                    type="text"
-                                    placeholder="Search by client name..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded px-3 py-2 w-full sm:w-64 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
-                                />
-                                <button
-                                    onClick={() => setShowUploadModal(true)}
-                                    className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white px-4 py-2 rounded-md text-center whitespace-nowrap"
-                                >
-                                    + Upload Document
-                                </button>
-                            </div>
+            <main className="p-6 pt-16">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-full"
+                >
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+                        <h1 className="text-2xl font-bold text-[var(--text)]">Documents</h1>
+                        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                            <input
+                                type="text"
+                                placeholder="Search by client name..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded px-3 py-2 w-full sm:w-64 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
+                            />
+                            <button
+                                onClick={() => setShowUploadModal(true)}
+                                className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white px-4 py-2 rounded-md text-center whitespace-nowrap"
+                            >
+                                + Upload Document
+                            </button>
                         </div>
+                    </div>
 
-                        {/* Tabs */}
-                        <div className="flex flex-wrap gap-2 border-b border-[var(--border)] mb-6">
-                            {tabs.map(tab => (
-                                <button
-                                    key={tab.key}
-                                    onClick={() => setActiveTab(tab.key)}
-                                    className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${activeTab === tab.key
-                                            ? 'bg-[var(--surface)] text-[var(--brand-accent)] border-t border-l border-r border-[var(--border)] -mb-px'
-                                            : 'text-[var(--muted)] hover:text-[var(--text)]'
-                                        }`}
-                                >
-                                    {tab.label}
-                                </button>
-                            ))}
+                    {/* Tabs */}
+                    <div className="flex flex-wrap gap-2 border-b border-[var(--border)] mb-6">
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.key}
+                                onClick={() => setActiveTab(tab.key)}
+                                className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${activeTab === tab.key
+                                        ? 'bg-[var(--surface)] text-[var(--brand-accent)] border-t border-l border-r border-[var(--border)] -mb-px'
+                                        : 'text-[var(--muted)] hover:text-[var(--text)]'
+                                    }`}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {loading ? (
+                        <div className="flex justify-center items-center h-64">
+                            <Spinner size={50} />
                         </div>
-
-                        {loading ? (
-                            <div className="flex justify-center items-center h-64">
-                                <Spinner size={50} />
-                            </div>
-                        ) : error ? (
-                            <div className="text-red-300 py-10">{error}</div>
-                        ) : filteredDocuments.length === 0 ? (
-                            <div className="text-center text-[var(--muted)] py-10">No documents found in this category.</div>
-                        ) : (
-                            <div className="bg-[var(--surface)] rounded-lg shadow overflow-hidden">
-                                <table className="min-w-full divide-y divide-[var(--border)]">
-                                    <thead className="bg-[var(--overlay-weak)]">
-                                        <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">File Name</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Client</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Uploaded</th>
-                                            <th className="px-6 py-3 text-right text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Actions</th>
+                    ) : error ? (
+                        <div className="text-red-300 py-10">{error}</div>
+                    ) : filteredDocuments.length === 0 ? (
+                        <div className="text-center text-[var(--muted)] py-10">No documents found in this category.</div>
+                    ) : (
+                        <div className="bg-[var(--surface)] rounded-lg shadow overflow-x-auto">
+                            <table className="min-w-full divide-y divide-[var(--border)]">
+                                <thead className="bg-[var(--overlay-weak)]">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">File Name</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Client</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Uploaded</th>
+                                        <th className="px-6 py-3 text-right text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-[var(--border)]">
+                                    {filteredDocuments.map(doc => (
+                                        <tr key={doc.id}>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <a href={`${SERVER_ORIGIN}${doc.fileUrl}`} target="_blank" rel="noopener noreferrer" className="text-[var(--brand-accent)] hover:underline">
+                                                    {doc.fileName}
+                                                </a>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{doc.clientName || '-'}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{new Date(doc.uploadedAt).toLocaleDateString()}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-right">
+                                                <button
+                                                    onClick={() => handleDelete(doc.id)}
+                                                    className="text-red-300 hover:text-red-200"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-[var(--border)]">
-                                        {filteredDocuments.map(doc => (
-                                            <tr key={doc.id}>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--brand-accent)] hover:underline">
-                                                        {doc.fileName}
-                                                    </a>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">{doc.clientName || '-'}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap">{new Date(doc.uploadedAt).toLocaleDateString()}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                    <button
-                                                        onClick={() => handleDelete(doc.id)}
-                                                        className="text-red-300 hover:text-red-200"
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
-                    </motion.div>
-                </main>
-            </div>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </motion.div>
+            </main>
 
             {/* Upload Modal */}
             {showUploadModal && (
@@ -284,6 +280,6 @@ export default function Documents() {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 }

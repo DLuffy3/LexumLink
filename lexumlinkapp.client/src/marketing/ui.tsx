@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import logoDark from '../assets/logo-dark.svg';
+import logoLight from '../assets/logo-light.svg';
+import { useTheme } from '../theme/useTheme';
+
+export const TAGLINE = 'Connecting Law. Simplifying Practice.';
 
 // ─── Design tokens (burgundy / cream brand) ───────────────────────────────────
 
@@ -162,20 +167,14 @@ export function GhostButton({
     return <a href={href} className={cls} style={style}>{children}</a>;
 }
 
-export function Logo({ className = 'text-2xl' }: { className?: string }) {
+export function Logo({ className = 'h-10 w-auto' }: { className?: string }) {
+    const { theme } = useTheme();
     return (
-        <span className={`font-['Mooxy'] font-black tracking-tight ${className}`}>
-            <span
-                style={{
-                    background: T.textGradient,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                }}
-            >
-                Lexum
-            </span>
-            <span style={{ color: T.text }}>Link</span>
-        </span>
+        <img
+            src={theme === 'dark' ? logoDark : logoLight}
+            alt={`LexumLink — ${TAGLINE}`}
+            className={`${className} object-contain object-left`}
+        />
     );
 }
 

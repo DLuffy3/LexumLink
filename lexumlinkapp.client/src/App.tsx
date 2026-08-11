@@ -1,11 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider';
+import { SidebarProvider } from './context/SidebarProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { OrganizationGuard } from './components/OrganizationGuard';
 import { SuperAdminGuard } from './components/SuperAdminGaurd';
 import { Suspense, lazy } from 'react';
 import Spinner from './components/Spinner';
 import MarketingLayout from './marketing/MarketingLayout';
+import AppLayout from './layouts/AppLayout';
 import Home from './marketing/pages/Home';
 import About from './marketing/pages/About';
 import Services from './marketing/pages/Services';
@@ -31,9 +33,11 @@ function App() {
     const Cases = lazy(() => import('./pages/Cases'));
     const Claims = lazy(() => import('./pages/Claims'));
     const Documents = lazy(() => import('./pages/Documents'));
+    const Guide = lazy(() => import('./pages/Guide'));
     return (
         <BrowserRouter>
             <AuthProvider>
+            <SidebarProvider>
                 <Routes>
                     <Route element={<MarketingLayout />}>
                         <Route path="/" element={<Home />} />
@@ -43,132 +47,148 @@ function App() {
                         <Route path="/contact" element={<Contact />} />
                     </Route>
                     <Route path="/signin" element={<SignIn />} />
-                    <Route path="/dashboard" element={
-                        <Suspense fallback={<Spinner/>}>
-                          <ProtectedRoute>
-                            <OrganizationGuard>
-                                <Dashboard />
-                            </OrganizationGuard>
-                          </ProtectedRoute>
-                        </Suspense>
-                    } />
-                    <Route path="/calendar" element={
-                        <Suspense fallback={<Spinner />}>
-                          <ProtectedRoute>
-                            <OrganizationGuard>
-                                <CalendarPage />
-                            </OrganizationGuard>
-                          </ProtectedRoute>
-                        </Suspense>
-                    } />
-                    <Route path="/clients" element={
-                        <Suspense fallback={<Spinner />}>
+
+                    {/* All authenticated pages share one persistent Sidebar via AppLayout,
+                        so it never unmounts/remounts (and re-animates) between pages. */}
+                    <Route element={<AppLayout />}>
+                        <Route path="/dashboard" element={
+                            <Suspense fallback={<Spinner/>}>
+                              <ProtectedRoute>
+                                <OrganizationGuard>
+                                    <Dashboard />
+                                </OrganizationGuard>
+                              </ProtectedRoute>
+                            </Suspense>
+                        } />
+                        <Route path="/calendar" element={
+                            <Suspense fallback={<Spinner />}>
+                              <ProtectedRoute>
+                                <OrganizationGuard>
+                                    <CalendarPage />
+                                </OrganizationGuard>
+                              </ProtectedRoute>
+                            </Suspense>
+                        } />
+                        <Route path="/clients" element={
+                            <Suspense fallback={<Spinner />}>
+                                <ProtectedRoute>
+                                    <OrganizationGuard>
+                                        <Clients />
+                                    </OrganizationGuard>
+                                </ProtectedRoute>
+                            </Suspense>
+                        } />
+                        <Route path="/clients/:id" element={
                             <ProtectedRoute>
                                 <OrganizationGuard>
-                                    <Clients />
+                                    <ClientDetail />
                                 </OrganizationGuard>
                             </ProtectedRoute>
-                        </Suspense>
-                    } />
-                    <Route path="/clients/:id" element={
-                        <ProtectedRoute>
-                            <OrganizationGuard>
-                                <ClientDetail />
-                            </OrganizationGuard>
-                        </ProtectedRoute>
-                    } />
-                    <Route path="/cases" element={
-                        <Suspense fallback={<Spinner />}>
+                        } />
+                        <Route path="/cases" element={
+                            <Suspense fallback={<Spinner />}>
+                                <ProtectedRoute>
+                                    <OrganizationGuard>
+                                        <Cases />
+                                    </OrganizationGuard>
+                                </ProtectedRoute>
+                            </Suspense>
+                        } />
+                        <Route path="/claims" element={
+                            <Suspense fallback={<Spinner />}>
+                                <ProtectedRoute>
+                                    <OrganizationGuard>
+                                        <Claims />
+                                    </OrganizationGuard>
+                                </ProtectedRoute>
+                            </Suspense>
+                        } />
+                        <Route path="/documents" element={
+                            <Suspense fallback={<Spinner />}>
+                                <ProtectedRoute>
+                                    <OrganizationGuard>
+                                        <Documents />
+                                    </OrganizationGuard>
+                                </ProtectedRoute>
+                            </Suspense>
+                        } />
+                        <Route path="/settings" element={
                             <ProtectedRoute>
                                 <OrganizationGuard>
-                                    <Cases />
+                                    <Settings />
                                 </OrganizationGuard>
                             </ProtectedRoute>
-                        </Suspense>
-                    } />
-                    <Route path="/claims" element={
-                        <Suspense fallback={<Spinner />}>
+                        } />
+                        <Route path="/guide" element={
+                            <Suspense fallback={<Spinner />}>
+                                <ProtectedRoute>
+                                    <OrganizationGuard>
+                                        <Guide />
+                                    </OrganizationGuard>
+                                </ProtectedRoute>
+                            </Suspense>
+                        } />
+                        <Route path="/admin/users/new" element={
+                            <ProtectedRoute>
+                                <SuperAdminGuard>
+                                    <CreateUser />
+                                </SuperAdminGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/super-admin" element={
+                            <ProtectedRoute>
+                                <SuperAdminGuard>
+                                    <SuperAdminDashboard />
+                                </SuperAdminGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/cases/new" element={
                             <ProtectedRoute>
                                 <OrganizationGuard>
-                                    <Claims />
+                                    <NewCase />
                                 </OrganizationGuard>
                             </ProtectedRoute>
-                        </Suspense>
-                    } />
-                    <Route path="/documents" element={
-                        <Suspense fallback={<Spinner />}>
+                        } />
+                        <Route path="/claims/new" element={
                             <ProtectedRoute>
                                 <OrganizationGuard>
-                                    <Documents />
+                                    <NewClaim />
                                 </OrganizationGuard>
                             </ProtectedRoute>
-                        </Suspense>
-                    } />
-                    <Route path="/settings" element={
-                        <ProtectedRoute>
-                            <OrganizationGuard>
-                                <Settings />
-                            </OrganizationGuard>
-                        </ProtectedRoute>
-                    } />
-                    <Route path="/admin/users/new" element={
-                        <ProtectedRoute>
-                            <SuperAdminGuard>
-                                <CreateUser />
-                            </SuperAdminGuard>
-                        </ProtectedRoute>
-                    } />
-                    <Route path="/super-admin" element={
-                        <ProtectedRoute>
-                            <SuperAdminGuard>
-                                <SuperAdminDashboard />
-                            </SuperAdminGuard>
-                        </ProtectedRoute>
-                    } />
-                    <Route path="/cases/new" element={
-                        <ProtectedRoute>
-                            <OrganizationGuard>
-                                <NewCase />
-                            </OrganizationGuard>
-                        </ProtectedRoute>
-                    } />
-                    <Route path="/claims/new" element={
-                        <ProtectedRoute>
-                            <OrganizationGuard>
-                                <NewClaim />
-                            </OrganizationGuard>
-                        </ProtectedRoute>
-                    } />
-                    <Route path="/admin/tickets" element={
-                        <ProtectedRoute>
-                            <SuperAdminGuard>
-                                <SuperAdminTickets />
-                            </SuperAdminGuard>
-                        </ProtectedRoute>
-                    } />
-                    <Route path="/clients/:id/edit" element={
-                        <ProtectedRoute>
-                            <OrganizationGuard>
-                                <EditClient />
-                            </OrganizationGuard>
-                        </ProtectedRoute>
-                    } />
-                    <Route path="/cases/:id/edit" element={
-                        <ProtectedRoute>
-                            <OrganizationGuard>
-                                <EditCase />
-                            </OrganizationGuard>
-                        </ProtectedRoute>
-                    } />
-                    <Route path="/claims/:id/edit" element={
-                        <ProtectedRoute>
-                            <OrganizationGuard>
-                                <EditClaim />
-                            </OrganizationGuard>
-                        </ProtectedRoute>
-                    } />
+                        } />
+                        <Route path="/admin/tickets" element={
+                            <ProtectedRoute>
+                                <SuperAdminGuard>
+                                    <SuperAdminTickets />
+                                </SuperAdminGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/clients/:id/edit" element={
+                            <ProtectedRoute>
+                                <OrganizationGuard>
+                                    <EditClient />
+                                </OrganizationGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/cases/:id/edit" element={
+                            <ProtectedRoute>
+                                <OrganizationGuard>
+                                    <EditCase />
+                                </OrganizationGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/claims/:id/edit" element={
+                            <ProtectedRoute>
+                                <OrganizationGuard>
+                                    <EditClaim />
+                                </OrganizationGuard>
+                            </ProtectedRoute>
+                        } />
+                    </Route>
+
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
+            </SidebarProvider>
             </AuthProvider>
         </BrowserRouter>
     );

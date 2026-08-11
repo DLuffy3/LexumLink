@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
+import { useSidebar } from '../context/useSidebar';
 import { motion } from 'framer-motion';
 import api, { SERVER_ORIGIN } from '../services/api';
 import ThemeToggle from './ThemeToggle';
+import { useTheme } from '../theme/useTheme';
+import logoDark from '../assets/logo-dark.svg';
+import logoLight from '../assets/logo-light.svg';
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
@@ -13,15 +17,13 @@ const navigation = [
     { name: 'Claims', href: '/claims', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
     { name: 'Documents', href: '/documents', icon: 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4' },
     { name: 'Settings', href: '/settings', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' },
+    { name: 'Guide', href: '/guide', icon: 'M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25' },
 ];
 
-interface SidebarProps {
-    sidebarOpen: boolean;
-    toggleSidebar: () => void;
-}
-
-export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
+export default function Sidebar() {
     const { user, activeOrganization, signOut } = useAuth();
+    const { sidebarOpen, toggleSidebar } = useSidebar();
+    const { theme } = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
     const fileRef = useRef<HTMLInputElement | null>(null);
@@ -139,12 +141,11 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                 </div>
 
                 {/* Bottom: logo + theme + logout */}
-                <div className="p-4 border-t border-[var(--border)] flex items-center justify-between gap-2">
-                    <Link to="/" className="font-['Mooxy'] text-lg font-black tracking-tight" aria-label="LexumLink home">
-                        <span style={{ background: 'var(--grad-text)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Lexum</span>
-                        <span className="text-[var(--text)]">Link</span>
+                <div className="p-4 border-t border-[var(--border)] flex flex-col items-start gap-3">
+                    <Link to="/" aria-label="LexumLink home">
+                        <img src={theme === 'dark' ? logoDark : logoLight} alt="LexumLink — Connecting Law. Simplifying Practice." className="h-16 w-auto object-contain object-left" />
                     </Link>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 self-end">
                         <ThemeToggle />
                         <button onClick={handleSignOut} title="Sign out" className="w-9 h-9 rounded-full flex items-center justify-center text-[var(--brand-accent)] hover:text-[var(--text)] hover:bg-[var(--overlay-weak)]">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

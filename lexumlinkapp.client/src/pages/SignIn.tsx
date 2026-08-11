@@ -4,6 +4,9 @@ import { useAuth } from '../context/useAuth';
 import { AxiosError } from 'axios';
 import Spinner from '../components/Spinner';
 import ThemeToggle from '../components/ThemeToggle';
+import { useTheme } from '../theme/useTheme';
+import logoDark from '../assets/logo-dark.svg';
+import logoLight from '../assets/logo-light.svg';
 
 export default function SignIn() {
     const [email, setEmail] = useState('');
@@ -11,6 +14,7 @@ export default function SignIn() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { signIn } = useAuth();
+    const { theme } = useTheme();
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -46,10 +50,9 @@ export default function SignIn() {
 
             {/* top nav */}
             <nav className="absolute top-0 left-0 right-0 z-20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-8 h-[72px] flex items-center justify-between">
-                    <Link to="/" className="font-['Mooxy'] text-2xl font-black tracking-tight" aria-label="LexumLink home">
-                        <span style={{ background: 'var(--grad-text)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Lexum</span>
-                        <span style={{ color: 'var(--text)' }}>Link</span>
+                <div className="max-w-7xl mx-auto px-4 sm:px-8 h-[104px] flex items-center justify-between">
+                    <Link to="/" aria-label="LexumLink home">
+                        <img src={theme === 'dark' ? logoDark : logoLight} alt="LexumLink — Connecting Law. Simplifying Practice." className="h-24 w-auto object-contain object-left" />
                     </Link>
                     <div className="flex items-center gap-3">
                         <ThemeToggle />

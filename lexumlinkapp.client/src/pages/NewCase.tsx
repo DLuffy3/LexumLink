@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import Sidebar from '../components/Sidebar';
+import HelpButton from '../components/HelpButton';
 import { AxiosError } from 'axios';
 
 interface Client {
@@ -12,7 +12,6 @@ interface Client {
 
 export default function NewCase() {
     const navigate = useNavigate();
-    const [sidebarOpen, setSidebarOpen] = useState(true);
     const [clients, setClients] = useState<Client[]>([]);
     const [formData, setFormData] = useState({
         clientId: '',
@@ -68,20 +67,19 @@ export default function NewCase() {
         }
     };
 
-    const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
-
     return (
-        <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
-            <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-            <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
-                <div className="fixed top-4 left-4 z-30">
-                    <button onClick={toggleSidebar} className="p-2 rounded-md bg-[var(--surface)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] shadow-md">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-                <main className="p-6 pt-16">
+        <>
+            <HelpButton
+                    title="Add New Case"
+                    description="Create a case for an existing client."
+                    steps={[
+                        'Select the client this case belongs to.',
+                        'Give it a case number and the date of the incident.',
+                        'Set the status — most new cases start as Open.',
+                        'Click "Create Case" to save, or Cancel to go back without saving.',
+                    ]}
+                />
+            <main className="p-6 pt-16">
                     <div className="max-w-2xl mx-auto bg-[var(--surface)] rounded-lg shadow p-6">
                         <h1 className="text-2xl font-bold mb-6">Add New Case</h1>
                         {error && <div className="bg-red-500/12 border border-red-500/30 text-red-300 p-3 rounded mb-4">{error}</div>}
@@ -149,17 +147,25 @@ export default function NewCase() {
                                     className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 />
                             </div>
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full bg-[var(--brand)] text-white py-2 rounded hover:bg-[var(--brand-hover)] disabled:opacity-50"
-                            >
-                                {loading ? 'Creating...' : 'Create Case'}
-                            </button>
+                            <div className="flex gap-3">
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="flex-1 bg-[var(--brand)] text-white py-2 rounded hover:bg-[var(--brand-hover)] disabled:opacity-50"
+                                >
+                                    {loading ? 'Creating...' : 'Create Case'}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => navigate('/cases')}
+                                    className="flex-1 bg-[var(--overlay-med)] text-[var(--text)] py-2 rounded hover:bg-[var(--overlay-strong)]"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
                         </form>
                     </div>
-                </main>
-            </div>
-        </div>
+            </main>
+        </>
     );
 }
