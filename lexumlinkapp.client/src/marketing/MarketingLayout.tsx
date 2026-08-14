@@ -162,13 +162,13 @@ function Footer() {
                         </p>
                         <div className="flex gap-3 mt-6">
                             {[
-                                { icon: 'fa-brands fa-linkedin-in', label: 'LinkedIn' },
-                                { icon: 'fa-brands fa-x-twitter', label: 'X' },
-                                { icon: 'fa-brands fa-facebook-f', label: 'Facebook' },
+                                { icon: 'fa-brands fa-linkedin-in', label: 'LinkedIn', href: 'https://www.linkedin.com/company/lexumlink' },
                             ].map((s) => (
                                 <a
                                     key={s.label}
-                                    href="#"
+                                    href={s.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     aria-label={s.label}
                                     className="w-9 h-9 rounded-full flex items-center justify-center text-sm transition-all duration-300 hover:-translate-y-0.5 hover:text-[var(--text)]"
                                     style={{ border: `1px solid ${T.border}`, color: T.muted }}

@@ -39,4 +39,14 @@
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
+  <Target Name="CopyClientDist" AfterTargets="Publish">
+    <ItemGroup>
+      <ClientDist Include="..\lexumlinkapp.client\dist\**\*" />
+    </ItemGroup>
+
+    <Copy
+        SourceFiles="@(ClientDist)"
+        DestinationFiles="@(ClientDist->'$(PublishDir)wwwroot\%(RecursiveDir)%(Filename)%(Extension)')"
+        SkipUnchangedFiles="true" />
+  </Target>
 </Project>
