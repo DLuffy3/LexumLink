@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/useAuth';
 import HelpButton from '../components/HelpButton';
+import ClientAvatar from '../components/ClientAvatar';
 import api, { SERVER_ORIGIN } from '../services/api';
 import { motion } from 'framer-motion';
 import Spinner from '../components/Spinner';
@@ -20,6 +21,7 @@ interface Document {
     mimeType: string;
     uploadedAt: string;
     clientName: string;
+    clientPhotoUrl: string | null;
 }
 
 const tabs = [
@@ -205,7 +207,19 @@ export default function Documents() {
                                                     {doc.fileName}
                                                 </a>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{doc.clientName || '-'}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                {doc.clientName ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <ClientAvatar
+                                                            firstName={doc.clientName.split(' ')[0]}
+                                                            lastName={doc.clientName.split(' ').slice(1).join(' ')}
+                                                            photoUrl={doc.clientPhotoUrl}
+                                                            size="xs"
+                                                        />
+                                                        {doc.clientName}
+                                                    </div>
+                                                ) : '-'}
+                                            </td>
                                             <td className="px-6 py-4 whitespace-nowrap">{new Date(doc.uploadedAt).toLocaleDateString()}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <button

@@ -1,10 +1,12 @@
 using LexumLinkApp.Server.Models;
 using LexumLinkApp.Server.Data;
 using LexumLinkApp.Server.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class OrganizationsController : ControllerBase

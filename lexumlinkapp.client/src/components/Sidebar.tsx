@@ -68,6 +68,9 @@ export default function Sidebar() {
     const initials = `${(user?.firstName?.[0] || '').toUpperCase()}${(user?.lastName?.[0] || '').toUpperCase()}` || '?';
     const navItemClass = (active: boolean) =>
         `group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-all duration-200 ${active ? 'bg-[var(--brand-soft)] text-[var(--brand-accent)]' : 'text-[var(--muted)] hover:bg-[var(--overlay-weak)] hover:text-[var(--text)]'}`;
+    // While inside the Super Admin area, keep the sidebar focused on just those pages
+    // instead of mixing in the regular practice-management nav.
+    const inSuperAdminArea = location.pathname.startsWith('/super-admin') || location.pathname.startsWith('/admin');
 
     return (
         <motion.aside
@@ -121,7 +124,7 @@ export default function Sidebar() {
                 {/* Nav */}
                 <div className="flex-1 overflow-y-auto py-4">
                     <nav className="px-2 space-y-1">
-                        {navigation.map((item) => (
+                        {!inSuperAdminArea && navigation.map((item) => (
                             <Link key={item.name} to={item.href} className={navItemClass(location.pathname === item.href)}>
                                 <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
@@ -130,12 +133,39 @@ export default function Sidebar() {
                             </Link>
                         ))}
                         {user?.isSuperAdmin && (
-                            <Link to="/admin/tickets" className={navItemClass(location.pathname === '/admin/tickets')}>
-                                <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z" />
-                                </svg>
-                                Tickets
-                            </Link>
+                            <>
+                                <p className={`px-2 pb-1 text-xs font-semibold tracking-wide uppercase text-[var(--faint)] ${inSuperAdminArea ? '' : 'pt-4'}`}>Super Admin</p>
+                                <Link to="/super-admin" className={navItemClass(location.pathname === '/super-admin')}>
+                                    <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                    Overview
+                                </Link>
+                                <Link to="/super-admin/users" className={navItemClass(location.pathname.startsWith('/super-admin/users'))}>
+                                    <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                    Users
+                                </Link>
+                                <Link to="/super-admin/organizations" className={navItemClass(location.pathname.startsWith('/super-admin/organizations'))}>
+                                    <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9h.01M9 12h.01M9 15h.01" />
+                                    </svg>
+                                    Organizations
+                                </Link>
+                                <Link to="/admin/tickets" className={navItemClass(location.pathname === '/admin/tickets')}>
+                                    <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z" />
+                                    </svg>
+                                    Tickets
+                                </Link>
+                                <Link to="/super-admin/settings" className={navItemClass(location.pathname === '/super-admin/settings')}>
+                                    <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                    </svg>
+                                    Settings
+                                </Link>
+                            </>
                         )}
                     </nav>
                 </div>

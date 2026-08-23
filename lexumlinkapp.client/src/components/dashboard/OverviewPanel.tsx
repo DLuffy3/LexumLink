@@ -2,12 +2,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import Spinner from '../Spinner';
+import ClientAvatar from '../ClientAvatar';
 import { LineChart, type LinePoint } from '../charts';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
-interface ClientRow { id: string; firstName?: string; lastName?: string; email?: string; phone?: string; createdAt: string; }
-interface CaseRow { id: string; caseNumber: string; clientName?: string; status: string; createdAt: string; }
+interface ClientRow { id: string; firstName?: string; lastName?: string; email?: string; phone?: string; photoUrl?: string | null; createdAt: string; }
+interface CaseRow { id: string; caseNumber: string; clientName?: string; clientPhotoUrl?: string | null; status: string; createdAt: string; }
 interface TodoRow { id: string; title: string; dueDate: string | null; isCompleted: boolean; }
 interface DocRow { id: string; fileName: string; documentType: string; uploadedAt: string; clientName?: string | null; }
 interface EventRow { id: string; source: string; type: string; title: string; start: string; allDay: boolean; clientName: string | null; }
@@ -19,7 +20,6 @@ type Granularity = 'day' | 'week' | 'month' | 'year';
 const MONTHS3 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const pad = (n: number) => String(n).padStart(2, '0');
 const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-const initials = (a?: string, b?: string) => `${(a?.[0] || '').toUpperCase()}${(b?.[0] || '').toUpperCase()}` || '?';
 
 function timeAgo(iso: string): string {
     const d = new Date(iso);
@@ -259,7 +259,7 @@ export default function OverviewPanel() {
                             shownClients.map((c) => (
                                 <li key={c.id}>
                                     <button onClick={() => navigate(`/clients/${c.id}`)} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-[var(--overlay-weak)] text-left">
-                                        <span className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style={{ background: 'var(--brand-soft)', color: 'var(--brand-accent)' }}>{initials(c.firstName, c.lastName)}</span>
+                                        <ClientAvatar firstName={c.firstName} lastName={c.lastName} photoUrl={c.photoUrl} size="sm" />
                                         <span className="min-w-0">
                                             <span className="block text-sm text-[var(--text)] truncate">{`${c.firstName ?? ''} ${c.lastName ?? ''}`.trim()}</span>
                                             <span className="block text-xs text-[var(--faint)] truncate">{c.email || c.phone || '—'}</span>
@@ -290,9 +290,17 @@ export default function OverviewPanel() {
                             shownCases.map((c) => (
                                 <li key={c.id}>
                                     <button onClick={() => navigate(`/cases/${c.id}/edit`)} className="w-full flex items-center justify-between gap-2 p-2 rounded-lg hover:bg-[var(--overlay-weak)] text-left">
-                                        <span className="min-w-0">
-                                            <span className="block text-sm text-[var(--text)] truncate">{c.caseNumber}</span>
-                                            <span className="block text-xs text-[var(--faint)] truncate">{c.clientName || '—'}</span>
+                                        <span className="flex items-center gap-2 min-w-0">
+                                            <ClientAvatar
+                                                firstName={c.clientName?.split(' ')[0]}
+                                                lastName={c.clientName?.split(' ').slice(1).join(' ')}
+                                                photoUrl={c.clientPhotoUrl}
+                                                size="xs"
+                                            />
+                                            <span className="min-w-0">
+                                                <span className="block text-sm text-[var(--text)] truncate">{c.caseNumber}</span>
+                                                <span className="block text-xs text-[var(--faint)] truncate">{c.clientName || '—'}</span>
+                                            </span>
                                         </span>
                                         <span className={`text-[0.62rem] font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${badge(c.status)}`}>{pretty(c.status)}</span>
                                     </button>
@@ -351,9 +359,17 @@ export default function OverviewPanel() {
                             {priority.map((c) => (
                                 <li key={c.id}>
                                     <button onClick={() => navigate(`/cases/${c.id}/edit`)} className="w-full flex items-center justify-between gap-2 py-3 text-left hover:opacity-80">
-                                        <span className="min-w-0">
-                                            <span className="block text-sm font-medium text-[var(--text)] truncate">{c.caseNumber}</span>
-                                            <span className="block text-xs text-[var(--faint)] truncate">{c.clientName || '—'}</span>
+                                        <span className="flex items-center gap-2 min-w-0">
+                                            <ClientAvatar
+                                                firstName={c.clientName?.split(' ')[0]}
+                                                lastName={c.clientName?.split(' ').slice(1).join(' ')}
+                                                photoUrl={c.clientPhotoUrl}
+                                                size="xs"
+                                            />
+                                            <span className="min-w-0">
+                                                <span className="block text-sm font-medium text-[var(--text)] truncate">{c.caseNumber}</span>
+                                                <span className="block text-xs text-[var(--faint)] truncate">{c.clientName || '—'}</span>
+                                            </span>
                                         </span>
                                         <span className={`text-[0.62rem] font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${badge(c.status)}`}>{pretty(c.status)}</span>
                                     </button>

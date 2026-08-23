@@ -21,6 +21,12 @@ import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import NewCase from './pages/NewCase';
 import NewClaim from './pages/NewClaim';
 import SuperAdminTickets from './pages/SuperAdminTickets';
+import SuperAdminUsers from './pages/SuperAdminUsers';
+import SuperAdminEditUser from './pages/SuperAdminEditUser';
+import SuperAdminOrganizations from './pages/SuperAdminOrganizations';
+import SuperAdminNewOrganization from './pages/SuperAdminNewOrganization';
+import SuperAdminEditOrganization from './pages/SuperAdminEditOrganization';
+import SuperAdminSettings from './pages/SuperAdminSettings';
 import EditClient from './pages/EditClient';
 import EditCase from './pages/EditCase';
 import EditClaim from './pages/EditClaim';
@@ -160,6 +166,48 @@ function App() {
                             <ProtectedRoute>
                                 <SuperAdminGuard>
                                     <SuperAdminTickets />
+                                </SuperAdminGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/super-admin/users" element={
+                            <ProtectedRoute>
+                                <SuperAdminGuard>
+                                    <SuperAdminUsers />
+                                </SuperAdminGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/super-admin/users/:id/edit" element={
+                            <ProtectedRoute>
+                                <SuperAdminGuard>
+                                    <SuperAdminEditUser />
+                                </SuperAdminGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/super-admin/organizations" element={
+                            <ProtectedRoute>
+                                <SuperAdminGuard>
+                                    <SuperAdminOrganizations />
+                                </SuperAdminGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/super-admin/organizations/new" element={
+                            <ProtectedRoute>
+                                <SuperAdminGuard>
+                                    <SuperAdminNewOrganization />
+                                </SuperAdminGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/super-admin/organizations/:id/edit" element={
+                            <ProtectedRoute>
+                                <SuperAdminGuard>
+                                    <SuperAdminEditOrganization />
+                                </SuperAdminGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/super-admin/settings" element={
+                            <ProtectedRoute>
+                                <SuperAdminGuard>
+                                    <SuperAdminSettings />
                                 </SuperAdminGuard>
                             </ProtectedRoute>
                         } />

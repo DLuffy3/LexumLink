@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/useAuth';
 import HelpButton from '../components/HelpButton';
+import ClientAvatar from '../components/ClientAvatar';
 import { motion } from 'framer-motion';
 import Spinner from '../components/Spinner';
 
@@ -11,6 +12,7 @@ interface Case {
     caseNumber: string;
     clientId: string;
     clientName?: string;
+    clientPhotoUrl?: string | null;
     status: string;
     incidentDate: string;
     description: string;
@@ -19,6 +21,7 @@ interface Case {
 
 export default function Cases() {
     const { activeOrganization } = useAuth();
+    const navigate = useNavigate();
     const [cases, setCases] = useState<Case[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -138,7 +141,15 @@ export default function Cases() {
                                                 </Link>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                {caseItem.clientName || caseItem.clientId}
+                                                <div className="flex items-center gap-2">
+                                                    <ClientAvatar
+                                                        firstName={caseItem.clientName?.split(' ')[0]}
+                                                        lastName={caseItem.clientName?.split(' ').slice(1).join(' ')}
+                                                        photoUrl={caseItem.clientPhotoUrl}
+                                                        size="xs"
+                                                    />
+                                                    {caseItem.clientName || caseItem.clientId}
+                                                </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadge(caseItem.status)}`}>
@@ -149,9 +160,13 @@ export default function Cases() {
                                                 {new Date(caseItem.incidentDate).toLocaleDateString()}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <Link to={`/cases/${caseItem.id}/edit`} className="text-[var(--brand-accent)] hover:text-[var(--text)] mr-3">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => navigate(`/cases/${caseItem.id}/edit`)}
+                                                    className="bg-[var(--brand-soft)] text-[var(--brand-accent)] px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-[var(--brand)] hover:text-white transition-colors"
+                                                >
                                                     Edit
-                                                </Link>
+                                                </button>
                                             </td>
                                         </tr>
                                     ))

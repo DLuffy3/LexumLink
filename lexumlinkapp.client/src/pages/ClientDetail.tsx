@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import api, { SERVER_ORIGIN } from '../services/api';
 import HelpButton from '../components/HelpButton';
@@ -81,6 +81,7 @@ const money = (n: number | null | undefined) =>
 
 export default function ClientDetail() {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const { activeOrganization } = useAuth();
     const fileRef = useRef<HTMLInputElement | null>(null);
     const [data, setData] = useState<DashboardData | null>(null);
@@ -215,7 +216,13 @@ export default function ClientDetail() {
                                     <div><i className="fa-solid fa-calendar w-4 mr-2 text-[var(--faint)]" />Client since {new Date(client.createdAt).toLocaleDateString()}</div>
                                 </div>
                                 <div className="mt-4">
-                                    <Link to={`/clients/${id}/edit`} className="bg-[var(--brand)] text-white px-4 py-2 rounded-md hover:bg-[var(--brand-hover)] text-sm">Edit Client</Link>
+                                    <button
+                                        type="button"
+                                        onClick={() => navigate(`/clients/${id}/edit`)}
+                                        className="bg-[var(--brand)] text-white px-4 py-2 rounded-md hover:bg-[var(--brand-hover)] text-sm"
+                                    >
+                                        Edit Client
+                                    </button>
                                 </div>
                             </div>
                         </div>

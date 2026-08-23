@@ -1,18 +1,20 @@
 using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.Extensions.Options;
 using MimeKit;
 
 namespace LexumLinkApp.Server.Services
 {
+    // Reads SMTP configuration live from PlatformSettings (DB-backed, editable on the
+    // Super Admin Settings page) rather than a fixed appsettings.json snapshot, so changes
+    // take effect immediately without a redeploy/restart.
     public class SmtpEmailService : IEmailService
     {
-        private readonly EmailSettings _settings;
+        private readonly IPlatformSettingsService _settingsService;
         private readonly ILogger<SmtpEmailService> _logger;
 
-        public SmtpEmailService(IOptions<EmailSettings> options, ILogger<SmtpEmailService> logger)
+        public SmtpEmailService(IPlatformSettingsService settingsService, ILogger<SmtpEmailService> logger)
         {
-            _settings = options.Value;
+            _settingsService = settingsService;
             _logger = logger;
         }
 
@@ -21,8 +23,10 @@ namespace LexumLinkApp.Server.Services
             var recipients = to.Where(a => !string.IsNullOrWhiteSpace(a)).Distinct().ToList();
             if (recipients.Count == 0) return;
 
+            var settings = await _settingsService.GetAsync();
+
             // Dev-safe: if disabled or unconfigured, log instead of sending.
-            if (!_settings.Enabled || string.IsNullOrWhiteSpace(_settings.Host))
+            if (!settings.SmtpEnabled || string.IsNullOrWhiteSpace(settings.SmtpHost))
             {
                 _logger.LogInformation("[Email disabled] Would send \"{Subject}\" to {Recipients}",
                     subject, string.Join(", ", recipients));
@@ -30,7 +34,7 @@ namespace LexumLinkApp.Server.Services
             }
 
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(_settings.FromName, _settings.FromEmail));
+            message.From.Add(new MailboxAddress(settings.SmtpFromName, settings.SmtpFromEmail));
             foreach (var r in recipients) message.To.Add(MailboxAddress.Parse(r));
             message.Subject = subject;
             message.Body = new BodyBuilder { HtmlBody = htmlBody }.ToMessageBody();
@@ -38,10 +42,10 @@ namespace LexumLinkApp.Server.Services
             using var client = new SmtpClient();
             try
             {
-                var socket = _settings.UseStartTls ? SecureSocketOptions.StartTls : SecureSocketOptions.Auto;
-                await client.ConnectAsync(_settings.Host, _settings.Port, socket, ct);
-                if (!string.IsNullOrWhiteSpace(_settings.Username))
-                    await client.AuthenticateAsync(_settings.Username, _settings.Password, ct);
+                var socket = settings.SmtpUseStartTls ? SecureSocketOptions.StartTls : SecureSocketOptions.Auto;
+                await client.ConnectAsync(settings.SmtpHost, settings.SmtpPort, socket, ct);
+                if (!string.IsNullOrWhiteSpace(settings.SmtpUsername))
+                    await client.AuthenticateAsync(settings.SmtpUsername, settings.SmtpPassword, ct);
                 await client.SendAsync(message, ct);
             }
             finally

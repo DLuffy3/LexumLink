@@ -15,11 +15,13 @@ namespace LexumLinkApp.Server.Controllers
     {
         private readonly LexumLinkDbContext _context;
         private readonly IJwtService _jwtService;
+        private readonly IPlatformSettingsService _settingsService;
 
-        public AuthController(LexumLinkDbContext context, IJwtService jwtService)
+        public AuthController(LexumLinkDbContext context, IJwtService jwtService, IPlatformSettingsService settingsService)
         {
             _context = context;
             _jwtService = jwtService;
+            _settingsService = settingsService;
         }
 
         [HttpPost("signin")]
@@ -29,8 +31,38 @@ namespace LexumLinkApp.Server.Controllers
             var user = await _context.Users
                 .Include(u => u.Organization)  // Include the navigation property, not the foreign key
                 .FirstOrDefaultAsync(u => u.Email == request.Email);
+
+            if (user != null && !user.IsActive)
+                return Unauthorized(new { error = "This account has been deactivated. Contact your administrator." });
+
+            if (user != null && user.LockedUntil.HasValue && user.LockedUntil.Value > DateTime.UtcNow)
+            {
+                var minutesLeft = Math.Ceiling((user.LockedUntil.Value - DateTime.UtcNow).TotalMinutes);
+                return StatusCode(423, new { error = $"Too many failed attempts. Try again in {minutesLeft} minute(s)." });
+            }
+
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            {
+                if (user != null)
+                {
+                    var settings = await _settingsService.GetAsync();
+                    user.FailedLoginAttempts += 1;
+                    if (user.FailedLoginAttempts >= settings.MaxLoginAttempts)
+                    {
+                        user.LockedUntil = DateTime.UtcNow.AddMinutes(settings.LockoutDurationMinutes);
+                        user.FailedLoginAttempts = 0;
+                    }
+                    await _context.SaveChangesAsync();
+                }
                 return Unauthorized(new { error = "Invalid credentials" });
+            }
+
+            if (user.FailedLoginAttempts != 0 || user.LockedUntil.HasValue)
+            {
+                user.FailedLoginAttempts = 0;
+                user.LockedUntil = null;
+                await _context.SaveChangesAsync();
+            }
 
             var token = _jwtService.GenerateToken(user, user.OrganizationId, "user");
 

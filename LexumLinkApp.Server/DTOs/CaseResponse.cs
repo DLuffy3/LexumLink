@@ -6,6 +6,7 @@ namespace LexumLinkApp.Server.DTOs
         public string CaseNumber { get; set; } = string.Empty;
         public Guid ClientId { get; set; }
         public string ClientName { get; set; } = string.Empty;
+        public string? ClientPhotoUrl { get; set; }
         public string Status { get; set; } = string.Empty;
         public DateTime? IncidentDate { get; set; }
         public string? Description { get; set; }

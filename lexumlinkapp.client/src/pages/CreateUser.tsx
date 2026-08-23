@@ -64,7 +64,7 @@ export default function CreateUser() {
             };
             await api.post('/admin/users', payload);
             alert('User created successfully!');
-            navigate('/dashboard');
+            navigate('/super-admin/users');
         } catch (err: unknown) {
             console.error(err);
             let errorMessage = 'Failed to create user';
@@ -125,7 +125,7 @@ export default function CreateUser() {
                                 <button type="submit" disabled={loading} className="flex-1 bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-white py-2 rounded disabled:opacity-50">
                                     {loading ? 'Creating...' : 'Create User'}
                                 </button>
-                                <button type="button" onClick={() => navigate('/super-admin')} className="flex-1 bg-[var(--overlay-med)] text-[var(--text)] py-2 rounded hover:bg-[var(--overlay-strong)]">
+                                <button type="button" onClick={() => navigate('/super-admin/users')} className="flex-1 bg-[var(--overlay-med)] text-[var(--text)] py-2 rounded hover:bg-[var(--overlay-strong)]">
                                     Cancel
                                 </button>
                             </div>

@@ -57,7 +57,8 @@ namespace LexumLinkApp.Server.Controllers
                     d.FileSize,
                     d.MimeType,
                     d.UploadedAt,
-                    ClientName = d.Client != null ? d.Client.FirstName + " " + d.Client.LastName : null
+                    ClientName = d.Client != null ? d.Client.FirstName + " " + d.Client.LastName : null,
+                    ClientPhotoUrl = d.Client != null ? d.Client.PhotoUrl : null
                 })
                 .ToListAsync();
 
