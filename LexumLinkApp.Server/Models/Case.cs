@@ -20,6 +20,14 @@ namespace LexumLinkApp.Server.Models
         public DateTime? ClosedAt { get; set; }
         public Guid? AssignedUserId { get; set; }
 
+        // Workflow automation
+        public bool IsArchived { get; set; }
+        public DateTime? ArchivedAt { get; set; }
+        // Set when a stale-case alert email goes out, so the daily job doesn't
+        // re-notify every single day — only once per idle period, and again if the
+        // case gets touched and then goes stale a second time.
+        public DateTime? StaleNotifiedAt { get; set; }
+
         public Organization Organization { get; set; } = null!;
         public Client Client { get; set; } = null!;
         public User? AssignedUser { get; set; }

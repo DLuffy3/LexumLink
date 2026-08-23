@@ -115,6 +115,23 @@ namespace LexumLinkApp.Server.Controllers
             };
 
             _context.Documents.Add(document);
+
+            // Workflow automation: a document landing against a client's active case is
+            // treated as progress on that case, so it moves from Open to In Progress
+            // automatically. If the client has more than one Open case, we can't tell
+            // which one the document is for, so we advance their most recently created
+            // one rather than guessing across all of them.
+            var activeCase = await _context.Cases
+                .Where(c => c.ClientId == request.ClientId && c.OrganizationId == orgId && c.Status == "open")
+                .OrderByDescending(c => c.CreatedAt)
+                .FirstOrDefaultAsync();
+            if (activeCase != null)
+            {
+                document.CaseId = activeCase.Id;
+                activeCase.Status = "in_progress";
+                activeCase.UpdatedAt = DateTime.UtcNow;
+            }
+
             await _context.SaveChangesAsync();
             await _notify.NotifyDocumentUploadedAsync(document, client.FirstName + " " + client.LastName);
 

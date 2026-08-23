@@ -134,15 +134,14 @@ export default function EditCase() {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-[var(--muted)] mb-1">Case Number *</label>
+                                <label className="block text-sm font-medium text-[var(--muted)] mb-1">Case Number</label>
                                 <input
                                     type="text"
-                                    name="caseNumber"
                                     value={formData.caseNumber}
-                                    onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
-                                    required
+                                    disabled
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--faint)] rounded p-2 cursor-not-allowed"
                                 />
+                                <p className="text-xs text-[var(--faint)] mt-1">Assigned automatically — can't be changed.</p>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-[var(--muted)] mb-1">Incident Date</label>

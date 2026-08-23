@@ -15,7 +15,6 @@ export default function NewCase() {
     const [clients, setClients] = useState<Client[]>([]);
     const [formData, setFormData] = useState({
         clientId: '',
-        caseNumber: '',
         incidentDate: '',
         status: 'open',        // lowercase
         description: '',
@@ -74,7 +73,7 @@ export default function NewCase() {
                     description="Create a case for an existing client."
                     steps={[
                         'Select the client this case belongs to.',
-                        'Give it a case number and the date of the incident.',
+                        'A case number is assigned automatically once you save.',
                         'Set the status — most new cases start as Open.',
                         'Click "Create Case" to save, or Cancel to go back without saving.',
                     ]}
@@ -100,17 +99,6 @@ export default function NewCase() {
                                         </option>
                                     ))}
                                 </select>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-[var(--muted)] mb-1">Case Number *</label>
-                                <input
-                                    type="text"
-                                    name="caseNumber"
-                                    value={formData.caseNumber}
-                                    onChange={handleChange}
-                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
-                                    required
-                                />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-[var(--muted)] mb-1">Incident Date *</label>

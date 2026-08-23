@@ -1,6 +1,7 @@
 namespace LexumLinkApp.Server.Services
 {
-    // Runs once a day (~07:00 server time) and emails upcoming-deadline / overdue-case digests.
+    // Runs once a day (~07:00 server time): emails upcoming-deadline / overdue-case digests,
+    // overdue task reminders, stale-case alerts, and auto-archives long-closed cases.
     public class DailyDigestService : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
@@ -32,16 +33,46 @@ namespace LexumLinkApp.Server.Services
 
                 if (stoppingToken.IsCancellationRequested) break;
 
+                using var scope = _scopeFactory.CreateScope();
+                var notify = scope.ServiceProvider.GetRequiredService<INotificationService>();
+
+                // Each job runs independently — one failing (e.g. a bad SMTP config) should
+                // never stop the others, especially auto-archiving, from running.
                 try
                 {
-                    using var scope = _scopeFactory.CreateScope();
-                    var notify = scope.ServiceProvider.GetRequiredService<INotificationService>();
                     await notify.SendDailyDigestsAsync(stoppingToken);
                     _logger.LogInformation("Daily case digest run completed.");
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Daily case digest run failed.");
+                }
+
+                try
+                {
+                    await notify.NotifyOverdueTasksAsync(stoppingToken);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Overdue task reminder run failed.");
+                }
+
+                try
+                {
+                    await notify.NotifyStaleCasesAsync(stoppingToken);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Stale case alert run failed.");
+                }
+
+                try
+                {
+                    await notify.ArchiveClosedCasesAsync(stoppingToken);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Auto-archive run failed.");
                 }
             }
         }

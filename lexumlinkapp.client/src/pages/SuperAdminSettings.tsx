@@ -23,6 +23,8 @@ interface SettingsForm {
     sessionTimeoutMinutes: number;
     maxLoginAttempts: number;
     lockoutDurationMinutes: number;
+    caseIdleDays: number;
+    caseArchiveDays: number;
 }
 
 const DEFAULTS: SettingsForm = {
@@ -44,6 +46,8 @@ const DEFAULTS: SettingsForm = {
     sessionTimeoutMinutes: 10080,
     maxLoginAttempts: 5,
     lockoutDurationMinutes: 15,
+    caseIdleDays: 14,
+    caseArchiveDays: 90,
 };
 
 export default function SuperAdminSettings() {
@@ -108,6 +112,8 @@ export default function SuperAdminSettings() {
                 sessionTimeoutMinutes: formData.sessionTimeoutMinutes,
                 maxLoginAttempts: formData.maxLoginAttempts,
                 lockoutDurationMinutes: formData.lockoutDurationMinutes,
+                caseIdleDays: formData.caseIdleDays,
+                caseArchiveDays: formData.caseArchiveDays,
             });
             setMessage('Settings saved.');
             setFormData({ ...formData, smtpPassword: '', smtpPasswordSet: formData.smtpPasswordSet || !!formData.smtpPassword });
@@ -168,6 +174,7 @@ export default function SuperAdminSettings() {
                     'Branding: the site name and support email shown to users.',
                     'Email: SMTP details used for outgoing notification emails. Leave the password blank to keep the current one. Save, then use "Send Test Email" to confirm delivery actually works.',
                     'Security: password complexity rules for new users, how long a sign-in session lasts, and how many failed sign-in attempts trigger a temporary lockout.',
+                    'Workflow Automation: how many idle days before a case handler gets nudged, and how long after closing a case is auto-archived.',
                     'Changes take effect immediately for new sign-ins and new users — existing sessions keep their original expiry.',
                 ]}
             />
@@ -301,6 +308,22 @@ export default function SuperAdminSettings() {
                                 <div className="flex items-center gap-2">
                                     <input type="checkbox" name="passwordRequireSpecialChar" id="passwordRequireSpecialChar" checked={formData.passwordRequireSpecialChar} onChange={handleChange} />
                                     <label htmlFor="passwordRequireSpecialChar" className="text-sm text-[var(--text)]">Require a special character</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={sectionClass}>
+                            <h2 className="text-lg font-semibold text-[var(--text)] mb-4">Workflow Automation</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label className={labelClass}>Idle Case Alert (days)</label>
+                                    <input type="number" min={1} name="caseIdleDays" value={formData.caseIdleDays} onChange={handleChange} className={inputClass} />
+                                    <p className="text-xs text-[var(--faint)] mt-1">Notify the case handler if a case sits with no activity this long.</p>
+                                </div>
+                                <div>
+                                    <label className={labelClass}>Archive Closed Cases After (days)</label>
+                                    <input type="number" min={1} name="caseArchiveDays" value={formData.caseArchiveDays} onChange={handleChange} className={inputClass} />
+                                    <p className="text-xs text-[var(--faint)] mt-1">Automatically archive a case this many days after it's closed.</p>
                                 </div>
                             </div>
                         </div>

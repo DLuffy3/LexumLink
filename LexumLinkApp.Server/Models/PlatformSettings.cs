@@ -29,6 +29,12 @@ namespace LexumLinkApp.Server.Models
         public int MaxLoginAttempts { get; set; } = 5;
         public int LockoutDurationMinutes { get; set; } = 15;
 
+        // Workflow automation
+        // Days a case can sit with no activity before its handler (or org admins) gets an alert.
+        public int CaseIdleDays { get; set; } = 14;
+        // Days after a case is closed before it's automatically archived.
+        public int CaseArchiveDays { get; set; } = 90;
+
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }
