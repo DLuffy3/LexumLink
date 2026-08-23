@@ -28,13 +28,34 @@ namespace LexumLinkApp.Server.Controllers
             return Guid.Parse(orgIdClaim);
         }
 
+        // Workflow automation: case numbers are assigned by the system, not typed in by
+        // hand. Format is CASE-{year}-{seq}, sequential per organization and resetting to
+        // 0001 at the start of each year.
+        private async Task<string> GenerateCaseNumberAsync(Guid orgId)
+        {
+            var prefix = $"CASE-{DateTime.UtcNow.Year}-";
+            var existing = await _context.Cases
+                .Where(c => c.OrganizationId == orgId && c.CaseNumber.StartsWith(prefix))
+                .Select(c => c.CaseNumber)
+                .ToListAsync();
+
+            var nextSeq = existing
+                .Select(n => int.TryParse(n.AsSpan(prefix.Length), out var seq) ? seq : 0)
+                .DefaultIfEmpty(0)
+                .Max() + 1;
+
+            return $"{prefix}{nextSeq:D4}";
+        }
+
         // GET: api/cases
+        // Archived cases are hidden by default — pass includeArchived=true to see them
+        // (e.g. from a dedicated "Archived" filter/tab).
         [HttpGet]
-        public async Task<IActionResult> GetCases()
+        public async Task<IActionResult> GetCases([FromQuery] bool includeArchived = false)
         {
             var orgId = GetOrganizationId();
             var cases = await _context.Cases
-                .Where(c => c.OrganizationId == orgId)
+                .Where(c => c.OrganizationId == orgId && (includeArchived || !c.IsArchived))
                 .Include(c => c.Client)
                 .Select(c => new CaseResponse
                 {
@@ -47,7 +68,8 @@ namespace LexumLinkApp.Server.Controllers
                     IncidentDate = c.IncidentDate,
                     Description = c.Description,
                     CreatedAt = c.CreatedAt,
-                    UpdatedAt = c.UpdatedAt
+                    UpdatedAt = c.UpdatedAt,
+                    IsArchived = c.IsArchived
                 })
                 .OrderByDescending(c => c.CreatedAt)
                 .ToListAsync();
@@ -74,7 +96,8 @@ namespace LexumLinkApp.Server.Controllers
                     IncidentDate = c.IncidentDate,
                     Description = c.Description,
                     CreatedAt = c.CreatedAt,
-                    UpdatedAt = c.UpdatedAt
+                    UpdatedAt = c.UpdatedAt,
+                    IsArchived = c.IsArchived
                 })
                 .FirstOrDefaultAsync();
 
@@ -99,18 +122,16 @@ namespace LexumLinkApp.Server.Controllers
                 if (client == null)
                     return BadRequest(new { error = "Client not found or does not belong to your organization." });
 
-                // Check if case number already exists for this organization (optional)
-                var existingCase = await _context.Cases
-                    .FirstOrDefaultAsync(c => c.CaseNumber == request.CaseNumber && c.OrganizationId == orgId);
-                if (existingCase != null)
-                    return BadRequest(new { error = "Case number already exists in your organization." });
+                // Case numbers are system-assigned (see GenerateCaseNumberAsync) — any
+                // CaseNumber the client might still send is ignored.
+                var caseNumber = await GenerateCaseNumberAsync(orgId);
 
                 var newCase = new Case
                 {
                     Id = Guid.NewGuid(),
                     OrganizationId = orgId,
                     ClientId = request.ClientId,
-                    CaseNumber = request.CaseNumber,
+                    CaseNumber = caseNumber,
                     Status = request.Status ?? "open",
                     IncidentDate = request.IncidentDate?.ToUniversalTime(),
                     Description = request.Description,
@@ -161,21 +182,24 @@ namespace LexumLinkApp.Server.Controllers
             if (client == null)
                 return BadRequest(new { error = "Client not found or does not belong to your organization." });
 
-            // If case number is changed, check uniqueness
-            if (existingCase.CaseNumber != request.CaseNumber)
-            {
-                var duplicate = await _context.Cases
-                    .FirstOrDefaultAsync(c => c.CaseNumber == request.CaseNumber && c.OrganizationId == orgId && c.Id != id);
-                if (duplicate != null)
-                    return BadRequest(new { error = "Case number already exists in your organization." });
-            }
+            // Case numbers are system-assigned and immutable once created — any CaseNumber
+            // sent by the client is ignored here.
+            var newStatus = request.Status ?? "open";
+            var wasClosed = existingCase.Status == "closed";
+            var isNowClosed = newStatus == "closed";
 
             existingCase.ClientId = request.ClientId;
-            existingCase.CaseNumber = request.CaseNumber;
-            existingCase.Status = request.Status ?? "open";
+            existingCase.Status = newStatus;
             existingCase.IncidentDate = request.IncidentDate?.ToUniversalTime();
             existingCase.Description = request.Description;
             existingCase.UpdatedAt = DateTime.UtcNow;
+
+            // Track when a case was closed — this is what the auto-archive job measures
+            // the idle period from. Clear it if the case is reopened.
+            if (isNowClosed && !wasClosed)
+                existingCase.ClosedAt = DateTime.UtcNow;
+            else if (!isNowClosed && wasClosed)
+                existingCase.ClosedAt = null;
 
             await _context.SaveChangesAsync();
 

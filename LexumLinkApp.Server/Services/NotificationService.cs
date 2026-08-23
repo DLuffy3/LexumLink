@@ -8,12 +8,14 @@ namespace LexumLinkApp.Server.Services
     {
         private readonly LexumLinkDbContext _db;
         private readonly IEmailService _email;
+        private readonly IPlatformSettingsService _settings;
         private readonly ILogger<NotificationService> _logger;
 
-        public NotificationService(LexumLinkDbContext db, IEmailService email, ILogger<NotificationService> logger)
+        public NotificationService(LexumLinkDbContext db, IEmailService email, IPlatformSettingsService settings, ILogger<NotificationService> logger)
         {
             _db = db;
             _email = email;
+            _settings = settings;
             _logger = logger;
         }
 
@@ -175,6 +177,103 @@ namespace LexumLinkApp.Server.Services
                 var to = await AdminEmailsAsync(orgId);
                 await SafeSendAsync(to, $"Daily case digest — {overdue.Count} overdue, {upcoming.Count} upcoming",
                     Shell("Daily Case Digest", body));
+            }
+        }
+
+        // ── Workflow automation ──────────────────────────────────────────────
+
+        // One email per user listing every incomplete task past its due date.
+        public async Task NotifyOverdueTasksAsync(CancellationToken ct = default)
+        {
+            var now = DateTime.UtcNow;
+            var overdue = await _db.Todos
+                .Where(t => !t.IsCompleted && t.DueDate != null && t.DueDate < now)
+                .Include(t => t.User)
+                .ToListAsync(ct);
+
+            foreach (var group in overdue.GroupBy(t => t.UserId))
+            {
+                var user = group.First().User;
+                if (user == null || string.IsNullOrWhiteSpace(user.Email)) continue;
+
+                var items = group.OrderBy(t => t.DueDate).ToList();
+                var rows = string.Concat(items.Select(t =>
+                {
+                    var days = (int)Math.Ceiling((now - t.DueDate!.Value).TotalDays);
+                    return $"<li style=\"margin:4px 0\"><strong>{System.Net.WebUtility.HtmlEncode(t.Title)}</strong> — {days} day(s) overdue</li>";
+                }));
+
+                await SafeSendAsync(new[] { user.Email }, $"You have {items.Count} overdue task(s)",
+                    Shell("Overdue Tasks", $"Hi {user.FirstName}, these tasks are past their due date.<ul style=\"padding-left:18px;margin:16px 0 0\">{rows}</ul>"));
+            }
+        }
+
+        // Alerts the assigned handler (or org admins if unassigned) when a case has sat
+        // with no activity for longer than PlatformSettings.CaseIdleDays. Only fires once
+        // per idle stretch — StaleNotifiedAt tracks that so this doesn't repeat daily.
+        public async Task NotifyStaleCasesAsync(CancellationToken ct = default)
+        {
+            var settings = await _settings.GetAsync();
+            var threshold = DateTime.UtcNow.AddDays(-settings.CaseIdleDays);
+
+            var staleCases = await _db.Cases
+                .Where(c => !c.IsArchived && c.Status != "closed" && c.UpdatedAt < threshold &&
+                            (c.StaleNotifiedAt == null || c.StaleNotifiedAt < c.UpdatedAt))
+                .Include(c => c.Client)
+                .Include(c => c.AssignedUser)
+                .ToListAsync(ct);
+
+            foreach (var c in staleCases)
+            {
+                var days = (int)(DateTime.UtcNow - c.UpdatedAt).TotalDays;
+                var rows = new (string, string)[]
+                {
+                    ("Case #", c.CaseNumber),
+                    ("Client", $"{c.Client.FirstName} {c.Client.LastName}".Trim()),
+                    ("Status", PrettyType(c.Status)),
+                    ("Last activity", $"{days} day(s) ago"),
+                };
+
+                var to = new List<string>();
+                if (c.AssignedUser != null && !string.IsNullOrWhiteSpace(c.AssignedUser.Email))
+                    to.Add(c.AssignedUser.Email);
+                if (to.Count == 0)
+                    to = await AdminEmailsAsync(c.OrganizationId);
+
+                if (to.Count > 0)
+                {
+                    await SafeSendAsync(to, $"Case {c.CaseNumber} hasn't been updated in {days} days",
+                        Shell("Case Needs Attention", $"This case hasn't had any activity in a while.{Table(rows)}"));
+                }
+
+                c.StaleNotifiedAt = DateTime.UtcNow;
+            }
+
+            if (staleCases.Count > 0)
+                await _db.SaveChangesAsync(ct);
+        }
+
+        // Archives closed cases once they've been closed longer than
+        // PlatformSettings.CaseArchiveDays. Silent — archiving isn't itself worth an email.
+        public async Task ArchiveClosedCasesAsync(CancellationToken ct = default)
+        {
+            var settings = await _settings.GetAsync();
+            var threshold = DateTime.UtcNow.AddDays(-settings.CaseArchiveDays);
+
+            var toArchive = await _db.Cases
+                .Where(c => !c.IsArchived && c.Status == "closed" && c.ClosedAt != null && c.ClosedAt < threshold)
+                .ToListAsync(ct);
+
+            foreach (var c in toArchive)
+            {
+                c.IsArchived = true;
+                c.ArchivedAt = DateTime.UtcNow;
+            }
+
+            if (toArchive.Count > 0)
+            {
+                await _db.SaveChangesAsync(ct);
+                _logger.LogInformation("Auto-archived {Count} closed case(s).", toArchive.Count);
             }
         }
 

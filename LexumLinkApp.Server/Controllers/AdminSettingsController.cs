@@ -59,6 +59,8 @@ namespace LexumLinkApp.Server.Controllers
                 s.SessionTimeoutMinutes,
                 s.MaxLoginAttempts,
                 s.LockoutDurationMinutes,
+                s.CaseIdleDays,
+                s.CaseArchiveDays,
                 s.UpdatedAt
             });
         }
@@ -94,6 +96,8 @@ namespace LexumLinkApp.Server.Controllers
             s.SessionTimeoutMinutes = request.SessionTimeoutMinutes;
             s.MaxLoginAttempts = request.MaxLoginAttempts;
             s.LockoutDurationMinutes = request.LockoutDurationMinutes;
+            s.CaseIdleDays = request.CaseIdleDays;
+            s.CaseArchiveDays = request.CaseArchiveDays;
             s.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
@@ -161,5 +165,8 @@ namespace LexumLinkApp.Server.Controllers
         public int SessionTimeoutMinutes { get; set; } = 10080;
         public int MaxLoginAttempts { get; set; } = 5;
         public int LockoutDurationMinutes { get; set; } = 15;
+
+        public int CaseIdleDays { get; set; } = 14;
+        public int CaseArchiveDays { get; set; } = 90;
     }
 }
