@@ -14,6 +14,12 @@ namespace LexumLinkApp.Server.Models
         public Guid? OrganizationId { get; set; }           
         public Organization? Organization { get; set; }  
         public bool IsSuperAdmin { get; set; }
+        public bool IsActive { get; set; } = true;
+
+        // Login lockout tracking (enforced in AuthController using PlatformSettings).
+        public int FailedLoginAttempts { get; set; }
+        public DateTime? LockedUntil { get; set; }
+
         public ICollection<Document> UploadedDocuments { get; set; } = new List<Document>();
         public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     }

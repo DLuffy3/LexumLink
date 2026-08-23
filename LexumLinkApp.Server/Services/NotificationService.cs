@@ -98,7 +98,6 @@ namespace LexumLinkApp.Server.Services
 
         public async Task NotifyTicketCreatedAsync(Ticket ticket)
         {
-            var to = await AdminEmailsAsync(ticket.OrganizationId);
             var number = INotificationService.TicketNumber(ticket.Id);
             var rows = new (string, string)[]
             {
@@ -108,8 +107,28 @@ namespace LexumLinkApp.Server.Services
                 ("Status", PrettyType(ticket.Status)),
                 ("Created", ticket.CreatedAt.ToString("dd MMM yyyy HH:mm") + " UTC"),
             };
-            await SafeSendAsync(to, $"New ticket {number}: {ticket.Title}",
-                Shell("Support Ticket Created", $"A new support ticket has been logged.{Table(rows)}"));
+
+            // Confirmation straight to the person who logged the ticket — this is the
+            // "we've got it, hang tight" receipt the reporter should always see.
+            var creator = ticket.UserId.HasValue
+                ? await _db.Users.FirstOrDefaultAsync(u => u.Id == ticket.UserId.Value)
+                : null;
+            if (creator != null && !string.IsNullOrWhiteSpace(creator.Email))
+            {
+                await SafeSendAsync(new[] { creator.Email }, $"We've received your ticket {number}",
+                    Shell("Ticket Received", $"Hi {creator.FirstName}, thanks for reaching out. Your ticket has been logged and will be resolved as soon as possible.{Table(rows)}"));
+            }
+
+            // Separate internal notice to org admins (or the whole org if none), excluding the
+            // creator so they don't get the same thing twice.
+            var to = (await AdminEmailsAsync(ticket.OrganizationId))
+                .Where(e => creator == null || !string.Equals(e, creator.Email, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            if (to.Count > 0)
+            {
+                await SafeSendAsync(to, $"New ticket {number}: {ticket.Title}",
+                    Shell("Support Ticket Created", $"A new support ticket has been logged.{Table(rows)}"));
+            }
         }
 
         // ── Daily digest ─────────────────────────────────────────────────────

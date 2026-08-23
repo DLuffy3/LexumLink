@@ -71,6 +71,8 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IPlatformSettingsService, PlatformSettingsService>();
+builder.Services.AddScoped<IPasswordPolicyService, PasswordPolicyService>();
 
 // Email + notifications
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));

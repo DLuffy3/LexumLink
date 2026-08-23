@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/useAuth';
 import HelpButton from '../components/HelpButton';
+import ClientAvatar from '../components/ClientAvatar';
 import { motion } from 'framer-motion';
 import Spinner from '../components/Spinner';
 
@@ -14,6 +15,7 @@ interface Client {
     phone: string;
     idNumber: string;
     address: string;
+    photoUrl: string | null;
     createdAt: string;
 }
 
@@ -24,6 +26,7 @@ interface ErrorResponse {
 
 export default function Clients() {
     const { activeOrganization } = useAuth();
+    const navigate = useNavigate();
     const [clients, setClients] = useState<Client[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -164,16 +167,21 @@ export default function Clients() {
                                 {filteredClients.map(client => (
                                     <tr key={client.id}>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <Link to={`/clients/${client.id}`} className="text-[var(--brand-accent)] hover:underline">
+                                            <Link to={`/clients/${client.id}`} className="flex items-center gap-3 text-[var(--brand-accent)] hover:underline">
+                                                <ClientAvatar firstName={client.firstName} lastName={client.lastName} photoUrl={client.photoUrl} />
                                                 {client.firstName} {client.lastName}
                                             </Link>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">{client.email}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{client.phone}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <Link to={`/clients/${client.id}/edit`} className="text-[var(--brand-accent)] hover:text-[var(--text)] mr-3">
+                                            <button
+                                                type="button"
+                                                onClick={() => navigate(`/clients/${client.id}/edit`)}
+                                                className="bg-[var(--brand-soft)] text-[var(--brand-accent)] px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-[var(--brand)] hover:text-white transition-colors"
+                                            >
                                                 Edit
-                                            </Link>
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}

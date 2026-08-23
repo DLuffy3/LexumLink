@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/useAuth';
 import HelpButton from '../components/HelpButton';
+import ClientAvatar from '../components/ClientAvatar';
 import { motion } from 'framer-motion';
 import Spinner from '../components/Spinner';
 
@@ -11,6 +12,7 @@ interface Claim {
     claimNumber: string;
     clientId: string;
     clientName?: string;
+    clientPhotoUrl?: string | null;
     status: string;
     rafReference: string;
     amountRequested: number;
@@ -20,6 +22,7 @@ interface Claim {
 
 export default function Claims() {
     const { activeOrganization } = useAuth();
+    const navigate = useNavigate();
     const [claims, setClaims] = useState<Claim[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -133,7 +136,17 @@ export default function Claims() {
                                                     {claim.claimNumber}
                                                 </Link>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{claim.clientName || claim.clientId}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="flex items-center gap-2">
+                                                    <ClientAvatar
+                                                        firstName={claim.clientName?.split(' ')[0]}
+                                                        lastName={claim.clientName?.split(' ').slice(1).join(' ')}
+                                                        photoUrl={claim.clientPhotoUrl}
+                                                        size="xs"
+                                                    />
+                                                    {claim.clientName || claim.clientId}
+                                                </div>
+                                            </td>
                                             <td className="px-6 py-4 whitespace-nowrap">{claim.rafReference}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 R {claim.amountRequested?.toLocaleString()}
@@ -144,9 +157,13 @@ export default function Claims() {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <Link to={`/claims/${claim.id}/edit`} className="text-[var(--brand-accent)] hover:text-[var(--text)] mr-3">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => navigate(`/claims/${claim.id}/edit`)}
+                                                    className="bg-[var(--brand-soft)] text-[var(--brand-accent)] px-3 py-1.5 rounded-md text-xs font-semibold hover:bg-[var(--brand)] hover:text-white transition-colors"
+                                                >
                                                     Edit
-                                                </Link>
+                                                </button>
                                             </td>
                                         </tr>
                                     ))
