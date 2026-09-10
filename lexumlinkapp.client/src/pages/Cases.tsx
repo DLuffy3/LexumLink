@@ -17,6 +17,7 @@ interface Case {
     incidentDate: string;
     description: string;
     createdAt: string;
+    prescriptionDate?: string | null;
 }
 
 export default function Cases() {
@@ -55,6 +56,20 @@ export default function Cases() {
             critical: 'pill-red',
         };
         return colors[status] || 'pill-neutral';
+    };
+
+    const prescriptionBadge = (dateStr?: string | null) => {
+        if (!dateStr) return <span className="text-[var(--faint)]">—</span>;
+        const days = Math.ceil((new Date(dateStr).getTime() - Date.now()) / 86400000);
+        const color = days < 0 ? 'text-red-400' : days <= 30 ? 'text-amber-400' : 'text-[var(--text)]';
+        return (
+            <span className={`font-medium ${color}`}>
+                {new Date(dateStr).toLocaleDateString()}
+                <span className="block text-xs font-normal opacity-80">
+                    {days < 0 ? `${Math.abs(days)}d overdue` : `${days}d left`}
+                </span>
+            </span>
+        );
     };
 
     // Filter cases based on client name or case number
@@ -122,13 +137,14 @@ export default function Cases() {
                                     <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Client</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Status</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Incident Date</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Prescription Date</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted)] uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-[var(--border)]">
                                 {filteredCases.length === 0 ? (
                                     <tr>
-                                        <td colSpan={5} className="px-6 py-12 text-center text-[var(--muted)]">
+                                        <td colSpan={6} className="px-6 py-12 text-center text-[var(--muted)]">
                                             {searchQuery ? 'No cases match your search.' : 'No cases found. Click "Add Case" to create one.'}
                                         </td>
                                     </tr>
@@ -158,6 +174,9 @@ export default function Cases() {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 {new Date(caseItem.incidentDate).toLocaleDateString()}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                {prescriptionBadge(caseItem.prescriptionDate)}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <button

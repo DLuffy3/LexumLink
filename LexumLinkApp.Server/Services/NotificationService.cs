@@ -277,6 +277,79 @@ namespace LexumLinkApp.Server.Services
             }
         }
 
+        // Prescription Alert: escalating reminders at 90, 30 and 7 days before a case's
+        // Prescription Date (Case.DeadlineDate), plus a final alert once it has passed.
+        // PrescriptionReminderStage tracks the highest stage already sent (0=none,
+        // 1=90-day, 2=30-day, 3=7-day, 4=overdue) so each stage only fires once — it's
+        // reset to 0 by CasesController whenever the Prescription Date itself changes.
+        public async Task NotifyPrescriptionDeadlinesAsync(CancellationToken ct = default)
+        {
+            var now = DateTime.UtcNow;
+
+            var candidates = await _db.Cases
+                .Where(c => !c.IsArchived && c.Status != "closed" && c.DeadlineDate != null && c.PrescriptionReminderStage < 4)
+                .Include(c => c.Client)
+                .Include(c => c.AssignedUser)
+                .Include(c => c.SupervisorUser)
+                .Include(c => c.MatterType)
+                .ToListAsync(ct);
+
+            var touched = new List<Case>();
+
+            foreach (var c in candidates)
+            {
+                var daysLeft = (int)Math.Ceiling((c.DeadlineDate!.Value - now).TotalDays);
+
+                int targetStage;
+                string stageLabel;
+                if (daysLeft <= 0) { targetStage = 4; stageLabel = "has reached its prescription date"; }
+                else if (daysLeft <= 7) { targetStage = 3; stageLabel = $"prescribes in {daysLeft} day(s)"; }
+                else if (daysLeft <= 30) { targetStage = 2; stageLabel = $"prescribes in {daysLeft} day(s)"; }
+                else if (daysLeft <= 90) { targetStage = 1; stageLabel = $"prescribes in {daysLeft} day(s)"; }
+                else continue; // more than 90 days out — nothing to send yet
+
+                if (targetStage <= c.PrescriptionReminderStage) continue;
+
+                var rows = new (string, string)[]
+                {
+                    ("Case #", c.CaseNumber),
+                    ("Client", $"{c.Client.FirstName} {c.Client.LastName}".Trim()),
+                    ("Matter type", c.MatterType?.Name ?? "—"),
+                    ("Prescription date", c.DeadlineDate.Value.ToString("dd MMM yyyy")),
+                };
+
+                var to = new List<string>();
+                if (c.AssignedUser != null && !string.IsNullOrWhiteSpace(c.AssignedUser.Email))
+                    to.Add(c.AssignedUser.Email);
+                if (c.SupervisorUser != null && !string.IsNullOrWhiteSpace(c.SupervisorUser.Email))
+                    to.Add(c.SupervisorUser.Email);
+                to = to.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+                if (to.Count == 0)
+                    to = await AdminEmailsAsync(c.OrganizationId);
+
+                var urgent = targetStage >= 3;
+                if (to.Count > 0)
+                {
+                    var subject = targetStage == 4
+                        ? $"Case {c.CaseNumber} has reached its prescription date"
+                        : $"Case {c.CaseNumber} {stageLabel}";
+                    var intro = targetStage == 4
+                        ? "This matter's prescription date has passed. Please confirm whether this has already been attended to."
+                        : "This matter is approaching its prescription date. Please confirm whether this has already been attended to, to avoid further reminders.";
+
+                    await SafeSendAsync(to, subject,
+                        Shell(urgent ? "Prescription Deadline — Urgent" : "Prescription Deadline Reminder",
+                            $"{intro}{Table(rows)}"));
+                }
+
+                c.PrescriptionReminderStage = targetStage;
+                touched.Add(c);
+            }
+
+            if (touched.Count > 0)
+                await _db.SaveChangesAsync(ct);
+        }
+
         // ── HTML helpers ─────────────────────────────────────────────────────
 
         private static string PrettyType(string s) =>

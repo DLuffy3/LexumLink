@@ -1,7 +1,8 @@
 namespace LexumLinkApp.Server.Services
 {
     // Runs once a day (~07:00 server time): emails upcoming-deadline / overdue-case digests,
-    // overdue task reminders, stale-case alerts, and auto-archives long-closed cases.
+    // overdue task reminders, stale-case alerts, auto-archives long-closed cases, and sends
+    // escalating prescription-deadline reminders (Prescription Alert).
     public class DailyDigestService : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
@@ -73,6 +74,15 @@ namespace LexumLinkApp.Server.Services
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Auto-archive run failed.");
+                }
+
+                try
+                {
+                    await notify.NotifyPrescriptionDeadlinesAsync(stoppingToken);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Prescription deadline reminder run failed.");
                 }
             }
         }
