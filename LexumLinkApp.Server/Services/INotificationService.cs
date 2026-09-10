@@ -15,6 +15,10 @@ namespace LexumLinkApp.Server.Services
         Task NotifyStaleCasesAsync(CancellationToken ct = default);
         Task ArchiveClosedCasesAsync(CancellationToken ct = default);
 
+        // Prescription Alert: escalating 90/30/7-day reminders ahead of a case's
+        // Prescription Date (Case.DeadlineDate).
+        Task NotifyPrescriptionDeadlinesAsync(CancellationToken ct = default);
+
         // Human-readable ticket reference derived from the ticket id.
         static string TicketNumber(Guid id) => "TKT-" + id.ToString("N").Substring(0, 8).ToUpperInvariant();
     }

@@ -130,6 +130,16 @@ namespace LexumLinkApp.Server.Controllers
                 document.CaseId = activeCase.Id;
                 activeCase.Status = "in_progress";
                 activeCase.UpdatedAt = DateTime.UtcNow;
+                _context.CaseEvents.Add(new CaseEvent
+                {
+                    Id = Guid.NewGuid(),
+                    CaseId = activeCase.Id,
+                    EventType = "Document uploaded",
+                    EventDate = DateTime.UtcNow,
+                    Notes = document.FileName,
+                    AddedByUserId = userId,
+                    CreatedAt = DateTime.UtcNow
+                });
             }
 
             await _context.SaveChangesAsync();

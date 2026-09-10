@@ -27,6 +27,7 @@ import SuperAdminOrganizations from './pages/SuperAdminOrganizations';
 import SuperAdminNewOrganization from './pages/SuperAdminNewOrganization';
 import SuperAdminEditOrganization from './pages/SuperAdminEditOrganization';
 import SuperAdminSettings from './pages/SuperAdminSettings';
+import SuperAdminMatterTypes from './pages/SuperAdminMatterTypes';
 import EditClient from './pages/EditClient';
 import EditCase from './pages/EditCase';
 import EditClaim from './pages/EditClaim';
@@ -208,6 +209,13 @@ function App() {
                             <ProtectedRoute>
                                 <SuperAdminGuard>
                                     <SuperAdminSettings />
+                                </SuperAdminGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/super-admin/matter-types" element={
+                            <ProtectedRoute>
+                                <SuperAdminGuard>
+                                    <SuperAdminMatterTypes />
                                 </SuperAdminGuard>
                             </ProtectedRoute>
                         } />

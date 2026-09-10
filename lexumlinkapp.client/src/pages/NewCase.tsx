@@ -10,20 +10,45 @@ interface Client {
     lastName: string;
 }
 
+interface MatterType {
+    id: string;
+    name: string;
+    defaultPeriodMonths: number | null;
+    notes: string | null;
+}
+
+interface TeamMember {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+}
+
 export default function NewCase() {
     const navigate = useNavigate();
     const [clients, setClients] = useState<Client[]>([]);
+    const [matterTypes, setMatterTypes] = useState<MatterType[]>([]);
+    const [team, setTeam] = useState<TeamMember[]>([]);
     const [formData, setFormData] = useState({
         clientId: '',
         incidentDate: '',
         status: 'open',        // lowercase
         description: '',
+        matterTypeId: '',
+        assignedUserId: '',
+        supervisorUserId: '',
+        prescriptionDate: '',
+        lodgementDate: '',
+        statutoryNoticeDate: '',
+        summonsServedDate: '',
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     useEffect(() => {
         fetchClients();
+        fetchMatterTypes();
+        fetchTeam();
     }, []);
 
     const fetchClients = async () => {
@@ -35,6 +60,33 @@ export default function NewCase() {
             setError('Could not load clients. Please try again.');
         }
     };
+
+    const fetchMatterTypes = async () => {
+        try {
+            const res = await api.get('/cases/matter-types');
+            setMatterTypes(res.data);
+        } catch (err) {
+            console.error('Failed to fetch matter types', err);
+        }
+    };
+
+    const fetchTeam = async () => {
+        try {
+            const res = await api.get('/cases/team');
+            setTeam(res.data);
+        } catch (err) {
+            console.error('Failed to fetch team', err);
+        }
+    };
+
+    const selectedMatterType = matterTypes.find(m => m.id === formData.matterTypeId);
+    const previewPrescriptionDate = (() => {
+        if (formData.prescriptionDate) return null; // explicit value already set, no preview needed
+        if (!formData.incidentDate || !selectedMatterType?.defaultPeriodMonths) return null;
+        const d = new Date(formData.incidentDate);
+        d.setMonth(d.getMonth() + selectedMatterType.defaultPeriodMonths);
+        return d.toISOString().split('T')[0];
+    })();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -49,6 +101,15 @@ export default function NewCase() {
         const payload = {
             ...formData,
             incidentDate: formData.incidentDate ? new Date(formData.incidentDate).toISOString().split('T')[0] : null,
+            matterTypeId: formData.matterTypeId || null,
+            assignedUserId: formData.assignedUserId || null,
+            supervisorUserId: formData.supervisorUserId || null,
+            // Leave prescriptionDate unset so the server auto-calculates it from the
+            // occurrence date + matter type, unless the user typed an explicit override.
+            prescriptionDate: formData.prescriptionDate || null,
+            lodgementDate: formData.lodgementDate || null,
+            statutoryNoticeDate: formData.statutoryNoticeDate || null,
+            summonsServedDate: formData.summonsServedDate || null,
         };
 
         try {
@@ -135,6 +196,105 @@ export default function NewCase() {
                                     className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
                                 />
                             </div>
+
+                            <div className="pt-2 border-t border-[var(--border)]">
+                                <h2 className="text-sm font-semibold text-[var(--text)] mb-3">Prescription tracking</h2>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-[var(--muted)] mb-1">Matter Type</label>
+                                <select
+                                    name="matterTypeId"
+                                    value={formData.matterTypeId}
+                                    onChange={handleChange}
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
+                                >
+                                    <option value="">Not set</option>
+                                    {matterTypes.map(m => (
+                                        <option key={m.id} value={m.id}>{m.name}</option>
+                                    ))}
+                                </select>
+                                {selectedMatterType?.notes && (
+                                    <p className="text-xs text-[var(--faint)] mt-1">{selectedMatterType.notes}</p>
+                                )}
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-[var(--muted)] mb-1">Prescription Date</label>
+                                <input
+                                    type="date"
+                                    name="prescriptionDate"
+                                    value={formData.prescriptionDate}
+                                    onChange={handleChange}
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
+                                />
+                                <p className="text-xs text-[var(--faint)] mt-1">
+                                    {previewPrescriptionDate
+                                        ? `Leave blank to auto-calculate: ${previewPrescriptionDate} (based on matter type). Not legal advice — verify before relying on it.`
+                                        : 'Leave blank to auto-calculate from Incident Date + Matter Type where available, or set manually.'}
+                                </p>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-[var(--muted)] mb-1">Lodgement Date</label>
+                                    <input
+                                        type="date"
+                                        name="lodgementDate"
+                                        value={formData.lodgementDate}
+                                        onChange={handleChange}
+                                        className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-[var(--muted)] mb-1">Statutory Notice Date</label>
+                                    <input
+                                        type="date"
+                                        name="statutoryNoticeDate"
+                                        value={formData.statutoryNoticeDate}
+                                        onChange={handleChange}
+                                        className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-[var(--muted)] mb-1">Summons Served Date</label>
+                                <input
+                                    type="date"
+                                    name="summonsServedDate"
+                                    value={formData.summonsServedDate}
+                                    onChange={handleChange}
+                                    className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-[var(--muted)] mb-1">Assigned Handler</label>
+                                    <select
+                                        name="assignedUserId"
+                                        value={formData.assignedUserId}
+                                        onChange={handleChange}
+                                        className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
+                                    >
+                                        <option value="">Unassigned</option>
+                                        {team.map(u => (
+                                            <option key={u.id} value={u.id}>{u.firstName} {u.lastName}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-[var(--muted)] mb-1">Supervisor</label>
+                                    <select
+                                        name="supervisorUserId"
+                                        value={formData.supervisorUserId}
+                                        onChange={handleChange}
+                                        className="w-full bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] rounded p-2 focus:border-[var(--brand-accent)] focus:ring-[var(--brand-ring)]"
+                                    >
+                                        <option value="">None</option>
+                                        {team.map(u => (
+                                            <option key={u.id} value={u.id}>{u.firstName} {u.lastName}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
                             <div className="flex gap-3">
                                 <button
                                     type="submit"
