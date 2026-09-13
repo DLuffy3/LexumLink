@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\uploads\" />
+    <Folder Include="wwwroot\uploads\fonts\" />
   </ItemGroup>
 
   <Target Name="CopyClientDist" AfterTargets="Publish">
@@ -44,9 +44,6 @@
       <ClientDist Include="..\lexumlinkapp.client\dist\**\*" />
     </ItemGroup>
 
-    <Copy
-        SourceFiles="@(ClientDist)"
-        DestinationFiles="@(ClientDist->'$(PublishDir)wwwroot\%(RecursiveDir)%(Filename)%(Extension)')"
-        SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(ClientDist)" DestinationFiles="@(ClientDist->'$(PublishDir)wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
   </Target>
 </Project>

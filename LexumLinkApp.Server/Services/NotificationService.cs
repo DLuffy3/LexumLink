@@ -133,6 +133,78 @@ namespace LexumLinkApp.Server.Services
             }
         }
 
+        // New public sign-up (Client Registration & Service Agreement) submitted via the
+        // marketing site. Two emails: an internal notice to sales so the account can be
+        // reviewed/activated, and a confirmation receipt to the registrant.
+        public async Task NotifyClientRegistrationAsync(ClientRegistration registration)
+        {
+            var settings = await _settings.GetAsync();
+            var salesTo = string.IsNullOrWhiteSpace(settings.SalesNotificationEmail)
+                ? settings.SupportEmail
+                : settings.SalesNotificationEmail;
+
+            var rows = new (string, string)[]
+            {
+                ("Reference #", registration.ClientReferenceNumber),
+                ("Company", registration.CompanyName),
+                ("Contact", $"{registration.ContactFullName} ({registration.ContactPosition ?? "—"})"),
+                ("Email", registration.ContactEmail),
+                ("Mobile", registration.ContactMobile),
+                ("Package", PrettyType(registration.ServicePackage)),
+                ("Signed", registration.SignedAt.ToString("dd MMM yyyy HH:mm") + " UTC"),
+            };
+
+            if (!string.IsNullOrWhiteSpace(salesTo))
+            {
+                await SafeSendAsync(new[] { salesTo }, $"New client sign-up: {registration.CompanyName} ({registration.ClientReferenceNumber})",
+                    Shell("New Client Registration", $"A new client has signed up and is awaiting review.{Table(rows)}<p style=\"margin-top:16px\">Review and activate it from Super Admin &gt; Signups.</p>"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(registration.ContactEmail))
+            {
+                await SafeSendAsync(new[] { registration.ContactEmail }, "We've received your LexumLink registration",
+                    Shell("Registration Received", $"Hi {registration.ContactFullName}, thanks for signing up with LexumLink. Your signed Client Registration &amp; Service Agreement has been received.{Table(new (string, string)[] { ("Reference #", registration.ClientReferenceNumber), ("Company", registration.CompanyName) })}<p style=\"margin-top:16px\">Our team will review your details and be in touch shortly to activate your account.</p>"));
+            }
+        }
+
+        // Sent when a Super Admin activates a pending client registration into a real
+        // Organization + admin User — gives the new admin their login and temp password.
+        //
+        // Unlike the other Notify* methods (which use SafeSendAsync and swallow failures,
+        // since a broken mail server shouldn't block a ticket or a digest), this one is the
+        // ONLY way the new admin receives their password — silently failing here leaves
+        // them locked out with no way to know why. So it deliberately does not swallow the
+        // outcome: it returns null on success, or a human-readable reason the admin doing
+        // the activation should see immediately (surfaced by the Activate endpoint/UI).
+        public async Task<string?> NotifyAccountActivatedAsync(User user, string organizationName, string tempPassword)
+        {
+            if (string.IsNullOrWhiteSpace(user.Email))
+                return "This user has no email address on file, so no welcome email could be sent.";
+
+            var settings = await _settings.GetAsync();
+            if (!settings.SmtpEnabled || string.IsNullOrWhiteSpace(settings.SmtpHost))
+                return "SMTP is not enabled/configured (Super Admin > Settings), so no email was sent.";
+
+            var rows = new (string, string)[]
+            {
+                ("Organization", organizationName),
+                ("Login email", user.Email),
+                ("Temporary password", tempPassword),
+            };
+
+            try
+            {
+                await _email.SendAsync(new[] { user.Email }, "Your LexumLink account is ready",
+                    Shell("Welcome to LexumLink", $"Hi {user.FirstName}, your LexumLink account has been activated.{Table(rows)}<p style=\"margin-top:16px\">Sign in at <a href=\"https://lexumlink.co.za/signin\" style=\"color:#5E0006\">lexumlink.co.za/signin</a> and change your password as soon as possible.</p>"));
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send account-activation email to {Email}", user.Email);
+                return $"The welcome email failed to send: {ex.Message}";
+            }
+        }
+
         // ── Daily digest ─────────────────────────────────────────────────────
 
         public async Task SendDailyDigestsAsync(CancellationToken ct = default)
@@ -363,14 +435,32 @@ namespace LexumLinkApp.Server.Services
             return $"<table style=\"margin-top:16px;border-collapse:collapse;font-size:14px\">{trs}</table>";
         }
 
+        // 'Mooxy' is the same brand font declared in the web app (index.css). Email clients
+        // mostly won't fetch @font-face at all (Gmail, Outlook.com/desktop and most mobile
+        // mail apps ignore it entirely and silently use the fallback stack below); the ones
+        // that do honor embedded webfonts (notably Apple/iOS Mail) need the file reachable at
+        // a stable, absolute URL — /fonts/mooxy.woff must exist in the deployed wwwroot
+        // (copy it from lexumlinkapp.client/src/assets/fonts/mooxy.woff; it isn't part of the
+        // Vite-bundled, content-hashed assets so it won't move around on rebuilds).
+        private const string BrandFontStack = "'Mooxy',Segoe UI,Arial,sans-serif";
+
         private static string Shell(string heading, string bodyHtml)
         {
-            return $@"<!DOCTYPE html><html><body style=""margin:0;background:#EED9B9;font-family:Segoe UI,Arial,sans-serif"">
+            return $@"<!DOCTYPE html><html><head>
+<style>
+  @font-face {{
+    font-family: 'Mooxy';
+    src: url('/fonts/mooxy.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }}
+</style>
+</head><body style=""margin:0;background:#EED9B9;font-family:{BrandFontStack}"">
 <div style=""max-width:560px;margin:0 auto;padding:24px"">
-  <div style=""background:#5E0006;color:#EED9B9;padding:18px 24px;border-radius:12px 12px 0 0;font-weight:800;font-size:18px;letter-spacing:.5px"">Lexum<span style=""color:#fff"">Link</span></div>
+  <div style=""background:#5E0006;color:#EED9B9;padding:18px 24px;border-radius:12px 12px 0 0;font-weight:800;font-size:18px;letter-spacing:.5px;font-family:{BrandFontStack}"">Lexum<span style=""color:#fff"">Link</span></div>
   <div style=""background:#FBF5EC;padding:24px;border-radius:0 0 12px 12px;color:#2A0A0C"">
-    <h2 style=""margin:0 0 10px;font-size:20px;color:#5E0006"">{heading}</h2>
-    <div style=""font-size:14px;line-height:1.6;color:#4a2e2a"">{bodyHtml}</div>
+    <h2 style=""margin:0 0 10px;font-size:20px;color:#5E0006;font-family:{BrandFontStack}"">{heading}</h2>
+    <div style=""font-size:14px;line-height:1.6;color:#4a2e2a;font-family:{BrandFontStack}"">{bodyHtml}</div>
     <p style=""margin-top:24px;font-size:12px;color:#9C7F79"">You are receiving this because you are an operator on Lexum Link.</p>
   </div>
 </div></body></html>";

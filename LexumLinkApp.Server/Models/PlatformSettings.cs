@@ -9,6 +9,8 @@ namespace LexumLinkApp.Server.Models
         // Branding
         public string SiteName { get; set; } = "LexumLink";
         public string SupportEmail { get; set; } = "support@lexumlink.co.za";
+        // Where new client sign-up notifications go — falls back to SupportEmail if blank.
+        public string SalesNotificationEmail { get; set; } = "sales@lexumlink.co.za";
 
         // Email / SMTP
         public bool SmtpEnabled { get; set; }

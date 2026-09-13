@@ -3,6 +3,7 @@ import { useAuth } from '../context/useAuth';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import HelpButton from '../components/HelpButton';
+import PasswordInput from '../components/PasswordInput';
 
 interface Organization {
     id: string;
@@ -103,7 +104,7 @@ export default function CreateUser() {
                                 <input type="text" name="lastName" placeholder="Last name" value={formData.lastName} onChange={handleInputChange} className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded" required />
                             </div>
                             <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleInputChange} className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full" required />
-                            <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleInputChange} className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full" required />
+                            <PasswordInput name="password" placeholder="Password" value={formData.password} onChange={handleInputChange} className="bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] p-2 rounded w-full" required />
 
                             <div className="flex items-center space-x-2">
                                 <input type="checkbox" name="createNewOrganization" id="createNew" checked={formData.createNewOrganization} onChange={handleInputChange} />

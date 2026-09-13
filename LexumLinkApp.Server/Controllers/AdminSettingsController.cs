@@ -43,6 +43,7 @@ namespace LexumLinkApp.Server.Controllers
             {
                 s.SiteName,
                 s.SupportEmail,
+                s.SalesNotificationEmail,
                 s.SmtpEnabled,
                 s.SmtpHost,
                 s.SmtpPort,
@@ -76,6 +77,7 @@ namespace LexumLinkApp.Server.Controllers
 
             s.SiteName = request.SiteName;
             s.SupportEmail = request.SupportEmail;
+            s.SalesNotificationEmail = request.SalesNotificationEmail;
 
             s.SmtpEnabled = request.SmtpEnabled;
             s.SmtpHost = request.SmtpHost;
@@ -129,7 +131,7 @@ namespace LexumLinkApp.Server.Controllers
                 await _emailService.SendAsync(
                     new[] { request.ToEmail },
                     "LexumLink test email",
-                    "<p>This is a test email from your LexumLink platform settings. If you received this, outgoing email is configured correctly.</p>");
+                    "<p style=\"font-family:'Mooxy',Segoe UI,Arial,sans-serif\">This is a test email from your LexumLink platform settings. If you received this, outgoing email is configured correctly.</p>");
                 return Ok(new { message = $"Test email sent to {request.ToEmail}." });
             }
             catch (Exception ex)
@@ -148,6 +150,7 @@ namespace LexumLinkApp.Server.Controllers
     {
         public string SiteName { get; set; } = "LexumLink";
         public string SupportEmail { get; set; } = "";
+        public string SalesNotificationEmail { get; set; } = "";
 
         public bool SmtpEnabled { get; set; }
         public string SmtpHost { get; set; } = "";

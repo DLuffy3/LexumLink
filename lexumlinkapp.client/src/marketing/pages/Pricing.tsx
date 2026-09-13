@@ -9,6 +9,7 @@ interface Plan {
     features: string[];
     featured?: boolean;
     cta: string;
+    ctaTo: string;
 }
 
 const PLANS: Plan[] = [
@@ -18,6 +19,7 @@ const PLANS: Plan[] = [
         blurb: 'For small teams getting organised.',
         features: ['1 user', '1 organisation', 'Limited clients', 'Case management', 'Document storage (5 GB)', 'Email support'],
         cta: 'Get Started',
+        ctaTo: '/signup?package=starter',
     },
     {
         name: 'Professional',
@@ -26,6 +28,7 @@ const PLANS: Plan[] = [
         features: ['Up to 5 users', '1 organisation', 'Unlimited clients & cases', 'Full workflow automation', 'Document storage (25 GB)', 'Task & reminder engine', 'Dashboards & reporting', 'Priority support'],
         featured: true,
         cta: 'Get Started',
+        ctaTo: '/signup?package=professional',
     },
     {
         name: 'Enterprise',
@@ -33,6 +36,7 @@ const PLANS: Plan[] = [
         blurb: 'For multi-branch firms and organisations.',
         features: ['Unlimited organisations', '10 users per organisation', 'Custom workflows & roles', 'Custom storage', 'API & integrations', 'Dedicated onboarding', '24/7 priority support'],
         cta: 'Contact Sales',
+        ctaTo: '/contact',
     },
 ];
 
@@ -93,7 +97,7 @@ function PriceCard({ plan, annual }: { plan: Plan; annual: boolean }) {
             </ul>
 
             <Link
-                to="/contact"
+                to={plan.ctaTo}
                 className="block w-full text-center py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:-translate-y-0.5"
                 style={
                     plan.featured

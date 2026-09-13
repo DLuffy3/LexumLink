@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import { AxiosError } from 'axios';
 import Spinner from '../components/Spinner';
+import PasswordInput from '../components/PasswordInput';
 import ThemeToggle from '../components/ThemeToggle';
 import { useTheme } from '../theme/useTheme';
 import logoDark from '../assets/logo-dark.svg';
@@ -94,8 +95,7 @@ export default function SignIn() {
                         className="w-full px-4 py-2.5 rounded-lg bg-[var(--overlay-weak)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--faint)] outline-none transition-all focus:border-[var(--brand-accent)] focus:ring-2 focus:ring-[var(--brand-ring)]"
                         required
                     />
-                    <input
-                        type="password"
+                    <PasswordInput
                         placeholder="Password"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
