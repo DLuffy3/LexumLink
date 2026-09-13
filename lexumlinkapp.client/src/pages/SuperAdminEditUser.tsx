@@ -4,6 +4,7 @@ import { useAuth } from '../context/useAuth';
 import api from '../services/api';
 import HelpButton from '../components/HelpButton';
 import Spinner from '../components/Spinner';
+import PasswordInput from '../components/PasswordInput';
 
 interface Organization {
     id: string;
@@ -207,8 +208,7 @@ export default function SuperAdminEditUser() {
 
                         <div className="pt-2 border-t border-[var(--border)]">
                             <label className="block text-sm font-medium text-[var(--muted)] mb-1 mt-2">Reset password (optional)</label>
-                            <input
-                                type="password"
+                            <PasswordInput
                                 name="newPassword"
                                 placeholder="Leave blank to keep current password"
                                 value={formData.newPassword}

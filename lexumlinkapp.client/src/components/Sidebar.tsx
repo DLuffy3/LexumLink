@@ -30,6 +30,7 @@ export default function Sidebar() {
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
     const [avatarError, setAvatarError] = useState('');
+    const [pendingSignups, setPendingSignups] = useState(0);
 
     useEffect(() => {
         let cancelled = false;
@@ -38,6 +39,19 @@ export default function Sidebar() {
             .catch(() => { });
         return () => { cancelled = true; };
     }, []);
+
+    useEffect(() => {
+        if (!user?.isSuperAdmin) return;
+        let cancelled = false;
+        api.get('/admin/client-registrations')
+            .then((r) => {
+                if (cancelled) return;
+                const pending = (r.data as { status: string }[]).filter((x) => x.status === 'pending').length;
+                setPendingSignups(pending);
+            })
+            .catch(() => { });
+        return () => { cancelled = true; };
+    }, [user?.isSuperAdmin]);
 
     const handleSignOut = () => {
         signOut();
@@ -140,6 +154,15 @@ export default function Sidebar() {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                     </svg>
                                     Overview
+                                </Link>
+                                <Link to="/super-admin/signups" className={navItemClass(location.pathname.startsWith('/super-admin/signups'))}>
+                                    <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h3.75M9 15h3.75M9 18h3.75m3-15H6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 006 21h12a2.25 2.25 0 002.25-2.25V6.75L15.75 3z" />
+                                    </svg>
+                                    Signups
+                                    {pendingSignups > 0 && (
+                                        <span className="ml-auto pill-amber text-[10px] font-bold px-1.5 py-0.5 rounded-full">{pendingSignups}</span>
+                                    )}
                                 </Link>
                                 <Link to="/super-admin/users" className={navItemClass(location.pathname.startsWith('/super-admin/users'))}>
                                     <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

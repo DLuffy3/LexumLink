@@ -12,6 +12,7 @@ import Home from './marketing/pages/Home';
 import About from './marketing/pages/About';
 import Services from './marketing/pages/Services';
 import Pricing from './marketing/pages/Pricing';
+import SignUp from './marketing/pages/SignUp';
 import Contact from './marketing/pages/Contact';
 import SignIn from './pages/SignIn';
 import ClientDetail from './pages/ClientDetail';
@@ -28,6 +29,8 @@ import SuperAdminNewOrganization from './pages/SuperAdminNewOrganization';
 import SuperAdminEditOrganization from './pages/SuperAdminEditOrganization';
 import SuperAdminSettings from './pages/SuperAdminSettings';
 import SuperAdminMatterTypes from './pages/SuperAdminMatterTypes';
+import SuperAdminSignups from './pages/SuperAdminSignups';
+import SuperAdminSignupDetail from './pages/SuperAdminSignupDetail';
 import EditClient from './pages/EditClient';
 import EditCase from './pages/EditCase';
 import EditClaim from './pages/EditClaim';
@@ -52,6 +55,7 @@ function App() {
                         <Route path="/services" element={<Services />} />
                         <Route path="/pricing" element={<Pricing />} />
                         <Route path="/contact" element={<Contact />} />
+                        <Route path="/signup" element={<SignUp />} />
                     </Route>
                     <Route path="/signin" element={<SignIn />} />
 
@@ -216,6 +220,20 @@ function App() {
                             <ProtectedRoute>
                                 <SuperAdminGuard>
                                     <SuperAdminMatterTypes />
+                                </SuperAdminGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/super-admin/signups" element={
+                            <ProtectedRoute>
+                                <SuperAdminGuard>
+                                    <SuperAdminSignups />
+                                </SuperAdminGuard>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/super-admin/signups/:id" element={
+                            <ProtectedRoute>
+                                <SuperAdminGuard>
+                                    <SuperAdminSignupDetail />
                                 </SuperAdminGuard>
                             </ProtectedRoute>
                         } />

@@ -19,6 +19,16 @@ namespace LexumLinkApp.Server.Services
         // Prescription Date (Case.DeadlineDate).
         Task NotifyPrescriptionDeadlinesAsync(CancellationToken ct = default);
 
+        // Public sign-up: notifies LexumLink's sales team of a new client registration
+        // awaiting review, and sends the registrant a confirmation with their reference number.
+        Task NotifyClientRegistrationAsync(ClientRegistration registration);
+
+        // Sent once a Super Admin activates a registration — gives the new organization's
+        // first admin user their login and a generated temporary password. Returns null on
+        // success, or a human-readable reason the email didn't go out (SMTP not configured,
+        // send failure, etc.) so the caller can surface it instead of failing silently.
+        Task<string?> NotifyAccountActivatedAsync(User user, string organizationName, string tempPassword);
+
         // Human-readable ticket reference derived from the ticket id.
         static string TicketNumber(Guid id) => "TKT-" + id.ToString("N").Substring(0, 8).ToUpperInvariant();
     }

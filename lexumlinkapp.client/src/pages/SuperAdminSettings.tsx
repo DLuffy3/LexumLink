@@ -3,10 +3,12 @@ import { useAuth } from '../context/useAuth';
 import api from '../services/api';
 import HelpButton from '../components/HelpButton';
 import Spinner from '../components/Spinner';
+import PasswordInput from '../components/PasswordInput';
 
 interface SettingsForm {
     siteName: string;
     supportEmail: string;
+    salesNotificationEmail: string;
     smtpEnabled: boolean;
     smtpHost: string;
     smtpPort: number;
@@ -30,6 +32,7 @@ interface SettingsForm {
 const DEFAULTS: SettingsForm = {
     siteName: 'LexumLink',
     supportEmail: '',
+    salesNotificationEmail: '',
     smtpEnabled: false,
     smtpHost: '',
     smtpPort: 587,
@@ -97,6 +100,7 @@ export default function SuperAdminSettings() {
             await api.put('/admin/settings', {
                 siteName: formData.siteName,
                 supportEmail: formData.supportEmail,
+                salesNotificationEmail: formData.salesNotificationEmail,
                 smtpEnabled: formData.smtpEnabled,
                 smtpHost: formData.smtpHost,
                 smtpPort: formData.smtpPort,
@@ -197,6 +201,11 @@ export default function SuperAdminSettings() {
                                     <label className={labelClass}>Support Email</label>
                                     <input type="email" name="supportEmail" value={formData.supportEmail} onChange={handleChange} className={inputClass} />
                                 </div>
+                                <div>
+                                    <label className={labelClass}>Sales Notification Email</label>
+                                    <input type="email" name="salesNotificationEmail" value={formData.salesNotificationEmail} onChange={handleChange} className={inputClass} placeholder="sales@lexumlink.co.za" />
+                                    <p className="text-xs text-[var(--faint)] mt-1">New sign-up notifications go here — falls back to Support Email if blank.</p>
+                                </div>
                             </div>
                         </div>
 
@@ -223,8 +232,7 @@ export default function SuperAdminSettings() {
                                 </div>
                                 <div>
                                     <label className={labelClass}>Password{formData.smtpPasswordSet ? ' (currently set)' : ''}</label>
-                                    <input
-                                        type="password"
+                                    <PasswordInput
                                         name="smtpPassword"
                                         value={formData.smtpPassword}
                                         onChange={handleChange}
